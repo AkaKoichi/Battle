@@ -1,8 +1,48 @@
 body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  background-color: lightblue;
+  height: 100vh;
+  margin:0;
+  display: grid;
+  grid-template-columns: 200px auto;
+  grid-template-areas: 'h h' 'n m' 'f f';
+  grid-template-rows: 170px auto 70px;
 }
-
-a {
-  color: #00B7FF;
+header > img { width: 150px; }
+header {
+   grid-area: h;
+   background-color: lightgreen;
+   color: white;
+   font-size: 1.2em;
+   padding:10px;
+   display: flex;
+   align-items: center;
+}
+header > section {
+  text-align: center;
+  width: calc(100% - 320px);
+}
+nav {  
+  display: flex;
+  flex-direction: column;
+  grid-area: n;
+  padding:10px;
+  background-color: lightpink; }
+nav a { 
+  color: white; 
+  margin:5px;
+  padding:5px;
+  border: 1px solid white;
+}
+footer { 
+  grid-area: f;
+  padding: 10px 20%;
+  text-align: right;
+  background-color: lightgreen;
+    color: white
+}
+main {
+  grid-area: m;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
