@@ -30,20 +30,31 @@ async function logout() {
     }
 }
 
-async function register(player) {
+async function requestUserInfo() {
+    try {
+        const response = await fetch(`/api/users/profile`);
+        var result = await response.json();
+        return {logged: response.status!=401 , result: result };
+    } catch (err) {
+        // Treat 500 errors here
+        console.log(err);
+    }
+}
+
+async function register(user) {
     try {
         // TODO: Verify user information  and give errors
-        const response = await fetch("/api/users/register",
+        const response = await fetch(`/api/users/register`,
         {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
               },
-            body: JSON.stringify(player) 
+            body: JSON.stringify(user) 
         });
-        var  result= await response.json();
+        var result= await response.json();
         return {inserted: response.status==200 , result: result };
-    } catch (err) {
+    }   catch (err) {
         // Treat 500 errors here
         console.log(err);
     }

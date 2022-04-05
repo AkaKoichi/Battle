@@ -2,11 +2,11 @@ async function registerUser() {
     try {
         let name = document.getElementById("name").value;
         let password = document.getElementById("password").value;
-        let player = {
+        let user = {
             name: name,
             password: password
         };
-        let result = await register(player);
+        let result = await register(user);
         if (result.inserted) {
             alert("Register was successful");
             window.location = "index.html"

@@ -1,11 +1,21 @@
-var cx = 20
-var cy = 20
+window.onload = async function() {
+    let userInfo = await getUserInfo();
+    document.getElementById("name").innerHTML = userInfo.usr_name;
+}
 let tilesize = 900/20;
+let shape_x;
+let shape_y;
+const radius = tilesize/2;
+const diameter = radius*2; 
+let shape_move = false;
 
 
 function setup(){
     createCanvas(900,900)
     tilesize = width/20;
+    shape_x =  width/2;
+    shape_y = height/2;
+
 }
 
 function draw(){
@@ -16,18 +26,7 @@ function draw(){
             rect(x,y,tilesize,tilesize);
         }
     }
-    circle(cx, cy, 50);
-    /*
-    var cx = 20
-    var cy = 20
-    circle(cx, cy, 50);
-    window.addEventListener('keyup', (e) => {
-        switch (e.key) {
-            case 'ArrowLeft':
-                cx = cx + 1;
-                break;
-            }
-        }*/
+    circle(shape_x, shape_y, diameter);
 
 }
 
@@ -36,23 +35,47 @@ async function keyPressed() {
     switch(key) {
         case 'd':
         case 'D':
-            cx = cx +tilesize;
+            shape_x  = shape_x  +tilesize;
         break;
         
         case 'a':
         case 'A':
-            cx = cx -tilesize;
+            shape_x = shape_x  -tilesize;
         break;
         
         case 'w':
         case 'W':
-            cy = cy -tilesize;
+            shape_y  = shape_y  -tilesize;
         break;
         
         case 's':
         case 'S': 
-            cy = cy +tilesize;
+            shape_y  = shape_y  +tilesize;
         break;
+    }
+}
+
+function mousePressed(){
+    let distance = dist(mouseX, mouseY, shape_x, shape_y);
+    if(distance<radius){
+        
+        shape_move = true;
+    }else {
+
+        shape_move = false;
+    }
+}
+
+function mouseReleased(){
+    shape_move = false;
+}
+
+function mouseDragged(){
+
+    if (shape_move){
+
+        shape_x = mouseX;
+        shape_y = mouseY;
     }
 }
 
