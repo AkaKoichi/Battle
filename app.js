@@ -4,9 +4,11 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var roomsRouter = require('./routes/room_routes');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+var troopsRouter = require('./routes/troop_routes');
 
 var app = express();
 
@@ -17,6 +19,8 @@ app.use(cookieParser("secret"));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
+app.use('/api/rooms', roomsRouter);
 app.use('/api/users', usersRouter);
+app.use('/api/troops', troopsRouter);
 
 module.exports = app;

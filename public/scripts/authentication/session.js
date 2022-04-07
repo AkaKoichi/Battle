@@ -14,7 +14,7 @@ async function getUserInfo() {
            return result.result;
         } else {
             alert ("You are not logged in\nWe will send you to login page");
-            window.location = "login.html"
+            window.location = "index.html"
         }
     } catch(err) {
         console.log(err);

@@ -1,6 +1,8 @@
 window.onload = async function() {
     let userInfo = await getUserInfo();
     document.getElementById("name").innerHTML = userInfo.usr_name;
+    let troop_info = await get_troops();
+    document.getElementById("troop").innerHTML = troop_info[2].trp_name;
 }
 let tilesize = 900/20;
 let shape_x;
@@ -20,10 +22,11 @@ function setup(){
 
 function draw(){
     
-    background("black")
-    for(let y = 0 ; y < 1000;y += tilesize){
-        for(let x = 0 ; x < 1000;x += tilesize){
-            rect(x,y,tilesize,tilesize);
+    background("black");
+    let square_size= width/20;
+    for (let y = 0; y < height; y += square_size) {
+        for (let x = 0; x < width; x += square_size){
+            rect(x, y, square_size,square_size);
         }
     }
     circle(shape_x, shape_y, diameter);
