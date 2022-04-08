@@ -38,8 +38,8 @@ function draw(){
     let square_size= width/20;
     let num_squares = 1
 
-    let dbX = 19;
-    let dbY = 3;
+    let dbX = new Request("Select troop_x from user_troop ");
+    let dbY = new Request("Select troop_y from user_troop ");
 
     
     for (let y = 0; y < height; y += square_size) {
