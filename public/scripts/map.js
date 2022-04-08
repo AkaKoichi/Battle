@@ -11,12 +11,24 @@ const radius = tilesize/2;
 const diameter = radius*2; 
 let shape_move = false;
 
+let matrix = [];
 
 function setup(){
-    createCanvas(900,900)
+    createCanvas(1000,1000)
     tilesize = width/20;
-    shape_x =  width/2;
-    shape_y = height/2;
+    shape_x =  width/20 - tilesize/2;
+    shape_y = height/20 - tilesize/2;
+    
+    let pos = 0;
+    for(let y = 0; y< 20 ; y ++){
+        matrix[y] = []
+        for(let x =0; x< 20; x ++ ){
+            pos++;
+            matrix[y][x] = pos;
+        }
+    }
+
+    print("Total: " + pos);
 
 }
 
@@ -24,9 +36,24 @@ function draw(){
     
     background("black");
     let square_size= width/20;
+    let num_squares = 1
+
+    let dbX = 19;
+    let dbY = 3;
+
+    
     for (let y = 0; y < height; y += square_size) {
         for (let x = 0; x < width; x += square_size){
             rect(x, y, square_size,square_size);
+            
+            if(matrix[dbX][dbY] == num_squares)
+            {
+                  text("Hello" , x+square_size/2 -10, y+square_size/2);
+            } else {
+                text(num_squares , x + square_size/2 -10, y + square_size/2 );
+            }
+            num_squares ++
+
         }
     }
     circle(shape_x, shape_y, diameter);

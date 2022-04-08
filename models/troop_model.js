@@ -11,3 +11,4 @@ module.exports.get_all_troops = async function() {
     return { status: 500, result: err};
   }
 }  
+
