@@ -6,15 +6,22 @@ window.onload = async function() {
         
         get_troops_by_id(userInfo.usr_id).then((troops) => {
             troop_movement = troops;
-            troop_x=troop_movement[0].troop_x;
-            troop_y=troop_movement[0].troop_y;
+            let addTroopsToArray = troops_movement.map((troop) => {
+                return new Promise(() => {
+                    troops.push({
+                        x:troop.troop_x,
+                        y:troop.troop_y
+                    })
+                });
+            })
             
+            Promise.all(addTroopsToArray).then(() => redraw());          
         })
     })
 }
 var troop_movement;
 var userInfo ;
-
+let troops = [];
 
 let tilesize = 1000/20;
 let shape_x;
@@ -48,8 +55,9 @@ function setup(){
             matrix[y][x] = pos;
         }
     }
-
+    
     print("Total: " + pos);
+    noLoop();
 
 }
 
@@ -58,6 +66,8 @@ function draw(){
     background("black");
     let square_size= width/20;
     let num_squares = 1;
+    let is_troop = false;
+    let troops = [{x:2,y:2},{x:4,y:4}]
   
 
 
@@ -65,11 +75,28 @@ function draw(){
     for (let x = 0; x < height; x += square_size) {
         for (let y = 0; y < width; y += square_size){
             rect(x, y, square_size,square_size);
-            
-            if(matrix[troop_x][troop_y] == num_squares)
+            console.log(troops)
+            for (const troop in troops){
+                console.log(troop)
+                if (!is_troop) {
+                   
+                    if(matrix[troop.x][troop.y] == num_squares)
+                    {
+                        is_troop = true;
+                        
+                        
+                    
+                    } else {
+                        is_troop =false;
+                    }
+                    
+                }
+            }
+        
+            if(is_troop)
             {
                 text("Troop" , x+square_size/2 -10, y+square_size/2);
-            } else {
+            }else {
                 text(num_squares , x + square_size/2 -10, y + square_size/2 );
             }
             num_squares ++
@@ -79,6 +106,8 @@ function draw(){
     circle(shape_x, shape_y, diameter);
 
 }
+
+
 
 async function keyPressed() {
     if (shape_movement > 0){
@@ -133,7 +162,7 @@ async function keyPressed() {
         break;
     
     }
-    
+    redraw()
 }
 
 function mousePressed(){

@@ -17,7 +17,9 @@ module.exports.loginCheck = async function (name,password) {
 
   module.exports.getLoggedUserInfo = async function (userId) {
     try {
-        let sql = `Select usr_name from users where usr_id = $1`;
+        let sql = `Select usr_id ,usr_name
+         from users 
+         where usr_id = $1`;
         let result = await pool.query(sql, [userId]);
         if (result.rows.length > 0) {
             let user = result.rows[0];
