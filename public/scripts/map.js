@@ -10,10 +10,17 @@ window.onload = async function() {
             troop_y=troop_movement[0].troop_y;
             
         })
+
+        get_buildings_by_id(userInfo.usr_id).then((buildings) => {
+            buildings_place = buildings;
+            building_x=buildings_place[0].building_x;
+            building_y=buildings_place[0].building_y;
+            
+        })
     })
 }
-var troop_movement;
-var userInfo ;
+let troop_movement;
+let userInfo ;
 
 
 let tilesize = 1000/20;
@@ -29,6 +36,8 @@ let shape_move = false;
 let shape_is_selected=false;
 let troop_x =0;
 let troop_y =0;
+let building_x =0;
+let building_y =0;
 
 
 let matrix = [];
@@ -69,7 +78,9 @@ function draw(){
             if(matrix[troop_x][troop_y] == num_squares)
             {
                 text("Troop" , x+square_size/2 -10, y+square_size/2);
-            } else {
+            } else if (matrix[building_x][building_y] == num_squares ){
+                text("build" , x+square_size/2 -10, y+square_size/2);
+            }else {
                 text(num_squares , x + square_size/2 -10, y + square_size/2 );
             }
             num_squares ++
@@ -81,43 +92,46 @@ function draw(){
 }
 
 async function keyPressed() {
-    if (shape_movement > 0){
-        switch(key) {
-            case 'd':
-            case 'D':
-                shape_x  = shape_x  +tilesize;
-                troop_x += 1;
-                shape_movement-=1
-            break;
-            
-            case 'a':
-            case 'A':
-                shape_x = shape_x  -tilesize;
-                troop_x -= 1;
-                shape_movement-=1
-            break;
-            
-            case 'w':
-            case 'W':
-                shape_y  = shape_y  -tilesize;
-                troop_y -= 1;
-                shape_movement-=1
-            break;
-            
-            case 's':
-            case 'S': 
-                shape_y  = shape_y  +tilesize;
-                troop_y += 1;
-                shape_movement-=1
+    if (shape_is_selected){
+        if (shape_movement > 0){
+            switch(key) {
+                case 'd':
+                case 'D':
+                    shape_x  = shape_x  +tilesize;
+                    troop_x += 1;
+                    shape_movement-=1
+                break;
                 
-            break;
+                case 'a':
+                case 'A':
+                    shape_x = shape_x  -tilesize;
+                    troop_x -= 1;
+                    shape_movement-=1
+                break;
+                
+                case 'w':
+                case 'W':
+                    shape_y  = shape_y  -tilesize;
+                    troop_y -= 1;
+                    shape_movement-=1
+                break;
+                
+                case 's':
+                case 'S': 
+                    shape_y  = shape_y  +tilesize;
+                    troop_y += 1;
+                    shape_movement-=1
+                    
+                break;
         
             
             
         }
-        if(shape_is_selected){
-            document.getElementById("movement").innerHTML = shape_movement;
-        }
+       
+        document.getElementById("movement").innerHTML = shape_movement;
+        
+    }
+        
     }
     switch(key) {
         case 'l':
