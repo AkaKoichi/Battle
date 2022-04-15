@@ -18,7 +18,7 @@ async function get_buildings() {
 
 async function get_buildings_by_id(id) {
     try {
-        const response = await fetch(`/api/building/${id}`);
+        const response = await fetch(`/api/buildings/${id}`);
         if (response.status == 200) {
            var buildings = await response.json();
            return buildings;

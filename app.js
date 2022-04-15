@@ -5,10 +5,10 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var roomsRouter = require('./routes/room_routes');
-
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var troopsRouter = require('./routes/troop_routes');
+var buildingsRouter = require('./routes/buildings_routes');
 
 var app = express();
 
@@ -22,5 +22,6 @@ app.use('/', indexRouter);
 app.use('/api/rooms', roomsRouter);
 app.use('/api/users', usersRouter);
 app.use('/api/troops', troopsRouter);
+app.use('/api/buildings', buildingsRouter);
 
 module.exports = app;
