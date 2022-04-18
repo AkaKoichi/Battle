@@ -9,6 +9,8 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var troopsRouter = require('./routes/troop_routes');
 var buildingsRouter = require('./routes/buildings_routes');
+var resourcesRouter = require('./routes/resources_routes');
+var tileRouter = require('./routes/tile_routes');
 
 var app = express();
 
@@ -23,5 +25,7 @@ app.use('/api/rooms', roomsRouter);
 app.use('/api/users', usersRouter);
 app.use('/api/troops', troopsRouter);
 app.use('/api/buildings', buildingsRouter);
+app.use('/api/resources', resourcesRouter);
+app.use('/api/tile', tileRouter);
 
 module.exports = app;
