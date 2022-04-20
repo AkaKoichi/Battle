@@ -1,8 +1,8 @@
 var pool = require('./connection.js')
     
-module.exports.loginCheck = async function (name,password) {
+module.exports.login_check = async function (name,password) {
     try {
-      let sql = `Select usr_id from users where usr_name = $1 and usr_password = $2`;
+      let sql = `Select user_id from users where username = $1 and password = $2`;
       let result = await pool.query(sql,[name,password]);
       if (result.rows.length == 0) {
           return { status: 401, result: {msg: "Wrong password or username."}}
@@ -15,12 +15,13 @@ module.exports.loginCheck = async function (name,password) {
     }
   }
 
-  module.exports.getLoggedUserInfo = async function (userId) {
+  module.exports.get_logged_user_info = async function (userId) {
     try {
-        let sql = `Select usr_id ,usr_name
+        let sql = `Select user_id ,username
          from users 
-         where usr_id = $1`;
+         where user_id = $1`;
         let result = await pool.query(sql, [userId]);
+        console.log('a')
         if (result.rows.length > 0) {
             let user = result.rows[0];
             return { status: 200, result: user };
@@ -33,9 +34,9 @@ module.exports.loginCheck = async function (name,password) {
     }
   }
 
-module.exports.registerUser = async function(user) {
+module.exports.register_user = async function(user) {
     try  {
-      let sql = "Insert into users (usr_name,usr_password) values ($1,$2)";
+      let sql = "Insert into users (username,password) values ($1,$2)";
       let result = await pool.query(sql,[user.name, user.password]); 
       return { status: 200, result:result }
     } catch (err){

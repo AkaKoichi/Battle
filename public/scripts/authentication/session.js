@@ -1,4 +1,4 @@
-async function logoutUser() {
+async function logout_user() {
     try {
         let result = await logout();
         window.location = "login.html"
@@ -7,9 +7,9 @@ async function logoutUser() {
     }
 }
 
-async function getUserInfo() {
+async function get_user_info() {
     try {
-        let result = await requestUserInfo();
+        let result = await request_user_info();
         if (result.logged) {
            return result.result;
         } else {

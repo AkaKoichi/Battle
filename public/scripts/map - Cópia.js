@@ -1,5 +1,5 @@
 window.onload = async function() {
-    getUserInfo().then((user_info) => {
+    get_user_info().then((user_info) => {
         userInfo = user_info;
         document.getElementById("name").innerHTML = userInfo.usr_name;
         document.getElementById("id").innerHTML = userInfo.usr_id;

@@ -14,6 +14,13 @@ router.get('/:id', async function(req, res, next) {
     let result = await troop_model.get_troops_id(id);
     res.status(result.status).send(result.result);
   });
+
+  // router.get('/update/:id', async function(req, res, next) {
+  //   let id = req.params.id;
+  //   console.log("Get troop with id "+id)
+  //   let result = await troop_model.update_troops(id);
+  //   res.status(result.status).send(result.result);
+  // });
       
       
 module.exports = router;

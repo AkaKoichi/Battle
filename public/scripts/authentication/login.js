@@ -1,4 +1,4 @@
-async function loginUser() {
+async function login_user() {
     try {
         let name = document.getElementById("name").value;
         let password = document.getElementById("password").value;

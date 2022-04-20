@@ -3,7 +3,7 @@ const tokenExpiration = 4*60*60*1000; // 4 hours
 
 
 // Middleware
-module.exports.checkAuthentication = function (req,res,next) {
+module.exports.check_authentication = function (req,res,next) {
     console.log(req.signedCookies);
     let usr_id = req.signedCookies.userId;
     if (!usr_id) {
@@ -18,7 +18,7 @@ module.exports.checkAuthentication = function (req,res,next) {
 }
 
 // functions
-module.exports.saveUserId = function (res,userId) {    
+module.exports.save_user_id = function (res,userId) {    
     res.cookie("userId", userId, {  maxAge: tokenExpiration, httpOnly: true, signed:true });
 }
 

@@ -1,4 +1,7 @@
+
+
 let userInfo;
+let troop_array = []
 
 let troop_movement =[];
 let buildings_place =[];
@@ -11,35 +14,53 @@ const diameter = radius * 2;
 
 window.onload = async () => {
 
-    getUserInfo().then((user_info) => {
+    get_user_info().then((user_info) => {
 
         userInfo = user_info;
-        document.getElementById("name").innerHTML = userInfo.usr_name;
-        document.getElementById("id").innerHTML = userInfo.usr_id;
+        document.getElementById("name").innerHTML = userInfo.username;
+        document.getElementById("id").innerHTML = userInfo.user_id;
+        console.log()
 
-        get_buildings_by_id(userInfo.usr_id).then((buildings) => {
+        // get_buildings_by_id(userInfo.usr_id).then((buildings) => {
 
-            buildings_place = buildings; 
-        });
+        //     buildings_place = buildings; 
+        // });
         get_troops_by_id(userInfo.usr_id).then((troops) => {
 
             troop_movement = troops;
-            console.log(troop_movement)
-            
-        });
-
-        
+            for (i = 0; i < troop_movement.length; i++) {
+                troop_array.push({
+                    id:troop_movement[i].user_troop_id,
+                    name:troop_movement[i].trp_name,
+                    health:troop_movement[i].trp_health,
+                    init_movement:troop_movement[i].trp_movement,
+                    movement:troop_movement[i].trp_movement,
+                    attack:troop_movement[i].trp_atack,
+                    range:troop_movement[i].trp_range,
+                    max_amount:troop_movement[i].trp_max_amount,
+                    x:troop_movement[i].troop_x,
+                    y:troop_movement[i].troop_y,
+                    selected:false,
+                    square_x:0,
+                    square_y:0
+                    
+                    });
+                }
+        });  
     })
+    // update_troops_id().then((update) => {
+    //     update_troops=update
+    // });
 }
 
 function setup() {
 
     createCanvas(800,800);
+    
+    console.log(troop_array)
 
     tilesize = width / 20;
-    shape_x = width / 20 - tilesize / 2;
-    
-    shape_y = height / 20 - tilesize / 2;
+
 
     
     
@@ -62,93 +83,101 @@ function draw(){
     background("black");
     let square_size= width/20;
     let num_squares = 1;
-    
-  
-
-    //
 
     for (let x = 0; x < height; x += square_size) {
-        
         for (let y = 0; y < width; y += square_size){
             rect(x, y, square_size,square_size);
-            for (i = 0; i < troop_movement.length; i++) {
-             
-                if(matrix[troop_movement[i].troop_x][troop_movement[i].troop_y] == num_squares)
+            text(num_squares , x + square_size/2 -10, y + square_size/2 );
+            num_squares ++
+            for ( let i = 0; i < troop_array.length; i++) {
+                if(matrix[troop_array[i].x][troop_array[i].y] == num_squares)
                 {
-                    circle(x+square_size/2 -10, y+square_size/2, diameter);
-                } else if (matrix[buildings_place[0].build_x][buildings_place[0].build_y] == num_squares ){
-                    rect(x+square_size/2 -10, y+square_size/2-10, 20,20);
-                }else {
-                    text(num_squares , x + square_size/2 -10, y + square_size/2 );
-                }
-                num_squares ++
-                break
+                    circle(x + square_size/2 , y + square_size/2, diameter);
+                    troop_array[i].square_x = x + square_size/2
+                    troop_array[i].square_y = y + square_size/2
+                } 
             }
+                
+            // for ( let i = 0; i < buildings_place.length; i++) {       
+            //     if(matrix[buildings_place[i].build_x][buildings_place[i].build_y] == num_squares ){
+            //                 rect(x+square_size/2 -10, y+square_size/2-10, 20,20);
+            //     }
+            // }
+            
         }
     }
+    
 }
 
 async function keyPressed() {
-    for (i = 0 ; i < troop_movement.length; i++) {
-        if (troop_movement[i].selected){
-            if (troop_movement[i].trp_movement > 0){
+    for (i = 0 ; i < troop_array.length; i++) {
+        if (troop_array[i].selected){
+            if (troop_array[i].movement > 0){
                 switch(key) {
                     case 'd':
                     case 'D':
-                        shape_x  = shape_x  +tilesize;
-                        troop_x += 1;
-                        shape_movement-=1
+                       
+                        troop_array[i].x += 1;
+                        troop_array[i].movement -=1 
+                    
                     break;
                     
                     case 'a':
                     case 'A':
-                        shape_x = shape_x  -tilesize;
-                        troop_x -= 1;
-                        shape_movement-=1
+                       
+                        troop_array[i].x -= 1;
+                        troop_array[i].movement -=1
+                      
                     break;
                     
                     case 'w':
                     case 'W':
-                        shape_y  = shape_y  -tilesize;
-                        troop_y -= 1;
-                        shape_movement-=1
+                       
+                        troop_array[i].y -= 1;
+                        troop_array[i].movement -=1
+                      
                     break;
                     
                     case 's':
                     case 'S': 
-                        shape_y  = shape_y  +tilesize;
-                        troop_y += 1;
-                        shape_movement-=1
+                        
+                        troop_array[i].y += 1;
+                        troop_array[i].movement -=1
+                     
                     break;
                 }
-            document.getElementById("movement").innerHTML = shape_movement;
+            document.getElementById("movement").innerHTML = troop_array[i].movement;
             } 
         }
         switch(key) {
             case 'l':
             case 'L': 
-                shape_movement = shape_init_movement;
+            troop_array[i].movement = troop_array[i].init_movement ;
+            document.getElementById("movement").innerHTML = troop_array[i].movement;
             break;
         }
         switch(key) {
             case 'k':
             case 'K': 
-                shape_movement = 500;
+                troop_array[i].movement = 500;
+                document.getElementById("movement").innerHTML = troop_array[i].movement;
             break;
         }
     }
 }
 
 function mousePressed(){
-    for (i = 0 ; i < troop_movement.length; i++) {
-        let distance = dist(mouseX, mouseY, troop_movement[i].troop_x, troop_movement[i].troop_y);
+    
+    for (i = 0 ; i < troop_array.length; i++) {
+        console.log(i)
+        let distance = dist(mouseX, mouseY, troop_array[i].square_x, troop_array[i].square_y);
         if(distance<radius){
-            
-          
-            troop_movement[i].selected = true;
+            console.log('a')
+            troop_array[i].selected = true;
+            console.log(troop_array[i].selected)
             shape_selected()
         }else {
-            shape_is_selected = false
+            troop_array[i].selected = false
             document.getElementById("movement").innerHTML = '';
             document.getElementById("troop").innerHTML = '';
 
@@ -160,13 +189,13 @@ function mousePressed(){
 
 
 function shape_selected(){
-    for (i = 0 ; i < troop_movement.length; i++) {
+    for (i = 0 ; i < troop_array.length; i++) {
 
-        if (troop_movement[1].selected){
+        if (troop_array[i].selected){
         
-            document.getElementById("troop").innerHTML =troop_movement[i].trp_name;
+            document.getElementById("troop").innerHTML =troop_array[i].name;
     
-            document.getElementById("movement").innerHTML = troop_movement[i].trp_movement;
+            document.getElementById("movement").innerHTML = troop_array[i].movement;
         };
     };
 }
@@ -181,4 +210,12 @@ function object(){
         var Y = canvas.height/2;
     }
 }
+
+// function end_turn(){
+//     for (i = 0 ; i < troop_array.length; i++) {
+//         console.log(i)
+//         update_troops(userInfo.usr_id,troop_array[i].health,troop_array[i].x,troop_array[i].y,troop_array[i].user_troop_id);
+
+//     }
+// }
 

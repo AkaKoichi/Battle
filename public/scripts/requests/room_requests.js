@@ -1,6 +1,6 @@
-async function getRoom(roomId) {
+async function get_room(room_id) {
     try {
-        const response = await fetch(`/api/rooms/${roomId}`);
+        const response = await fetch(`/api/rooms/${room_id}`);
         if (response.status == 200) {
            var room = await response.json();
            return room;

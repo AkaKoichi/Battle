@@ -4,7 +4,7 @@ let userInfo;
 async function enter_room() {
     window.location = "map.html"
 
-    // getUserInfo().then((user_info) => {
+    // get_user_info().then((user_info) => {
 
     //     userInfo = user_info;
     //     id = document.getElementById("id").userInfo.usr_id;

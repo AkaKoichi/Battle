@@ -3,7 +3,7 @@ var router = express.Router();
 var rModel = require("../models/room_model");
             
 router.get('/', async function(req, res, next) {
-  let result = await rModel.getAllRooms();
+  let result = await rModel.get_all_rooms();
   res.status(result.status).send(result.result);
 });
 
@@ -23,7 +23,7 @@ router.get('/:id', async function(req, res, next) {
   let id = req.params.id;
   console.log("Get room with id "+id)
   console.log("a")
-  let result = await rModel.getRoomById(id);
+  let result = await rModel.get_room_by_id(id);
   res.status(result.status).send(result.result);
 });
             

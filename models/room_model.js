@@ -1,6 +1,6 @@
 var pool = require('./connection.js')
 
-module.exports.getAllRooms = async function() {
+module.exports.get_all_rooms = async function() {
   try {
     let sql = "Select * from room";
     let result = await pool.query(sql);
@@ -13,7 +13,7 @@ module.exports.getAllRooms = async function() {
 }  
 
 
-module.exports.getRoomById = async function (id) {
+module.exports.get_room_by_id = async function (id) {
     try {
       let sql = "Select * from room where room_id = $1";
       let result = await pool.query(sql, [id]);
