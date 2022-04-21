@@ -100,6 +100,7 @@ function draw() {
 }
 
 async function keyPressed() {
+    console.log()
     for (i = 0; i < troop_array.length; i++) {
         if (troop_array[i].selected) {
             if (troop_array[i].movement > 0) {
