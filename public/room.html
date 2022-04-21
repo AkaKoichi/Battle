@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Login page</title>
+    <title>Rooms Page</title>
     <link rel="stylesheet" href="./stylesheets/style.css">
     <script src="./scripts/requests/user_requests.js"></script>
     <script src="./scripts/requests/room_requests.js"></script>
@@ -13,15 +13,13 @@
 </head>
 <body>
     <header>
-        <img src="data:image/png;base64,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" alt="rock paper scissors chart">
+        <img src="/images/branco.png" alt="Logo">
         <section>
-          <h1> Battle of Gaugamela</h1>
-          <h3> Fight for Territory</h3>
+          <img src="/images/logo.png" alt="Game Title">
         </section>
        </header>
       <nav>
-         <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ&ab_channel=RickAstley"> Trailer for the game</a>
-         <a href="https://www.rpsgame.org/">Site of the Game</a>
+         <a href="https://drive.google.com/file/d/1bk9KhyResxPXlgnNJR8VCxKgLwhEhA8T/view?usp=sharing"> Trailer for the game</a>
       </nav>
       <main >
         <section>
@@ -32,7 +30,7 @@
         </section>
       </main>
       <footer>
-        <p>Made by Bruno Serra</p>
+        <p>Made by Bruno Serra, Tomás Canto , Marwan ElBachouti</p>
       </footer>
     </body>
     </html>

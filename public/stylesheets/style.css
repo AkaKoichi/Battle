@@ -10,7 +10,7 @@ body {
 header > img { width: 150px; }
 header {
    grid-area: h;
-   background-color: lightgreen;
+   background-color: #444445;
    color: white;
    font-size: 1.2em;
    padding:10px;
@@ -37,7 +37,7 @@ footer {
   grid-area: f;
   padding: 10px 20%;
   text-align: right;
-  background-color: lightgreen;
+  background-color: #444445;
     color: white
 }
 main {
