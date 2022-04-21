@@ -4,15 +4,7 @@ let userInfo;
 async function enter_room() {
     window.location = "map.html"
 
-    // get_user_info().then((user_info) => {
-
-    //     userInfo = user_info;
-    //     id = document.getElementById("id").userInfo.usr_id;
-    //     search_room().then((user_room) => {
-    //     room=user_room
-
-    //     });
-    // });
+  
     // try {
     //     console.log(id)
     //     let user = {
@@ -30,6 +22,20 @@ async function enter_room() {
     //     console.log(err);
     // };
 }
+
+window.onload = async () => {
+    get_user_info().then((user_info) => {
+
+        let userInfo = user_info;
+        document.getElementById("id").userInfo.user_user_id;
+        // search_room().then((user_room) => {
+        // //room=user_room
+    
+        // });
+    });
+}
+
+
 
 
 

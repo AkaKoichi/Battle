@@ -7,11 +7,11 @@ router.post('/login', async function(req, res, next) {
     console.log("Login")
     let name = req.body.name;
     let password = req.body.password;
-    let result = await uModel.login_check(name,password);
+    let result = await uModel.login_check(name, password);
     if (result.status == 200) {
         auth.save_user_id(res,result.result.userId);
         res.status(result.status).send({msg:"User logged in"});
-    } else  res.status(result.status).send(result.result);
+    }else res.status(result.status).send(result.result);
 });
 
 router.post('/logout', auth.check_authentication, async function(req, res, next) {
@@ -23,8 +23,7 @@ router.post('/logout', auth.check_authentication, async function(req, res, next)
 router.get('/profile', auth.check_authentication, async function(req, res, next) {
     console.log("Get profile of logged user ");
     let result = await uModel.get_logged_user_info(req.userId);
-    console.log(req.userId)
-    console.log(result)
+    
     res.status(result.status).send(result.result);
 });
 

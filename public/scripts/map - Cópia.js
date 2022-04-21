@@ -43,8 +43,6 @@ let matrix = [];
 function setup(){
     createCanvas(1000,1000)
     tilesize = width/20;
-    shape_x =  width/20 - tilesize/2;
-    shape_y = height/20 - tilesize/2;
     
     
     let pos = 0;
