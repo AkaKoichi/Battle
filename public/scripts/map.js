@@ -13,6 +13,8 @@ const radius = tilesize / 2;
 const diameter = radius * 2;
 
 window.onload = async () => {
+
+    console.log('tommy tommy')
     let user_info = await get_user_info();
     //get_user_info().then((user_info) => {
 
