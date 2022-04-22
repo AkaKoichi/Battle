@@ -12,12 +12,13 @@ module.exports.get_all_troops = async function() {
   }
 }  
 
-module.exports.get_troops_id = async function(userId1,userId2) {
+module.exports.get_troops_id = async function(game_id) {
   try {
-    let sql = `Select  game_id,user_trp_id,trp_id,troop_id, troop_x,troop_y,trp_name,trp_health,trp_movement,trp_atack,trp_range,trp_max_amount 
-    from user_troops,troops 
-    where trp_id = troop_id and ´user_id´ in ($1 ,$2) `;
-    let result = await pool.query(sql,[userId1,userId2]);
+    let sql = `
+    Select game.game_id,user_id,user_trp_id,trp_id,troop_id, troop_x,troop_y,trp_name,trp_health,trp_movement,trp_atack,trp_range,trp_max_amount 
+    from user_troops,troops,player_game,game  
+    where trp_id = troop_id and player_game.game_id = game.game_id and game.game_id = $1 ; `;
+    let result = await pool.query(sql,[game_id]);
     let troops = result.rows;
     return { status: 200, result: troops};
   } catch (err) {
