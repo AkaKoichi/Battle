@@ -4,10 +4,7 @@ const tokenExpiration = 4*60*60*1000; // 4 hours
 
 // Middleware
 module.exports.check_authentication = function (req,res,next) {
-    console.log(req.signedCookies);
     let user_id = req.signedCookies.userId;
-    console.log('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA')
-    console.log(req.signedCookies.userId)
     if (!user_id) {
         res.status(401).send({msg: "You are not logged in."});       
     } else {
