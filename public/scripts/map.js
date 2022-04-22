@@ -14,7 +14,7 @@ const diameter = radius * 2;
 
 window.onload = async () => {
 
-    user_info = await get_user_info();
+    let user_info = await get_user_info();
     //get_user_info().then((user_info) => {
 
     userInfo = user_info;
@@ -103,14 +103,13 @@ function draw() {
 }
 
 async function keyPressed() {
-    console.log()
+    
     for (i = 0; i < troop_array.length; i++) {
         if (troop_array[i].selected) {
             if (troop_array[i].movement > 0) {
                 switch (key) {
                     case 'd':
                     case 'D':
-
                         troop_array[i].x += 1;
                         troop_array[i].movement -= 1
 
