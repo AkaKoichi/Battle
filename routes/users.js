@@ -3,6 +3,15 @@ var router = express.Router();
 var uModel = require("../models/user_model");
 var auth = require("../models/authentication")
 
+
+
+router.get('/game/:id', async function(req, res, next) {
+    let id = req.params.id;
+    console.log("Get game with idd "+id)
+    let result = await uModel.get_players_by_game_id(id);
+    res.status(result.status).send(result.result);
+  });
+
 router.post('/login', async function(req, res, next) {
     console.log("Login")
     let name = req.body.name;
@@ -33,5 +42,6 @@ router.post('/register', async function(req, res, next){
     let result = await uModel.register_user(user);
     res.status(result.status).send(result.result); 
 });
+
 
 module.exports = router;

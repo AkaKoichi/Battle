@@ -26,6 +26,7 @@ window.onload = async () => {
 
     //     buildings_place = buildings; 
     // });
+    let users = await get_player_by_game(1)
     let troops = await get_troops_by_id(userInfo.user_id);
 
     troop_movement = troops;
