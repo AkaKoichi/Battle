@@ -5,7 +5,7 @@ body {
   display: grid;
   grid-template-columns: 200px auto;
   grid-template-areas: 'h h' 'n m' 'f f';
-  grid-template-rows: 170px auto 70px;
+  /*grid-template-rows: 170px auto 70px;*/
 }
 header > img { width: 150px; }
 header {
@@ -21,7 +21,7 @@ header > section {
   text-align: center;
   width: calc(100% - 320px);
 }
-nav {  
+/*nav {  
   display: flex;
   flex-direction: column;
   grid-area: n;
@@ -39,10 +39,25 @@ footer {
   text-align: right;
   background-color: #444445;
     color: white
-}
-main {
+}*/
+/* main {
   grid-area: m;
   display: flex;
   align-items: center;
   justify-content: center;
+} */
+
+.container { 
+  height: 200px;
+  position: relative;
+  border: 3px solid #444445; 
+}
+
+.vertical-center {
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
 }

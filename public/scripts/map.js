@@ -14,11 +14,7 @@ const diameter = radius * 2;
 
 window.onload = async () => {
 
-<<<<<<< HEAD
     let user_info = await get_user_info();
-=======
-    user_info = await get_user_info();
->>>>>>> 06219aeb59c4d571d8bcfbda5d321e936e2b343e
     //get_user_info().then((user_info) => {
 
     userInfo = user_info;
@@ -113,7 +109,6 @@ async function keyPressed() {
                 switch (key) {
                     case 'd':
                     case 'D':
-
                         troop_array[i].x += 1;
                         troop_array[i].movement -= 1
 

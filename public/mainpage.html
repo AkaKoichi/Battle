@@ -4,27 +4,28 @@
     <meta charset="UTF-8">
     <title>Rooms Page</title>
     <link rel="stylesheet" href="./stylesheets/style.css">
+    <script src="./scripts/p5.min.js"></script>
+    <script src="./scripts/mainpage.js"></script>
     <script src="./scripts/requests/user_requests.js"></script>
     <script src="./scripts/requests/room_requests.js"></script>
     <script src="./scripts/authentication/session.js"></script>
-    <script src="./scripts/room.js"></script>
     
   
 </head>
 <body>
     <header>
-        <img src="/images/branco.png" alt="Logo">
+        <img src="images/branco.png" alt="Logo">
         <section>
-          <img src="/images/logo.png" alt="Game Title">
+          <img src="images/logo.png" alt="Game Title">
         </section>
        </header>
-      <nav>
-         <a href="https://drive.google.com/file/d/1bk9KhyResxPXlgnNJR8VCxKgLwhEhA8T/view?usp=sharing"> Trailer for the game</a>
-      </nav>
       <main >
         <section>
-        
-        <input type="button" value="room" onclick="enter_room()">
+          <div class="container">
+            <div class="vertical-center">
+              <input type="button" value="room" onclick="enter_room()">
+            </div>
+          </div>
         <p id="result"></p>
         <p id="id"></p>
         </section>
