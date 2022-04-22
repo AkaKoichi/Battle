@@ -28,9 +28,8 @@ module.exports.get_troops_id = async function(userId) {
 
   module.exports.update_troop = async function(user_id, user_trp_id,x,y){
    try {
-     let sql = `UPDATE user_troop
-     SET troop_x = $3, troop_y = $4,
-     WHERE user_id =$1 and user_trp_id =$2; `;
+     console.log({user_id, user_trp_id,x,y})
+     let sql = `UPDATE user_troops SET troop_x = $3, troop_y = $4 WHERE user_id =$1 and user_trp_id =$2; `;
      let result = await pool.query(sql,[user_id,user_trp_id,x,y]);
      let troops = result.rows;
      return { status: 200, result: troops};
@@ -40,5 +39,6 @@ module.exports.get_troops_id = async function(userId) {
    
  }
 } 
+
 
 

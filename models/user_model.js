@@ -22,7 +22,6 @@ module.exports.login_check = async function (name,password) {
          from users 
          where user_id = $1`;
         let result = await pool.query(sql, [userId]);
-        console.log('aaaaaaaaaaaaaAAAAAAAAAAAAAA')
         if (result.rows.length > 0) {
             let user = result.rows[0];
             return { status: 200, result: user };

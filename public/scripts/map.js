@@ -14,7 +14,11 @@ const diameter = radius * 2;
 
 window.onload = async () => {
 
+<<<<<<< HEAD
     let user_info = await get_user_info();
+=======
+    user_info = await get_user_info();
+>>>>>>> 06219aeb59c4d571d8bcfbda5d321e936e2b343e
     //get_user_info().then((user_info) => {
 
     userInfo = user_info;
@@ -31,6 +35,7 @@ window.onload = async () => {
     troop_movement = troops;
     for (i = 0; i < troop_movement.length; i++) {
         troop_array.push({
+            user_trp_id:troop_movement[i].user_trp_id,
             name: troop_movement[i].trp_name,
             health: troop_movement[i].trp_health,
             init_movement: troop_movement[i].trp_movement,
@@ -46,10 +51,10 @@ window.onload = async () => {
 
         });
     }
-    //})
-    // update_troops_id().then((update) => {
-    //     update_troops=update
-    // });
+   
+    
+    
+    
 }
 
 function setup() {
@@ -203,11 +208,9 @@ function object() {
     }
 }
 
-// function end_turn(){
-//     for (i = 0 ; i < troop_array.length; i++) {
-//         console.log(i)
-//         update_troops(userInfo.usr_id,troop_array[i].health,troop_array[i].x,troop_array[i].y,troop_array[i].user_troop_id);
-
-//     }
-// }
+async function end_turn() {
+     for (i = 0 ; i < troop_array.length; i++) {
+        let update = await update_troops_id(userInfo.user_id,troop_array[i].user_trp_id,troop_array[i].x,troop_array[i].y,);
+     }
+ }
 
