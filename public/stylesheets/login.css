@@ -20,6 +20,20 @@ header {
     text-align: center;
 }
 
+nav {  
+    display: flex;
+    flex-direction: column;
+    padding:10px;
+    background-color: #194518; 
+    float: left;
+}
+nav a { 
+    color: white; 
+    margin:5px;
+    padding:5px;
+    border: 1px solid white;
+}
+
 footer {
     background-color: #194518;
     padding: 10px;
