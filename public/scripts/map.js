@@ -8,8 +8,12 @@ let buildings_place = [];
 let tilesize = 800 / 20;
 let matrix = [];
 
+
 const radius = tilesize / 2;
 const diameter = radius * 2;
+
+let deffender ;
+let attacker;
 
 window.onload = async () => {
 
@@ -22,7 +26,7 @@ window.onload = async () => {
     console.log()
 
 
-    buildings_place = await get_buildings_by_id(userInfo.user_id);
+    buildings_place = await get_buildings_by_id(1);
     
      
     let troops = await get_troops_by_id(1);
@@ -47,10 +51,6 @@ window.onload = async () => {
 
         });
     }
-   
-    
-    
-    
 }
 
 function setup() {
@@ -79,6 +79,9 @@ function draw() {
     let w= color('white');
     let b= color('black');
     let r= color('red');
+    let p= color('purple');
+    let bl= color('blue');
+    let g= color('gray');
 
     for (let x = 0; x < height; x += square_size) {
         for (let y = 0; y < width; y += square_size) {
@@ -88,6 +91,14 @@ function draw() {
             text(num_squares, x + square_size / 2 - 10, y + square_size / 2);
             fill(w);
             num_squares++
+
+            for (let i = 0; i < buildings_place.length; i++) {
+                if (matrix[buildings_place[i].bld_x][buildings_place[i].bld_y] == num_squares) {
+                    fill(r);
+                    rect(x , y , tilesize, tilesize);
+                    fill(w);
+                }
+            }
             for (let i = 0; i < troop_array.length; i++) {
                 if (matrix[troop_array[i].x][troop_array[i].y] == num_squares) {
                     if(troop_array[i].user_id == userInfo.user_id){
@@ -100,25 +111,15 @@ function draw() {
                         
                     }else{
                         fill(r);
-                        rect(x , y , tilesize, tilesize);
+                        circle(x + square_size / 2, y + square_size / 2, diameter);
                         fill(w);
                         troop_array[i].square_x = x + square_size / 2
                         troop_array[i].square_y = y + square_size / 2
                     } 
                 }
-            }
-
-            for (let i = 0; i < buildings_place.length; i++) {
-                if (matrix[buildings_place[i].bld_x][buildings_place[i].bld_y] == num_squares) {
-                    fill(r);
-                    rect(x + square_size / 2 - 10, y + square_size / 2 - 10, tilesize, tilesize);
-                    fill(w);
-                }
-            }
-
+            } 
         }
     }
-
 }
 
 async function keyPressed() {
@@ -244,19 +245,14 @@ async function build_building(){
             if (troop_array[i].selected){
                 await build(userInfo.user_id,1,troop_array[i].x,troop_array[i].y,5)
                 break
-
             }
-           
-
-        }
-        
-        
-    }
-            
+        } 
+    }        
 }
     
  
 
- /* if (troop_array[i].selected == true){
-    if (troop_array[i].user_id == userInfo.user_id){ */
+function attack(){
+    
+}
 
