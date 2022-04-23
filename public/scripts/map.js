@@ -1,5 +1,3 @@
-
-
 let userInfo;
 
 let troop_array = []
