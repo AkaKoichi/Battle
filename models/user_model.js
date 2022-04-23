@@ -16,7 +16,6 @@ module.exports.login_check = async function (name,password) {
   }
 
   module.exports.get_logged_user_info = async function (userId) {
-    console.log('AAA')
     try {
         let sql = `Select user_id , username, user_trophies
          from users 
@@ -44,4 +43,25 @@ module.exports.register_user = async function(user) {
       return { status: 500, result: err };
     }
 }
+
+module.exports.get_players_by_game_id = async function (game_id) {
+  console.log('a')
+  try {
+      let sql = `Select user_id 
+       from users,player_game,game 
+       where game.game_id=player_game.game_id and game.game_id = $1`;
+      let result = await pool.query(sql, [game_id]);
+      if (result.rows.length > 0) {
+          let user = result.rows;
+          return { status: 200, result: user };
+      } else {
+          return { status: 404, result: { msg: "No user with that id" } };
+      }
+  } catch (err) {
+    console.log(err);
+    return { status: 500, result: err };
+  }
+}
+
+
 

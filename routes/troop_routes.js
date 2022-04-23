@@ -18,9 +18,10 @@ router.put('/update/:id', async function(req, res, next) {
   res.status(result.status).send(result.result);
 });
 
+
 router.get('/:id', async function(req, res, next) {
   let id = req.params.id;
-  console.log("Get troop with idd "+id)
+  console.log("Get troop with iddd "+id)
   let result = await troop_model.get_troops_id(id);
   res.status(result.status).send(result.result);
 });

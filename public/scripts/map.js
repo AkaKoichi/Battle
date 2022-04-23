@@ -26,7 +26,7 @@ window.onload = async () => {
 
     //     buildings_place = buildings; 
     // });
-    let troops = await get_troops_by_id(userInfo.user_id);
+    let troops = await get_troops_by_id(1);
 
     troop_movement = troops;
     for (i = 0; i < troop_movement.length; i++) {

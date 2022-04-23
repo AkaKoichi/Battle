@@ -31,7 +31,6 @@ async function logout() {
 }
 
 async function request_user_info() {
-    console.log('a')
     try {
         const response = await fetch(`/api/users/profile`);
         var result = await response.json();
@@ -61,4 +60,20 @@ async function register(user) {
         console.log(err);
     }
 } 
+
+async function get_player_by_game(id) {
+    try {
+        const response = await fetch(`/api/users/game/${id}`);
+        if (response.status == 200) {
+           var user = await response.json();
+           return user;
+        } else {
+            // Treat errors like 404 here
+            console.log(response);
+        }
+    } catch (err) {
+        // Treat 500 errors here    
+        console.log(err);
+    }
+}
 
