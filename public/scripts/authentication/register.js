@@ -1,6 +1,6 @@
-let register_button;
-let sound_button;
-let music_button;
+// let register_button;
+// let sound_button;
+// let music_button;
 
 async function register_user() {
     try {
@@ -23,27 +23,27 @@ async function register_user() {
     }
 }
 
-function preload() {
-    register_button = createImg('/images/buttons/registo.png');
-    sound_button = createImg('/images/buttons/som.png');
-    music_button = createImg('/images/buttons/musica.png');
-}
+// function preload() {
+//     register_button = createImg('/images/buttons/registo.png');
+//     sound_button = createImg('/images/buttons/som.png');
+//     music_button = createImg('/images/buttons/musica.png');
+// }
 
-function setup() {
-    createCanvas(1420, 700);
-    //buttons
-    register_button.position(520, 480);
-    sound_button.position(1250, 650);
-    music_button.position(1350, 650);
-    register_button.mousePressed();
-}
+// function setup() {
+//     createCanvas(1420, 700);
+//     //buttons
+//     register_button.position(520, 480);
+//     sound_button.position(1250, 650);
+//     music_button.position(1350, 650);
+//     register_button.mousePressed();
+// }
 
-function draw() {
-}
+// function draw() {
+// }
 
-function mousePressed() {
-    if (mouseX > 520 && mouseX < 520 + register_button.width && mouseY > 480 && mouseY < 480 + register_button.height) {
-        register_user();
-    }
-    return false;
-}
+// function mousePressed() {
+//     if (mouseX > 520 && mouseX < 520 + register_button.width && mouseY > 480 && mouseY < 480 + register_button.height) {
+//         register_user();
+//     }
+//     return false;
+// }
