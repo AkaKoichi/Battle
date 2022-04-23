@@ -17,16 +17,16 @@ window.onload = async () => {
 }
 
 // function preload() {
-//     logo_img = loadImage('/images/avatar.png');
+//      logo_img = loadImage('/images/avatar.png');
 // }
 
-// async function enter_room() {
-//     window.location = "map.html";
-// }
+async function enter_room() {
+    window.location = "map.html";
+}
 
 
-// function setup() {
-//     createCanvas(1420, 700);
+//function setup() {
+//   createCanvas(1420, 700);
 //     image(logo_img, 50, 50);
 
 // }
