@@ -7,8 +7,10 @@ let troop_array = []
 let troop_movement = [];
 let buildings_place = [];
 
-let tilesize = 800 / 20;
+let tilesize = 600 / 20;
 let matrix = [];
+let iron =16;
+let food=16;
 
 
 const radius = tilesize / 2;
@@ -57,7 +59,7 @@ window.onload = async () => {
 
 function setup() {
 
-    createCanvas(900, 900);
+    createCanvas(600, 600);
     tilesize = width / 20;
     let pos = 0;
     for (let x = 0; x < 20; x++) {
@@ -96,16 +98,32 @@ function draw() {
 
             for (let i = 0; i < buildings_place.length; i++) {
                 if (matrix[buildings_place[i].bld_x][buildings_place[i].bld_y] == num_squares) {
-                    fill(r);
-                    rect(x , y , tilesize, tilesize);
-                    fill(w);
+                    if(buildings_place[i].user_id == userInfo.user_id){
+                        if (buildings_place[i].bld_name == 'Town Center'){
+                            fill(bl);
+                            rect(x , y , tilesize, tilesize);
+                            fill(b);
+                            text('TC', x + square_size / 2 - 10, y + square_size / 2);
+                            fill(w);
+                        }
+                        
+                    }else{
+                        if (buildings_place[i].bld_name == 'Town Center'){
+                        fill(r);
+                        rect(x , y , tilesize, tilesize);
+                        fill(b);
+                        text('TC', x + square_size / 2 - 10, y + square_size / 2);
+                            fill(w);
+                        fill(w);
+                        }
+                    }
                 }
             }
             for (let i = 0; i < troop_array.length; i++) {
                 if (matrix[troop_array[i].x][troop_array[i].y] == num_squares) {
                     if(troop_array[i].user_id == userInfo.user_id){
                         
-                        fill(c);
+                        fill(bl);
                         circle(x + square_size / 2, y + square_size / 2, diameter);
                         fill(w);
                         troop_array[i].square_x = x + square_size / 2
@@ -255,6 +273,6 @@ async function build_building(){
  
 
 function attack(){
-    
+
 }
 

@@ -6,7 +6,6 @@ window.onload = async () => {
     get_user_info().then((user_info) => {
 
         let userInfo = user_info;
-        userInfo = user_info;
         document.getElementById("name").innerHTML = userInfo.username;
         document.getElementById("id").innerHTML = userInfo.user_id;
         document.getElementById("trophies").innerHTML = userInfo.user_trophies;
