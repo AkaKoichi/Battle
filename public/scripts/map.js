@@ -1,6 +1,7 @@
 
 
 let userInfo;
+
 let troop_array = []
 
 let troop_movement = [];
@@ -22,15 +23,16 @@ window.onload = async () => {
     document.getElementById("id").innerHTML = userInfo.user_id;
     console.log()
 
-    // get_buildings_by_id(userInfo.usr_id).then((buildings) => {
 
-    //     buildings_place = buildings; 
-    // });
+    buildings_place = await get_buildings_by_id(userInfo.user_id);
+    
+     
     let troops = await get_troops_by_id(1);
 
     troop_movement = troops;
     for (i = 0; i < troop_movement.length; i++) {
         troop_array.push({
+            user_id:troop_movement[i].user_id,
             user_trp_id:troop_movement[i].user_trp_id,
             name: troop_movement[i].trp_name,
             health: troop_movement[i].trp_health,
@@ -75,24 +77,44 @@ function draw() {
     background("black");
     let square_size = width / 20;
     let num_squares = 0;
+    let c = color(255, 204, 0);
+    let w= color('white');
+    let b= color('black');
+    let r= color('red');
 
     for (let x = 0; x < height; x += square_size) {
         for (let y = 0; y < width; y += square_size) {
+            
             rect(x, y, square_size, square_size);
+            fill(b);
             text(num_squares, x + square_size / 2 - 10, y + square_size / 2);
+            fill(w);
             num_squares++
             for (let i = 0; i < troop_array.length; i++) {
                 if (matrix[troop_array[i].x][troop_array[i].y] == num_squares) {
-
-                    circle(x + square_size / 2, y + square_size / 2, diameter);
-                    troop_array[i].square_x = x + square_size / 2
-                    troop_array[i].square_y = y + square_size / 2
+                    if(troop_array[i].user_id == userInfo.user_id){
+                        
+                        fill(c);
+                        circle(x + square_size / 2, y + square_size / 2, diameter);
+                        fill(w);
+                        troop_array[i].square_x = x + square_size / 2
+                        troop_array[i].square_y = y + square_size / 2
+                        
+                    }else{
+                        fill(r);
+                        rect(x , y , tilesize, tilesize);
+                        fill(w);
+                        troop_array[i].square_x = x + square_size / 2
+                        troop_array[i].square_y = y + square_size / 2
+                    } 
                 }
             }
 
             for (let i = 0; i < buildings_place.length; i++) {
-                if (matrix[buildings_place[i].build_x][buildings_place[i].build_y] == num_squares) {
-                    rect(x + square_size / 2 - 10, y + square_size / 2 - 10, 20, 20);
+                if (matrix[buildings_place[i].bld_x][buildings_place[i].bld_y] == num_squares) {
+                    fill(r);
+                    rect(x + square_size / 2 - 10, y + square_size / 2 - 10, tilesize, tilesize);
+                    fill(w);
                 }
             }
 
@@ -104,69 +126,78 @@ function draw() {
 async function keyPressed() {
     
     for (i = 0; i < troop_array.length; i++) {
-        if (troop_array[i].selected) {
-            if (troop_array[i].movement > 0) {
+        if(troop_array[i].user_id == userInfo.user_id){
+
+            if (troop_array[i].selected) {
+                if (troop_array[i].movement > 0) {
+                    switch (key) {
+                        case 'd':
+                        case 'D':
+                            troop_array[i].x += 1;
+                            troop_array[i].movement -= 1
+
+                            break;
+
+                        case 'a':
+                        case 'A':
+
+                            troop_array[i].x -= 1;
+                            troop_array[i].movement -= 1
+
+                            break;
+
+                        case 'w':
+                        case 'W':
+
+                            troop_array[i].y -= 1;
+                            troop_array[i].movement -= 1
+
+                            break;
+
+                        case 's':
+                        case 'S':
+
+                            troop_array[i].y += 1;
+                            troop_array[i].movement -= 1
+
+                            break;
+                    }
+                }
+
                 switch (key) {
-                    case 'd':
-                    case 'D':
-                        troop_array[i].x += 1;
-                        troop_array[i].movement -= 1
-
+                    case 'l':
+                    case 'L':
+                        troop_array[i].movement = troop_array[i].init_movement;
+                        document.getElementById("movement").innerHTML = troop_array[i].movement;
+                        break;
+                
+                    case 'k':
+                    case 'K':
+                        troop_array[i].movement = 500;
+                        document.getElementById("movement").innerHTML = troop_array[i].movement;
                         break;
 
-                    case 'a':
-                    case 'A':
-
-                        troop_array[i].x -= 1;
-                        troop_array[i].movement -= 1
-
-                        break;
-
-                    case 'w':
-                    case 'W':
-
-                        troop_array[i].y -= 1;
-                        troop_array[i].movement -= 1
-
-                        break;
-
-                    case 's':
-                    case 'S':
-
-                        troop_array[i].y += 1;
-                        troop_array[i].movement -= 1
-
+                    case 'b':
+                    case 'B':
+                        build_building();
                         break;
                 }
+                    
+                
                 document.getElementById("movement").innerHTML = troop_array[i].movement;
             }
         }
-        switch (key) {
-            case 'l':
-            case 'L':
-                troop_array[i].movement = troop_array[i].init_movement;
-                document.getElementById("movement").innerHTML = troop_array[i].movement;
-                break;
-        }
-        switch (key) {
-            case 'k':
-            case 'K':
-                troop_array[i].movement = 500;
-                document.getElementById("movement").innerHTML = troop_array[i].movement;
-                break;
-        }
+        
     }
 }
 
 function mousePressed() {
 
     for (i = 0; i < troop_array.length; i++) {
-        console.log(i)
+        troop_array[i].selected = false;
         let distance = dist(mouseX, mouseY, troop_array[i].square_x, troop_array[i].square_y);
         if (distance < radius) {
-            console.log('a')
             troop_array[i].selected = true;
-            console.log(troop_array[i].selected)
             shape_selected()
         } else {
             troop_array[i].selected = false
@@ -208,4 +239,26 @@ async function end_turn() {
         let update = await update_troops_id(userInfo.user_id,troop_array[i].user_trp_id,troop_array[i].x,troop_array[i].y,);
      }
  }
+
+async function build_building(){
+    for (i = 0 ; i < troop_array.length; i++) {
+        if (troop_array[i].user_id == userInfo.user_id){
+            if (troop_array[i].selected){
+                await build(userInfo.user_id,1,troop_array[i].x,troop_array[i].y,5)
+                break
+
+            }
+           
+
+        }
+        
+        
+    }
+            
+}
+    
+ 
+
+ /* if (troop_array[i].selected == true){
+    if (troop_array[i].user_id == userInfo.user_id){ */
 

@@ -1,7 +1,3 @@
-// let register_button;
-// let sound_button;
-// let music_button;
-
 async function register_user() {
     try {
         let name = document.getElementById("name").value;
