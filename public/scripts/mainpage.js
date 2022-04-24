@@ -15,6 +15,16 @@ window.onload = async () => {
         console.log();
 
     });
+
+    players_leader_board().then((user_info) => {
+
+        let userInfo = user_info;
+        username = userInfo.username;
+        userid = userInfo.user_id;
+        trophies = userInfo.user_trophies;
+        console.log();
+
+    });
 }
 
 async function enter_room() {
