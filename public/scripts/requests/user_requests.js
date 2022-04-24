@@ -92,3 +92,40 @@ async function leader_board() {
     }
 }
 
+async function check_current_playing_by_game(id) {
+    try {
+        const response = await fetch(`/api/users/current/${id}`);
+        if (response.status == 200) {
+           var user = await response.json();
+           return user;
+        } else {
+            // Treat errors like 404 here
+            console.log(response);
+        }
+    } catch (err) {
+        // Treat 500 errors here    
+        console.log(err);
+    }
+}
+
+async function update_current_playing(user_id,game_id) {
+    try {
+        const response = await fetch(`/api/users/update_current/${game_id}`,{
+            method:"PUT",
+            headers: {
+               "Content-Type": "application/json"
+             },
+           body: JSON.stringify({user_id})
+        });
+        if (response.status == 200) {
+           var user = await response.json();
+           return user;
+        } else {
+            // Treat errors like 404 here
+        }
+    } catch (err) {
+        // Treat 500 errors here    
+        console.log(err);
+    }
+} 
+

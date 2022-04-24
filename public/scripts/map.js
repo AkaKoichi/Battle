@@ -3,8 +3,12 @@ let troop_array = []
 let troop_movement = [];
 let buildings_place = [];
 
+let end_turn_button;
+let train_troop_button;
+
 let tilesize = 700 / 20;
 let matrix = [];
+let its_my_turn=false;
 
 
 
@@ -47,8 +51,7 @@ function setup() {
     let cnv = createCanvas(700, 700);
     cnv.position(700, 30);
     tilesize = width / 20;
-    let end_turn_button;
-    let train_troop_button;
+    
     let pos = 0;
     for (let x = 0; x < 20; x++) {
 
@@ -65,12 +68,12 @@ function setup() {
     end_turn_button.position(500, 155);
     end_turn_button.mousePressed(end_turn);
 
-
     train_troop_button = createButton('train troop');
     train_troop_button.position(500, 245);
     train_troop_button.mousePressed(train);
 }
 function draw() {
+    
     background("black");
     let square_size = width / 20;
     let num_squares = 0;
@@ -223,24 +226,25 @@ function mousePressed() {
         let distance = dist(mouseX, mouseY, troop_array[i].square_x, troop_array[i].square_y);
         if (distance < radius) {
             troop_array[i].selected = true;
-            console.log(troop_array[i].selected)
-            document.getElementById("troop").innerHTML = troop_array[i].name;
-            document.getElementById("movement").innerHTML = troop_array[i].movement;
+            troop_selected(troop_array[i])
+            break
         } else {
             troop_array[i].selected = false;
-            
-            document.getElementById("movement").innerHTML = '';
-            document.getElementById("troop").innerHTML = '';
+            troop_selected('')
         }
     }
 }
 
-
-async function end_turn() {
-    for (let i = 0; i < troop_array.length; i++) {
-        await update_troops_id(userInfo.user_id, troop_array[i].user_trp_id, troop_array[i].x, troop_array[i].y,troop_array[i].health);
-        break
+function troop_selected(troop){
+    if (troop !=''){
+        document.getElementById("troop").innerHTML = troop.name;
+        document.getElementById("movement").innerHTML = troop.movement;
+    }else{
+        document.getElementById("movement").innerHTML = '';
+        document.getElementById("troop").innerHTML = '';
     }
+    
+
 }
 
 async function build_building() {
@@ -316,6 +320,39 @@ async function train(){
         }
     }
 }
+async function check_current_playing() {
+    let current_playing = await check_current_playing_by_game(1)
+    return current_playing;    
+}
+async function end_turn() {
+    let bol =await check_current_playing()
+    console.log(bol)
+    if (bol[0].current_user_playing == userInfo.user_id){
+        await update_current_playing(2,1);
+        opponent_turn()
+    }else{
+        await update_current_playing(userInfo.user_id,1);
+        your_turn()
+       
+        
+    }
+        
+ } 
+
+ function your_turn(){
+    its_my_turn = true;
+    end_turn_button.removeAttribute('disabled')
+    train_troop_button.removeAttribute('disabled')
+ }
+
+ function opponent_turn(){
+    its_my_turn = false; 
+    end_turn_button.attribute('disabled', '');
+    train_troop_button.attribute('disabled', '');
+}
+
+
+
 
 
 
