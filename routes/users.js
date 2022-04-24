@@ -5,6 +5,12 @@ var auth = require("../models/authentication")
 
 
 
+router.get('/leader_board/', async function(req, res, next) {
+    let result = await uModel.players_leader_board();
+    res.status(result.status).send(result.result);
+  });
+
+
 router.get('/game/:id', async function(req, res, next) {
     let id = req.params.id;
     console.log("Get game with idd "+id)

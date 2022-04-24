@@ -76,3 +76,19 @@ async function get_player_by_game(id) {
     }
 }
 
+async function leader_board() {
+    try {
+        const response = await fetch(`/api/users/leader_board`);
+        if (response.status == 200) {
+           var user = await response.json();
+           return user;
+        } else {
+            // Treat errors like 404 here
+            console.log(response);
+        }
+    } catch (err) {
+        // Treat 500 errors here    
+        console.log(err);
+    }
+}
+

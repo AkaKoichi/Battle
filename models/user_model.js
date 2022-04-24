@@ -44,11 +44,11 @@ module.exports.register_user = async function(user) {
     }
 }
 
-module.exports.players_leader_board = async function(user) {
+module.exports.players_leader_board = async function() {
   try  {
     let sql = `SELECT username, user_trophies FROM users ORDER BY user_trophies DESC LIMIT 7`;
-    let result = await pool.query(sql,[user.name, user.trophies]); 
-    return { status: 200, result:result }
+    let result = await pool.query(sql); 
+    return { status: 200, result:result.rows }
   } catch (err){
     console.log(err);
     return { status: 500, result: err };

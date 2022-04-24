@@ -3,6 +3,8 @@ let room;
 let userInfo;
 let userid;;
 var username;
+let username_leader_board
+
 var trophies;
 
 window.onload = async () => {
@@ -16,17 +18,15 @@ window.onload = async () => {
 
     });
 
-    players_leader_board().then((user_info) => {
+    let user_board = await leader_board();
+    console.log(user_board)
 
-        let userInfo = user_info;
-        username = userInfo.username;
-        userid = userInfo.user_id;
-        trophies = userInfo.user_trophies;
-        console.log();
+    username_leader_board = user_board.username;
+    userid = user_board.user_id;
+    trophies = user_board.user_trophies;
+    console.log(user_board[1].username);
 
-    });
 }
-
 async function enter_room() {
     window.location = "map.html";
 }
