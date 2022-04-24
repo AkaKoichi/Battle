@@ -145,7 +145,7 @@ async function keyPressed() {
                         case 'D':
                             troop_array[i].x += 1;
                             troop_array[i].movement -= 1
-                            await update_troops_id(userInfo.user_id, troop_array[i].user_trp_id, troop_array[i].x, troop_array[i].y);
+                            await update_troops_id(userInfo.user_id, troop_array[i].user_trp_id, troop_array[i].x, troop_array[i].y,troop_array[i].health);
                             break;
 
                         case 'a':
@@ -153,7 +153,7 @@ async function keyPressed() {
 
                             troop_array[i].x -= 1;
                             troop_array[i].movement -= 1
-                            await update_troops_id(userInfo.user_id, troop_array[i].user_trp_id, troop_array[i].x, troop_array[i].y);
+                            await update_troops_id(userInfo.user_id, troop_array[i].user_trp_id, troop_array[i].x, troop_array[i].y,troop_array[i].health);
                             break;
 
                         case 'w':
@@ -161,7 +161,7 @@ async function keyPressed() {
 
                             troop_array[i].y -= 1;
                             troop_array[i].movement -= 1
-                            await update_troops_id(userInfo.user_id, troop_array[i].user_trp_id, troop_array[i].x, troop_array[i].y);
+                            await update_troops_id(userInfo.user_id, troop_array[i].user_trp_id, troop_array[i].x, troop_array[i].y,troop_array[i].health);
                             break;
 
                         case 's':
@@ -169,7 +169,7 @@ async function keyPressed() {
 
                             troop_array[i].y += 1;
                             troop_array[i].movement -= 1
-                            await update_troops_id(userInfo.user_id, troop_array[i].user_trp_id, troop_array[i].x, troop_array[i].y);
+                            await update_troops_id(userInfo.user_id, troop_array[i].user_trp_id, troop_array[i].x, troop_array[i].y,troop_array[i].health);
                             break;
 
                     }
@@ -223,28 +223,22 @@ function mousePressed() {
         let distance = dist(mouseX, mouseY, troop_array[i].square_x, troop_array[i].square_y);
         if (distance < radius) {
             troop_array[i].selected = true;
-            shape_selected()
+            console.log(troop_array[i].selected)
+            document.getElementById("troop").innerHTML = troop_array[i].name;
+            document.getElementById("movement").innerHTML = troop_array[i].movement;
         } else {
             troop_array[i].selected = false;
+            
             document.getElementById("movement").innerHTML = '';
             document.getElementById("troop").innerHTML = '';
         }
     }
 }
 
-function shape_selected() {
-    for (let i = 0; i < troop_array.length; i++) {
-        if (troop_array[i].selected) {
-            console.log(i)
-            document.getElementById("troop").innerHTML = troop_array[i].name;
-            document.getElementById("movement").innerHTML = troop_array[i].movement;
-        };
-    };
-}
 
 async function end_turn() {
     for (let i = 0; i < troop_array.length; i++) {
-        await update_troops_id(userInfo.user_id, troop_array[i].user_trp_id, troop_array[i].x, troop_array[i].y);
+        await update_troops_id(userInfo.user_id, troop_array[i].user_trp_id, troop_array[i].x, troop_array[i].y,troop_array[i].health);
         break
     }
 }
@@ -306,7 +300,7 @@ async function make_attack() {
     }
     can_attack = get_dist_attack(attacker, defender)
     if (can_attack) defender.health -= attacker.attack;
-    await update_troops_id(userInfo.user_id, defender.user_trp_id, defender.x, defender.y, defender.health);
+    await update_troops_id(defender.user_id, defender.user_trp_id, defender.x, defender.y, defender.health);
 }
 
 function get_dist_attack(attacker, defender) {

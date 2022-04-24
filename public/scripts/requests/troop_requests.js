@@ -31,7 +31,7 @@ async function get_troops_by_id(id) {
 }   
 
  async function update_troops_id(id,user_trp_id,x,y,health) {
-     console.log({id, user_trp_id,x,y})
+     console.log({id, user_trp_id,x,y,health})
      try {
          const response = await fetch(`/api/troops/update/${id}`,{
              method:"PUT",
