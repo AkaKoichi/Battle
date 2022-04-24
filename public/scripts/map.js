@@ -3,10 +3,9 @@ let troop_array = []
 let troop_movement = [];
 let buildings_place = [];
 
-let tilesize = 600 / 20;
+let tilesize = 700 / 20;
 let matrix = [];
-let iron = 16;
-let food = 16;
+
 
 
 const radius = tilesize / 2;
@@ -46,9 +45,13 @@ window.onload = async () => {
 
 function setup() {
 
-    createCanvas(600, 600);
+    let cnv = createCanvas(700, 700);
+    cnv.position(700, 30);
     tilesize = width / 20;
     let end_turn_button ;
+    let set_attacker_button ;
+    let set_defender_button;
+    let make_atack_button;
     let pos = 0;
     for (let x = 0; x < 20; x++) {
 
@@ -62,11 +65,22 @@ function setup() {
         }
     }
     end_turn_button=createButton('End Turn');
-    end_turn_button.position(170,155);
+    end_turn_button.position(500,155);
     end_turn_button.mousePressed(end_turn);
+
+    set_attacker_button = createButton('set attacker');
+    set_attacker_button.position(500,185);
+    set_attacker_button.mousePressed('set_attacker');
+
+    set_defender_button = createButton('set defender');
+    set_defender_button.position(500,215);
+    set_defender_button.mousePressed('set_defender');
+
+    make_atack_button = createButton('set defender');
+    make_atack_button.position(500,245);
+    make_atack_button.mousePressed('make_atack_button');
 }
 function draw() {
-
     background("black");
     let square_size = width / 20;
     let num_squares = 0;
@@ -134,7 +148,6 @@ function draw() {
 }
 
 async function keyPressed() {
-
     for (i = 0; i < troop_array.length; i++) {
         if (troop_array[i].user_id == userInfo.user_id) {
             if (troop_array[i].selected) {
@@ -202,7 +215,6 @@ async function keyPressed() {
 }
 
 function mousePressed() {
-
     for (i = 0; i < troop_array.length; i++) {
         troop_array[i].selected = false;
         let distance = dist(mouseX, mouseY, troop_array[i].square_x, troop_array[i].square_y);
@@ -213,13 +225,9 @@ function mousePressed() {
             troop_array[i].selected = false
             document.getElementById("movement").innerHTML = '';
             document.getElementById("troop").innerHTML = '';
-
         }
     }
 }
-
-
-
 
 function shape_selected() {
     for (i = 0; i < troop_array.length; i++) {
@@ -231,17 +239,6 @@ function shape_selected() {
             document.getElementById("movement").innerHTML = troop_array[i].movement;
         };
     };
-}
-
-
-
-function object() {
-    var canvas = document.getElementById('circle');
-    if (canvas.getContext) {
-        var ctx = canvas.getContext('2d');
-        var X = canvas.width / 2;
-        var Y = canvas.height / 2;
-    }
 }
 
  async function end_turn() {
@@ -265,9 +262,7 @@ async function build_building() {
 
 
 
-function attack() {
 
-}
 
 
 
