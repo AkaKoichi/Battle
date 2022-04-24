@@ -1,3 +1,4 @@
+
 async function register_user() {
     try {
         let name = document.getElementById("name").value;
@@ -19,20 +20,23 @@ async function register_user() {
     }
 }
 
-// function preload() {
-//     register_button = createImg('/images/buttons/registo.png');
-//     sound_button = createImg('/images/buttons/som.png');
-//     music_button = createImg('/images/buttons/musica.png');
-// }
+ function preload() {
+     register_button = createImg('/images/buttons/registo.png');
+  //   sound_button = createImg('/images/buttons/som.png');
+ //    music_button = createImg('/images/buttons/musica.png');
+ }
 
-// function setup() {
+ function setup() {
+     let input;
+     input = createInput();
+     input.position(10,10);
 //     createCanvas(1420, 700);
 //     //buttons
-//     register_button.position(520, 480);
+     register_button.position(520, 480);
 //     sound_button.position(1250, 650);
 //     music_button.position(1350, 650);
-//     register_button.mousePressed();
-// }
+     register_button.mousePressed(register_user);
+ }
 
 // function draw() {
 // }
@@ -43,3 +47,4 @@ async function register_user() {
 //     }
 //     return false;
 //
+// }
