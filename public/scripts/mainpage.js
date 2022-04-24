@@ -56,5 +56,5 @@ function draw() {
     image(leader_board_img, 1050,10);
     textSize(20);
     text(username,275,500);
-    text("30",270,590);
+    text(trophies,270,590);
 }
