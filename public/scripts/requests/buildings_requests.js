@@ -33,7 +33,6 @@ async function get_buildings_by_id(id) {
 }   
 
 async function build(id,bld_id,bld_x,bld_y,bld_current_health) {
-    console.log('aaaaaaaaaaaaaaaaaaaaaaaa')
     try {
         // TODO: Verify user information  and give errors
         const response = await fetch(`/api/buildings/build/${id}`,

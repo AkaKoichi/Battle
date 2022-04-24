@@ -34,7 +34,6 @@ async function request_user_info() {
     try {
         const response = await fetch(`/api/users/profile`);
         var result = await response.json();
-        console.log(result)
         return {logged: response.status!=401 , result: result };
     } catch (err) {
         // Treat 500 errors here

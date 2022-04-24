@@ -30,7 +30,7 @@ async function get_troops_by_id(id) {
     }
 }   
 
- async function update_troops_id(id,user_trp_id,x,y) {
+ async function update_troops_id(id,user_trp_id,x,y,health) {
      console.log({id, user_trp_id,x,y})
      try {
          const response = await fetch(`/api/troops/update/${id}`,{
@@ -38,7 +38,7 @@ async function get_troops_by_id(id) {
              headers: {
                 "Content-Type": "application/json"
               },
-            body: JSON.stringify({user_trp_id,x,y})
+            body: JSON.stringify({user_trp_id,x,y,health})
 
          });
          if (response.status == 200) {
@@ -52,4 +52,23 @@ async function get_troops_by_id(id) {
          // Treat 500 errors here    
          console.log(err);
      }
- }   
+ }  
+ 
+ async function train_troop(id,troop_id,troop_x,troop_y,troop_current_health) {
+    try {
+        // TODO: Verify user information  and give errors
+        const response = await fetch(`/api/troops/train/${id}`,
+        {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+              },
+            body: JSON.stringify({troop_id,troop_x,troop_y,troop_current_health}) 
+        });
+        var result= await response.json();
+        return {inserted: response.status==200 , result: result };
+    }   catch (err) {
+        // Treat 500 errors here
+        console.log(err);
+    }
+} 

@@ -11,9 +11,6 @@ let matrix = [];
 const radius = tilesize / 2;
 const diameter = radius * 2;
 
-let deffender;
-let attacker;
-
 window.onload = async () => {
 
     let user_info = await get_user_info();
@@ -23,7 +20,7 @@ window.onload = async () => {
     buildings_place = await get_buildings_by_id(1);
     let troops = await get_troops_by_id(1);
     troop_movement = troops;
-    for (i = 0; i < troop_movement.length; i++) {
+    for (let i = 0; i < troop_movement.length; i++) {
         troop_array.push({
             user_id: troop_movement[i].user_id,
             user_trp_id: troop_movement[i].user_trp_id,
@@ -37,6 +34,8 @@ window.onload = async () => {
             x: troop_movement[i].troop_x,
             y: troop_movement[i].troop_y,
             selected: false,
+            attacker: false,
+            defender: false,
             square_x: 0,
             square_y: 0
         });
@@ -48,10 +47,8 @@ function setup() {
     let cnv = createCanvas(700, 700);
     cnv.position(700, 30);
     tilesize = width / 20;
-    let end_turn_button ;
-    let set_attacker_button ;
-    let set_defender_button;
-    let make_atack_button;
+    let end_turn_button;
+    let train_troop_button;
     let pos = 0;
     for (let x = 0; x < 20; x++) {
 
@@ -64,21 +61,14 @@ function setup() {
 
         }
     }
-    end_turn_button=createButton('End Turn');
-    end_turn_button.position(500,155);
+    end_turn_button = createButton('End Turn');
+    end_turn_button.position(500, 155);
     end_turn_button.mousePressed(end_turn);
 
-    set_attacker_button = createButton('set attacker');
-    set_attacker_button.position(500,185);
-    set_attacker_button.mousePressed('set_attacker');
 
-    set_defender_button = createButton('set defender');
-    set_defender_button.position(500,215);
-    set_defender_button.mousePressed('set_defender');
-
-    make_atack_button = createButton('set defender');
-    make_atack_button.position(500,245);
-    make_atack_button.mousePressed('make_atack_button');
+    train_troop_button = createButton('train troop');
+    train_troop_button.position(500, 245);
+    train_troop_button.mousePressed(train);
 }
 function draw() {
     background("black");
@@ -104,23 +94,21 @@ function draw() {
             for (let i = 0; i < buildings_place.length; i++) {
                 if (matrix[buildings_place[i].bld_x][buildings_place[i].bld_y] == num_squares) {
                     if (buildings_place[i].user_id == userInfo.user_id) {
-                        if (buildings_place[i].bld_name == 'Town Center') {
-                            fill(bl);
-                            rect(x, y, tilesize, tilesize);
-                            fill(b);
-                            text('TC', x + square_size / 2 - 10, y + square_size / 2);
-                            fill(w);
-                        }
+                        fill(bl);
+                        rect(x, y, tilesize, tilesize);
+                        fill(b);
+                        textWrap(CHAR);
+                        text(buildings_place[i].bld_name, x + square_size / 2 - 10, y + square_size /2);
+                        fill(w);
 
                     } else {
-                        if (buildings_place[i].bld_name == 'Town Center') {
-                            fill(r);
-                            rect(x, y, tilesize, tilesize);
-                            fill(b);
-                            text('TC', x + square_size / 2 - 10, y + square_size / 2);
-                            fill(w);
-                            fill(w);
-                        }
+
+                        fill(r);
+                        rect(x, y, tilesize, tilesize);
+                        fill(b);
+                        text(buildings_place[i].bld_name, x + square_size / 2 - 10, y + square_size / 2);
+                        fill(w);
+
                     }
                 }
             }
@@ -204,25 +192,40 @@ async function keyPressed() {
                     case 'B':
                         build_building();
                         break;
+
+                    case 'i':
+                    case 'I':
+                        set_attacker()
+                        break;
                 }
-
-
                 document.getElementById("movement").innerHTML = troop_array[i].movement;
             }
+
         }
 
+
+    }
+    switch (key) {
+        case 'p':
+        case 'P':
+            make_attack()
+            break;
+        case 'o':
+        case 'O':
+            set_defender()
+            break;
     }
 }
 
 function mousePressed() {
-    for (i = 0; i < troop_array.length; i++) {
+    for (let i = 0; i < troop_array.length; i++) {
         troop_array[i].selected = false;
         let distance = dist(mouseX, mouseY, troop_array[i].square_x, troop_array[i].square_y);
         if (distance < radius) {
             troop_array[i].selected = true;
             shape_selected()
         } else {
-            troop_array[i].selected = false
+            troop_array[i].selected = false;
             document.getElementById("movement").innerHTML = '';
             document.getElementById("troop").innerHTML = '';
         }
@@ -230,27 +233,24 @@ function mousePressed() {
 }
 
 function shape_selected() {
-    for (i = 0; i < troop_array.length; i++) {
-
+    for (let i = 0; i < troop_array.length; i++) {
         if (troop_array[i].selected) {
-
+            console.log(i)
             document.getElementById("troop").innerHTML = troop_array[i].name;
-
             document.getElementById("movement").innerHTML = troop_array[i].movement;
         };
     };
 }
 
- async function end_turn() {
-    console.log('a')
-    for (i = 0; i < troop_array.length; i++) {
+async function end_turn() {
+    for (let i = 0; i < troop_array.length; i++) {
         await update_troops_id(userInfo.user_id, troop_array[i].user_trp_id, troop_array[i].x, troop_array[i].y);
         break
     }
-} 
+}
 
 async function build_building() {
-    for (i = 0; i < troop_array.length; i++) {
+    for (let i = 0; i < troop_array.length; i++) {
         if (troop_array[i].user_id == userInfo.user_id) {
             if (troop_array[i].selected) {
                 await build(userInfo.user_id, 1, troop_array[i].x, troop_array[i].y, 5)
@@ -260,6 +260,68 @@ async function build_building() {
     }
 }
 
+function set_attacker() {
+    for (let i = 0; i < troop_array.length; i++) {
+        if (troop_array[i].user_id == userInfo.user_id) {
+            if (troop_array[i].selected) {
+                troop_array[i].attacker = true;
+                break;
+            }
+        }
+    }
+}
+
+function set_defender() {
+    for (let i = 0; i < troop_array.length; i++) {
+        if (troop_array[i].user_id != userInfo.user_id) {
+            if (troop_array[i].selected) {
+                troop_array[i].defender = true;
+                break;
+            }
+        }
+    }
+
+}
+
+async function make_attack() {
+    var attacker = {};
+    var defender = {};
+    let can_attack = false;
+
+    for (let i = 0; i < troop_array.length; i++) {
+        if (troop_array[i].user_id == userInfo.user_id) {
+            if (troop_array[i].attacker) {
+                attacker = troop_array[i]
+                break;
+            }
+        }
+    }
+    for (let i = 0; i < troop_array.length; i++) {
+        if (troop_array[i].user_id != userInfo.user_id) {
+            if (troop_array[i].defender) {
+                defender = troop_array[i]
+                break;
+            }
+        }
+    }
+    can_attack = get_dist_attack(attacker, defender)
+    if (can_attack) defender.health -= attacker.attack;
+    await update_troops_id(userInfo.user_id, defender.user_trp_id, defender.x, defender.y, defender.health);
+}
+
+function get_dist_attack(attacker, defender) {
+    distX = Math.abs(attacker.x - defender.x)
+    distY = Math.abs(attacker.y - defender.y)
+    return distX <= attacker.range && distY <= attacker.range;
+}
+
+async function train(){
+    for (let i = 0; i < buildings_place.length; i++) {
+        if  (buildings_place[i].bld_name == 'Training Camp'){
+            await train_troop(userInfo.user_id, 1, buildings_place[i].bld_x, buildings_place[i].bld_y, 5)
+        }
+    }
+}
 
 
 
