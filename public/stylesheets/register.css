@@ -4,25 +4,4 @@ body {
     background-attachment: fixed;
     background-size: cover;
     margin: 0px;
-    padding: 0px;
-    text-align: center;
-    align-items: center;
-    justify-content: center;
-    font-family: Arial, Helvetica, sans-serif;
-}
-
-* {
-    box-sizing: border-box;
-}
-
-header {
-    padding: 11px;
-    text-align: center;
-}
-
-footer {
-    background-color: #194518;
-    padding: 10px;
-    text-align: center;
-    color: white;
 }
