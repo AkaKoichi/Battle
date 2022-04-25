@@ -114,9 +114,7 @@ function draw() {
         for (let y = 0; y < width; y += square_size) {
 
             rect(x, y, square_size, square_size);
-            fill(b);
-            text(num_squares, x + square_size / 2 - 10, y + square_size / 2);
-            fill(w);
+            
             num_squares++
 
             for (let i = 0; i < buildings_place.length; i++) {
