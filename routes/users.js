@@ -6,10 +6,11 @@ var auth = require("../models/authentication")
 
 
 router.put('/update_current/:id', async function (req, res, next) {
-    let game_id = req.params.game_id;
+    console.log('entrou route')
+    let id = req.params.id;
     let user_id = req.body.user_id;
-    console.log("Get game with idd " + game_id)
-    let result = await uModel.update_current_playing_by_game_id(user_id, game_id);
+    console.log("Get game with iddbb "+ id)
+    let result = await uModel.update_current_playing_by_game_id(user_id,id);
     res.status(result.status).send(result.result);
 });
 

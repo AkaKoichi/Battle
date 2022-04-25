@@ -108,9 +108,11 @@ async function check_current_playing_by_game(id) {
     }
 }
 
-async function update_current_playing(user_id,game_id) {
+async function update_current_playing(id,user_id) {
+    console.log('entrou request')
+
     try {
-        const response = await fetch(`/api/users/update_current/${game_id}`,{
+        const response = await fetch(`/api/users/update_current/${id}`,{
             method:"PUT",
             headers: {
                "Content-Type": "application/json"

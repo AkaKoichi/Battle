@@ -75,7 +75,6 @@ module.exports.get_players_by_game_id = async function (game_id) {
 }
 
 module.exports.check_current_playing_by_game_id = async function (game_id) {
-  console.log('a')
   try {
       let sql = `
       Select current_user_playing
@@ -95,6 +94,8 @@ module.exports.check_current_playing_by_game_id = async function (game_id) {
 }
 
 module.exports.update_current_playing_by_game_id = async function (user_id,game_id) {
+  console.log(user_id)
+  console.log('entrou model')
   try {
     let sql = `UPDATE player_game SET current_user_playing = $1 WHERE game_id = $2;`;
     let result = await pool.query(sql, [user_id,game_id]);

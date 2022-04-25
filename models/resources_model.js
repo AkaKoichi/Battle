@@ -12,12 +12,16 @@ module.exports.get_all_resources = async function() {
   }
 }  
 
-module.exports.get_resources_id = async function(user_id) {
+module.exports.get_resources_id = async function(game_id,user_id) {
   try {
-    let sql = `Select troop_x,troop_y 
-    from user_troop 
-    where user_id = $1 `;
-    let result = await pool.query(sql,[user_id]);
+    let sql = `Select game.game_id,users.user_id,user_resources.rsc_id,rsc_type,rsc_amount 
+    from user_resources,resources,player_game,game,users
+    where users.user_id=user_resources.user_id 
+    and user_resources.rsc_id = resources.rsc_id 
+    and player_game.game_id = game.game_id 
+    and game.game_id = $1 
+    and users.user_id = $2 `;
+    let result = await pool.query(sql,[game_id,user_id]);
     let resources = result.rows;
     return { status: 200, result: resources};
   } catch (err) {

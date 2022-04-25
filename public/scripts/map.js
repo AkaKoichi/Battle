@@ -8,7 +8,7 @@ let train_troop_button;
 
 let tilesize = 700 / 20;
 let matrix = [];
-let its_my_turn=false;
+let its_my_turn;
 
 
 
@@ -19,6 +19,17 @@ window.onload = async () => {
 
     let user_info = await get_user_info();
     userInfo = user_info;
+    let bol = await check_current_playing()
+    if (bol[0].current_user_playing == userInfo.user_id) {
+        its_my_turn = true;
+        enable_button(train_troop_button)
+        enable_button(end_turn_button)
+    } else {
+        its_my_turn = false;
+        disable_button(train_troop_button)
+        disable_button(end_turn_button)
+
+    }
     document.getElementById("name").innerHTML = userInfo.username;
     document.getElementById("id").innerHTML = userInfo.user_id;
     buildings_place = await get_buildings_by_id(1);
@@ -51,12 +62,10 @@ function setup() {
     let cnv = createCanvas(700, 700);
     cnv.position(700, 30);
     tilesize = width / 20;
-    
+
     let pos = 0;
     for (let x = 0; x < 20; x++) {
-
         matrix[x] = []
-
         for (let y = 0; y < 20; y++) {
 
             pos++;
@@ -73,7 +82,7 @@ function setup() {
     train_troop_button.mousePressed(train);
 }
 function draw() {
-    
+
     background("black");
     let square_size = width / 20;
     let num_squares = 0;
@@ -101,7 +110,7 @@ function draw() {
                         rect(x, y, tilesize, tilesize);
                         fill(b);
                         textWrap(CHAR);
-                        text(buildings_place[i].bld_name, x + square_size / 2 - 10, y + square_size /2);
+                        text(buildings_place[i].bld_name, x + square_size / 2 - 10, y + square_size / 2);
                         fill(w);
 
                     } else {
@@ -148,7 +157,7 @@ async function keyPressed() {
                         case 'D':
                             troop_array[i].x += 1;
                             troop_array[i].movement -= 1
-                            await update_troops_id(userInfo.user_id, troop_array[i].user_trp_id, troop_array[i].x, troop_array[i].y,troop_array[i].health);
+                            await update_troops_id(userInfo.user_id, troop_array[i].user_trp_id, troop_array[i].x, troop_array[i].y, troop_array[i].health);
                             break;
 
                         case 'a':
@@ -156,7 +165,7 @@ async function keyPressed() {
 
                             troop_array[i].x -= 1;
                             troop_array[i].movement -= 1
-                            await update_troops_id(userInfo.user_id, troop_array[i].user_trp_id, troop_array[i].x, troop_array[i].y,troop_array[i].health);
+                            await update_troops_id(userInfo.user_id, troop_array[i].user_trp_id, troop_array[i].x, troop_array[i].y, troop_array[i].health);
                             break;
 
                         case 'w':
@@ -164,7 +173,7 @@ async function keyPressed() {
 
                             troop_array[i].y -= 1;
                             troop_array[i].movement -= 1
-                            await update_troops_id(userInfo.user_id, troop_array[i].user_trp_id, troop_array[i].x, troop_array[i].y,troop_array[i].health);
+                            await update_troops_id(userInfo.user_id, troop_array[i].user_trp_id, troop_array[i].x, troop_array[i].y, troop_array[i].health);
                             break;
 
                         case 's':
@@ -172,7 +181,7 @@ async function keyPressed() {
 
                             troop_array[i].y += 1;
                             troop_array[i].movement -= 1
-                            await update_troops_id(userInfo.user_id, troop_array[i].user_trp_id, troop_array[i].x, troop_array[i].y,troop_array[i].health);
+                            await update_troops_id(userInfo.user_id, troop_array[i].user_trp_id, troop_array[i].x, troop_array[i].y, troop_array[i].health);
                             break;
 
                     }
@@ -235,16 +244,14 @@ function mousePressed() {
     }
 }
 
-function troop_selected(troop){
-    if (troop !=''){
+function troop_selected(troop) {
+    if (troop != '') {
         document.getElementById("troop").innerHTML = troop.name;
         document.getElementById("movement").innerHTML = troop.movement;
-    }else{
+    } else {
         document.getElementById("movement").innerHTML = '';
         document.getElementById("troop").innerHTML = '';
     }
-    
-
 }
 
 async function build_building() {
@@ -278,7 +285,6 @@ function set_defender() {
             }
         }
     }
-
 }
 
 async function make_attack() {
@@ -313,43 +319,66 @@ function get_dist_attack(attacker, defender) {
     return distX <= attacker.range && distY <= attacker.range;
 }
 
-async function train(){
+async function train() {
     for (let i = 0; i < buildings_place.length; i++) {
-        if  (buildings_place[i].bld_name == 'Training Camp'){
+        if (buildings_place[i].bld_name == 'Training Camp') {
             await train_troop(userInfo.user_id, 1, buildings_place[i].bld_x, buildings_place[i].bld_y, 5)
         }
     }
 }
+
 async function check_current_playing() {
     let current_playing = await check_current_playing_by_game(1)
-    return current_playing;    
+    return current_playing;
 }
-async function end_turn() {
-    let bol =await check_current_playing()
-    console.log(bol)
-    if (bol[0].current_user_playing == userInfo.user_id){
-        await update_current_playing(2,1);
-        opponent_turn()
-    }else{
-        await update_current_playing(userInfo.user_id,1);
-        your_turn()
-       
-        
-    }
-        
- } 
 
- function your_turn(){
+async function end_turn() {
+    let bol = await check_current_playing()
+    console.log(bol)
+    if (bol[0].current_user_playing == userInfo.user_id) {
+        console.log('end_turn')
+        if (userInfo.user_id == 2) {
+            await update_current_playing(1, 1)
+
+        } else {
+            await update_current_playing(1, 2);
+        }
+        opponent_turn()
+    } else {
+        await update_current_playing(1, userInfo.user_id);
+        your_turn()
+    }
+
+}
+
+function your_turn() {
+    console.log('y')
     its_my_turn = true;
     end_turn_button.removeAttribute('disabled')
     train_troop_button.removeAttribute('disabled')
- }
+}
 
- function opponent_turn(){
-    its_my_turn = false; 
+function opponent_turn() {
+    console.log('o')
+    its_my_turn = false;
     end_turn_button.attribute('disabled', '');
     train_troop_button.attribute('disabled', '');
 }
+
+function toggle_button(button) {
+    if (button.hasAttribute('disabled')) {
+        button.removeAttribute('disabled')
+    } else button.attribute('disabled', '');
+}
+
+function enable_button(button) {
+    button.removeAttribute('disabled')
+}
+
+function disable_button(button) {
+    button.attribute('disabled', '');
+}
+
 
 
 

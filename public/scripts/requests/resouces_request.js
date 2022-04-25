@@ -15,12 +15,12 @@ async function get_resources() {
 }    
 
 
-async function get_buildings_by_id(id) {
+async function get_resources_by_id(id,user_id) {
     try {
-        const response = await fetch(`/api/resources/${id}`);
+        const response = await fetch(`/api/resources/${id}/${user_id}`);
         if (response.status == 200) {
-           var buildings = await response.json();
-           return buildings;
+           var resources = await response.json();
+           return resources;
         } else {
             // Treat errors like 404 here
             console.log(response);
