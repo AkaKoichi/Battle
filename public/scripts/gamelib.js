@@ -22,6 +22,11 @@ const radius = tilesize / 2;
 const diameter = radius * 2;
 
 window.onload = async () => {
+    setInterval(()=>{
+        if (its_my_turn==false){
+            document.location.reload(true)
+        }
+    },10000)
 
     let user_info = await get_user_info();
     userInfo = user_info;
@@ -312,7 +317,7 @@ async function make_attack() {
                 attacker = troop_array[i]
                 attacker_index = i
                 break;
-            }
+            }   
         }
     }
     for (let i = 0; i < troop_array.length; i++) {
