@@ -15,7 +15,7 @@ module.exports.get_all_troops = async function () {
 module.exports.get_troops_id = async function (game_id) {
   try {
     let sql = `
-    Select game.game_id,user_id,user_trp_id,trp_id,troop_id, troop_x,troop_y,trp_name,trp_health,trp_movement,trp_atack,trp_range,trp_max_amount 
+    Select game.game_id,user_id,user_trp_id,trp_id,troop_id, troop_x,troop_y,trp_name,trp_health,trp_movement,trp_attack,trp_range,trp_max_amount,troop_current_health 
     from user_troops,troops,player_game,game  
     where trp_id = troop_id and player_game.game_id = game.game_id and game.game_id = $1 ; `;
     let result = await pool.query(sql, [game_id]);
@@ -37,6 +37,7 @@ module.exports.update_troop = async function (user_id, user_trp_id, x, y, health
   } catch (err) {
     console.log(err);
     return { status: 500, result: err };
+
   }
 }
 
@@ -51,6 +52,20 @@ module.exports.train = async function (user_id, troop_id, troop_x, troop_y, troo
     return { status: 500, result: err };
   }
 }
+
+module.exports.delete_troop = async function (id) {
+  try {
+    let sql = `DELETE FROM user_troops WHERE user_trp_id = $1; `;
+    let result = await pool.query(sql, [id]);
+    let troops = result.rows;
+    return { status: 200, result: troops };
+  } catch (err) {
+    console.log(err);
+    return { status: 500, result: err };
+
+  }
+}
+
 
 
 
