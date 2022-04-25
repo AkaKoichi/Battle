@@ -35,7 +35,7 @@ module.exports.login_check = async function (name,password) {
 
 module.exports.register_user = async function(user) {
     try  {
-      let sql = "Insert into users (username,password) values ($1,$2)";
+      let sql = "Insert into users (username,password,user_trophies) values ($1,$2,0)";
       let result = await pool.query(sql,[user.name, user.password]); 
       return { status: 200, result:result }
     } catch (err){

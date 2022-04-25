@@ -3,7 +3,7 @@ let room;
 let userInfo;
 let userid;;
 var username;
-let username_leader_board
+let user_board;
 
 var trophies;
 
@@ -17,15 +17,6 @@ window.onload = async () => {
         console.log();
 
     });
-
-    let user_board = await leader_board();
-    console.log(user_board)
-
-    username_leader_board = user_board.username;
-    userid = user_board.user_id;
-    trophies = user_board.user_trophies;
-    console.log(user_board[1].username);
-
 }
 async function enter_room() {
     window.location = "map.html";
@@ -67,4 +58,11 @@ function draw() {
     textSize(20);
     text(username,275,500);
     text(trophies,270,590);
+    // user_board = await leader_board();
+    // for (let i = 0; i <= 7; x++) {
+    //     let x = 0;
+    //     let y= 0;
+    //     text(user_board[i].username,x,y);
+    //     y =+ 20;
+    // }
 }
