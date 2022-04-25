@@ -37,7 +37,6 @@ module.exports.update_troop = async function (user_id, user_trp_id, x, y, health
   } catch (err) {
     console.log(err);
     return { status: 500, result: err };
-
   }
 }
 

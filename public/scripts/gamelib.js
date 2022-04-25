@@ -1,4 +1,6 @@
 let userInfo;
+let resources;
+
 let troop_array = []
 let troop_movement = [];
 let buildings_place = [];
@@ -8,7 +10,10 @@ let train_troop_button;
 
 let tilesize = 700 / 20;
 let matrix = [];
+
 let its_my_turn;
+var turn_changed = false;
+
 
 
 
@@ -16,6 +21,12 @@ const radius = tilesize / 2;
 const diameter = radius * 2;
 
 window.onload = async () => {
+    setInterval(() => {
+        if (its_my_turn && turn_changed){
+            document.location.reload(true);
+            turn_changed = false;
+        }
+    }, 1000);
 
     let user_info = await get_user_info();
     userInfo = user_info;
@@ -33,6 +44,9 @@ window.onload = async () => {
     document.getElementById("name").innerHTML = userInfo.username;
     document.getElementById("id").innerHTML = userInfo.user_id;
     buildings_place = await get_buildings_by_id(1);
+    resources = await get_resources_by_id(1,userInfo.user_id);
+    document.getElementById("iron").innerHTML = resources[0].rsc_amount;
+    document.getElementById("food").innerHTML = resources[1].rsc_amount;
     let troops = await get_troops_by_id(1);
     troop_movement = troops;
     for (let i = 0; i < troop_movement.length; i++) {
@@ -56,6 +70,7 @@ window.onload = async () => {
         });
     }
 }
+
 
 function setup() {
 
@@ -148,84 +163,86 @@ function draw() {
 }
 
 async function keyPressed() {
-    for (i = 0; i < troop_array.length; i++) {
-        if (troop_array[i].user_id == userInfo.user_id) {
-            if (troop_array[i].selected) {
-                if (troop_array[i].movement > 0) {
-                    switch (key) {
-                        case 'd':
-                        case 'D':
-                            troop_array[i].x += 1;
-                            troop_array[i].movement -= 1
-                            await update_troops_id(userInfo.user_id, troop_array[i].user_trp_id, troop_array[i].x, troop_array[i].y, troop_array[i].health);
-                            break;
+    if (its_my_turn) {
+        for (i = 0; i < troop_array.length; i++) {
+            if (troop_array[i].user_id == userInfo.user_id) {
+                if (troop_array[i].selected) {
+                    if (troop_array[i].movement > 0) {
+                        switch (key) {
+                            case 'd':
+                            case 'D':
+                                troop_array[i].x += 1;
+                                troop_array[i].movement -= 1
+                                await update_troops_id(userInfo.user_id, troop_array[i].user_trp_id, troop_array[i].x, troop_array[i].y, troop_array[i].health);
+                                break;
 
-                        case 'a':
-                        case 'A':
+                            case 'a':
+                            case 'A':
 
-                            troop_array[i].x -= 1;
-                            troop_array[i].movement -= 1
-                            await update_troops_id(userInfo.user_id, troop_array[i].user_trp_id, troop_array[i].x, troop_array[i].y, troop_array[i].health);
-                            break;
+                                troop_array[i].x -= 1;
+                                troop_array[i].movement -= 1
+                                await update_troops_id(userInfo.user_id, troop_array[i].user_trp_id, troop_array[i].x, troop_array[i].y, troop_array[i].health);
+                                break;
 
-                        case 'w':
-                        case 'W':
+                            case 'w':
+                            case 'W':
 
-                            troop_array[i].y -= 1;
-                            troop_array[i].movement -= 1
-                            await update_troops_id(userInfo.user_id, troop_array[i].user_trp_id, troop_array[i].x, troop_array[i].y, troop_array[i].health);
-                            break;
+                                troop_array[i].y -= 1;
+                                troop_array[i].movement -= 1
+                                await update_troops_id(userInfo.user_id, troop_array[i].user_trp_id, troop_array[i].x, troop_array[i].y, troop_array[i].health);
+                                break;
 
-                        case 's':
-                        case 'S':
+                            case 's':
+                            case 'S':
 
-                            troop_array[i].y += 1;
-                            troop_array[i].movement -= 1
-                            await update_troops_id(userInfo.user_id, troop_array[i].user_trp_id, troop_array[i].x, troop_array[i].y, troop_array[i].health);
-                            break;
+                                troop_array[i].y += 1;
+                                troop_array[i].movement -= 1
+                                await update_troops_id(userInfo.user_id, troop_array[i].user_trp_id, troop_array[i].x, troop_array[i].y, troop_array[i].health);
+                                break;
 
+                        }
                     }
+
+                    switch (key) {
+                        case 'l':
+                        case 'L':
+                            troop_array[i].movement = troop_array[i].init_movement;
+                            document.getElementById("movement").innerHTML = troop_array[i].movement;
+                            break;
+
+                        case 'k':
+                        case 'K':
+                            troop_array[i].movement = 500;
+                            document.getElementById("movement").innerHTML = troop_array[i].movement;
+                            break;
+
+                        case 'b':
+                        case 'B':
+                            build_building();
+                            break;
+
+                        case 'i':
+                        case 'I':
+                            set_attacker()
+                            break;
+                    }
+                    document.getElementById("movement").innerHTML = troop_array[i].movement;
                 }
 
-                switch (key) {
-                    case 'l':
-                    case 'L':
-                        troop_array[i].movement = troop_array[i].init_movement;
-                        document.getElementById("movement").innerHTML = troop_array[i].movement;
-                        break;
-
-                    case 'k':
-                    case 'K':
-                        troop_array[i].movement = 500;
-                        document.getElementById("movement").innerHTML = troop_array[i].movement;
-                        break;
-
-                    case 'b':
-                    case 'B':
-                        build_building();
-                        break;
-
-                    case 'i':
-                    case 'I':
-                        set_attacker()
-                        break;
-                }
-                document.getElementById("movement").innerHTML = troop_array[i].movement;
             }
 
+
         }
-
-
-    }
-    switch (key) {
-        case 'p':
-        case 'P':
-            make_attack()
-            break;
-        case 'o':
-        case 'O':
-            set_defender()
-            break;
+        switch (key) {
+            case 'p':
+            case 'P':
+                make_attack()
+                break;
+            case 'o':
+            case 'O':
+                set_defender()
+                break;
+        }
     }
 }
 
@@ -290,12 +307,15 @@ function set_defender() {
 async function make_attack() {
     var attacker = {};
     var defender = {};
+    let attacker_index = null;
+    let defender_index = null;
     let can_attack = false;
 
     for (let i = 0; i < troop_array.length; i++) {
         if (troop_array[i].user_id == userInfo.user_id) {
             if (troop_array[i].attacker) {
                 attacker = troop_array[i]
+                attacker_index = i
                 break;
             }
         }
@@ -304,13 +324,18 @@ async function make_attack() {
         if (troop_array[i].user_id != userInfo.user_id) {
             if (troop_array[i].defender) {
                 defender = troop_array[i]
+                defender_index = i
                 break;
             }
         }
     }
     can_attack = get_dist_attack(attacker, defender)
-    if (can_attack) defender.health -= attacker.attack;
-    await update_troops_id(defender.user_id, defender.user_trp_id, defender.x, defender.y, defender.health);
+    if (can_attack) {
+        defender.health -= attacker.attack;
+        await update_troops_id(defender.user_id, defender.user_trp_id, defender.x, defender.y, defender.health);
+        troop_array[attacker_index].attacker = false;
+        troop_array[defender_index].defender = false;
+    }
 }
 
 function get_dist_attack(attacker, defender) {
@@ -320,11 +345,19 @@ function get_dist_attack(attacker, defender) {
 }
 
 async function train() {
+    let troop_iron_cost = 5;
+    let troop_food_cost = 5;
     for (let i = 0; i < buildings_place.length; i++) {
         if (buildings_place[i].bld_name == 'Training Camp') {
-            await train_troop(userInfo.user_id, 1, buildings_place[i].bld_x, buildings_place[i].bld_y, 5)
+            if (buildings_place[i].user_id == userInfo.user_id) {
+                await train_troop(userInfo.user_id, 1, buildings_place[i].bld_x, buildings_place[i].bld_y, 5)
+                await update_resources_id(userInfo.user_id,resources[0].rsc_amount-troop_iron_cost,1)
+                await update_resources_id(userInfo.user_id,resources[1].rsc_amount-troop_food_cost,2)
+            }
         }
     }
+    document.getElementById("iron").innerHTML = resources[0].rsc_amount;
+    document.getElementById("food").innerHTML = resources[1].rsc_amount;
 }
 
 async function check_current_playing() {
@@ -348,6 +381,7 @@ async function end_turn() {
         await update_current_playing(1, userInfo.user_id);
         your_turn()
     }
+    turn_changed = true;
 
 }
 

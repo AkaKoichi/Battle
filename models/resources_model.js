@@ -30,3 +30,15 @@ module.exports.get_resources_id = async function(game_id,user_id) {
   }
 }  
 
+module.exports.update_resources = async function (user_id, rsc_amount,rsc_id) {
+  try {
+    let sql = `UPDATE user_resources SET rsc_amount = $2 WHERE user_id = $1 and rsc_id= $3 ; `;
+    let result = await pool.query(sql, [user_id, rsc_amount,rsc_id]);
+    let resources = result.rows;
+    return { status: 200, result: resources };
+  } catch (err) {
+    console.log(err);
+    return { status: 500, result: err };
+  }
+}
+
