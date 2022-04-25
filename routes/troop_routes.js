@@ -19,10 +19,11 @@ router.put('/update/:id', async function(req, res, next) {
   let x = req.body.x;
   let y = req.body.y;
   let health = req.body.health;
+  let movement = req.body.movement;
   console.log(health+'aaaa')
   console.log("Get troop with id "+id)
   console.log(id, user_trp_id,x,y)
-  let result = await troop_model.update_troop(id,user_trp_id,x,y,health);
+  let result = await troop_model.update_troop(id,user_trp_id,x,y,health,movement);
   res.status(result.status).send(result.result);
 });
 
@@ -45,8 +46,10 @@ router.post('/train/:id', async function(req, res, next) {
   let troop_x = req.body.troop_x;
   let troop_y = req.body.troop_y;
   let troop_current_health = req.body.troop_current_health;
+  let troop_movement = req.body.movement
+  console.log(troop_movement+'aaaaaaaaaaaaaaaaaaaaaaaa')
   console.log("Get troop with id "+id)
-  let result = await troop_model.train(id,troop_id,troop_x,troop_y,troop_current_health);
+  let result = await troop_model.train(id,troop_id,troop_x,troop_y,troop_current_health,troop_movement);
   res.status(result.status).send(result.result);
 });
       

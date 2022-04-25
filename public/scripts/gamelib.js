@@ -57,7 +57,7 @@ window.onload = async () => {
             name: troop_movement[i].trp_name,
             health: troop_movement[i].troop_current_health,
             init_movement: troop_movement[i].trp_movement,
-            movement: troop_movement[i].trp_movement,
+            movement: troop_movement[i].troop_current_movement,
             attack: troop_movement[i].trp_attack,
             range: troop_movement[i].trp_range,
             max_amount: troop_movement[i].trp_max_amount,
@@ -172,7 +172,7 @@ async function keyPressed() {
                             case 'D':
                                 troop_array[i].x += 1;
                                 troop_array[i].movement -= 1
-                                await update_troops_id(userInfo.user_id, troop_array[i].user_trp_id, troop_array[i].x, troop_array[i].y, troop_array[i].health);
+                                await update_troops_id(userInfo.user_id, troop_array[i].user_trp_id, troop_array[i].x, troop_array[i].y, troop_array[i].health, troop_array[i].movement);
                                 break;
 
                             case 'a':
@@ -180,7 +180,7 @@ async function keyPressed() {
 
                                 troop_array[i].x -= 1;
                                 troop_array[i].movement -= 1
-                                await update_troops_id(userInfo.user_id, troop_array[i].user_trp_id, troop_array[i].x, troop_array[i].y, troop_array[i].health);
+                                await update_troops_id(userInfo.user_id, troop_array[i].user_trp_id, troop_array[i].x, troop_array[i].y, troop_array[i].health, troop_array[i].movement);
                                 break;
 
                             case 'w':
@@ -188,16 +188,15 @@ async function keyPressed() {
 
                                 troop_array[i].y -= 1;
                                 troop_array[i].movement -= 1
-                                await update_troops_id(userInfo.user_id, troop_array[i].user_trp_id, troop_array[i].x, troop_array[i].y, troop_array[i].health);
+                                await update_troops_id(userInfo.user_id, troop_array[i].user_trp_id, troop_array[i].x, troop_array[i].y, troop_array[i].health, troop_array[i].movement);
                                 break;
 
                             case 's':
                             case 'S':
-                                let current_y = troop_array[i].y
-                                if (current_y +=1 <= 19 )
+                                
                                 troop_array[i].y += 1;
                                 troop_array[i].movement -= 1
-                                await update_troops_id(userInfo.user_id, troop_array[i].user_trp_id, troop_array[i].x, troop_array[i].y, troop_array[i].health);
+                                await update_troops_id(userInfo.user_id, troop_array[i].user_trp_id, troop_array[i].x, troop_array[i].y, troop_array[i].health, troop_array[i].movement);
                                 break;
 
                         }
@@ -228,10 +227,7 @@ async function keyPressed() {
                     }
                     document.getElementById("movement").innerHTML = troop_array[i].movement;
                 }
-
             }
-
-
         }
         switch (key) {
             case 'p':
@@ -265,22 +261,32 @@ function troop_selected(troop) {
     if (troop != '') {
         document.getElementById("troop").innerHTML = troop.name;
         document.getElementById("movement").innerHTML = troop.movement;
+        document.getElementById("attack").innerHTML = troop.attack;
     } else {
         document.getElementById("movement").innerHTML = '';
         document.getElementById("troop").innerHTML = '';
+        document.getElementById("attack").innerHTML = '';
     }
 }
 
 async function build_building() {
+    let building_iron_cost = 4;
+    let building_food_cost = 4;
+
     for (let i = 0; i < troop_array.length; i++) {
         if (troop_array[i].user_id == userInfo.user_id) {
             if (troop_array[i].selected) {
-                await build(userInfo.user_id, 2, troop_array[i].x, troop_array[i].y, 5)
-                break
+                if ((resources[0].rsc_amount - building_iron_cost >= 0) && (resources[1].rsc_amount - building_food_cost >= 0)) {
+                    alert("Building Successfully Built");
+                    await build(userInfo.user_id, 2, troop_array[i].x, troop_array[i].y, 5)
+                    await update_resources_id(userInfo.user_id, resources[0].rsc_amount - building_iron_cost, 1)
+                    await update_resources_id(userInfo.user_id, resources[1].rsc_amount - building_food_cost, 2)
+                    document.location.reload(true)
+                    break
+                }
             }
         }
     }
-    document.location.reload(true)
 }
 
 function set_attacker() {
@@ -339,9 +345,11 @@ async function make_attack() {
             await delete_troops_id(troop_array[defender_index].user_trp_id)
         }
         await update_troops_id(defender.user_id, defender.user_trp_id, defender.x, defender.y, defender.health);
+        alert('defender health after attack'+defender.health)
         troop_array[attacker_index].attacker = false;
         troop_array[defender_index].defender = false;
     }
+    document.location.reload(true)
 }
 
 function get_dist_attack(attacker, defender) {
@@ -358,16 +366,14 @@ async function train() {
             if (buildings_place[i].user_id == userInfo.user_id) {
                 if ((resources[0].rsc_amount - troop_iron_cost >= 0) && (resources[1].rsc_amount - troop_food_cost >= 0)) {
                     alert("Troop Successfully Trained");
-                    await train_troop(userInfo.user_id, 1, buildings_place[i].bld_x, buildings_place[i].bld_y, 5)
+                    await train_troop(userInfo.user_id, 1, buildings_place[i].bld_x, buildings_place[i].bld_y, 5, 2)
                     await update_resources_id(userInfo.user_id, resources[0].rsc_amount - troop_iron_cost, 1)
                     await update_resources_id(userInfo.user_id, resources[1].rsc_amount - troop_food_cost, 2)
                     document.location.reload(true)
                 }
-
             }
         }
     }
-    
 }
 
 async function check_current_playing() {
@@ -376,7 +382,26 @@ async function check_current_playing() {
 }
 
 async function end_turn() {
+    let resources_per_turn = 2
 
+    for (let i = 0; i < buildings_place.length; i++) {
+        if (buildings_place[i].user_id == userInfo.user_id) {
+            if (buildings_place[i].bld_name == 'Mine') {
+                await update_resources_id(userInfo.user_id, resources[0].rsc_amount + resources_per_turn, 1)
+            }
+            if (buildings_place[i].bld_name == 'Field') {
+                await update_resources_id(userInfo.user_id, resources[1].rsc_amount + resources_per_turn, 2)
+            }
+        }
+    }
+    for (let i = 0; i < troop_array.length; i++) {
+        troop_array[i].movement = troop_array[i].init_movement
+        await update_troops_id(
+            userInfo.user_id,
+            troop_array[i].user_trp_id,
+            troop_array[i].x, troop_array[i].y,
+            troop_array[i].health, troop_array[i].movement);
+    }
     let bol = await check_current_playing()
     console.log(bol)
     if (bol[0].current_user_playing == userInfo.user_id) {
@@ -395,7 +420,8 @@ async function end_turn() {
     document.location.reload(true)
 }
 
-function your_turn() {
+async function your_turn() {
+
     console.log('y')
     its_my_turn = true;
     end_turn_button.removeAttribute('disabled')

@@ -30,15 +30,14 @@ async function get_troops_by_id(id) {
     }
 }   
 
- async function update_troops_id(id,user_trp_id,x,y,health) {
-     console.log({id, user_trp_id,x,y,health})
+ async function update_troops_id(id,user_trp_id,x,y,health,movement) {
      try {
          const response = await fetch(`/api/troops/update/${id}`,{
              method:"PUT",
              headers: {
                 "Content-Type": "application/json"
               },
-            body: JSON.stringify({user_trp_id,x,y,health})
+            body: JSON.stringify({user_trp_id,x,y,health,movement})
 
          });
          if (response.status == 200) {
@@ -54,7 +53,7 @@ async function get_troops_by_id(id) {
      }
  }  
  
- async function train_troop(id,troop_id,troop_x,troop_y,troop_current_health) {
+ async function train_troop(id,troop_id,troop_x,troop_y,troop_current_health,movement) {
     try {
         // TODO: Verify user information  and give errors
         const response = await fetch(`/api/troops/train/${id}`,
@@ -63,7 +62,7 @@ async function get_troops_by_id(id) {
             headers: {
                 "Content-Type": "application/json"
               },
-            body: JSON.stringify({troop_id,troop_x,troop_y,troop_current_health}) 
+            body: JSON.stringify({troop_id,troop_x,troop_y,troop_current_health,movement}) 
         });
         var result= await response.json();
         return {inserted: response.status==200 , result: result };
