@@ -22,11 +22,11 @@ const radius = tilesize / 2;
 const diameter = radius * 2;
 
 window.onload = async () => {
-    setInterval(()=>{
-        if (its_my_turn==false){
+    setInterval(() => {
+        if (its_my_turn == false) {
             document.location.reload(true)
         }
-    },10000)
+    }, 5000)
 
     let user_info = await get_user_info();
     userInfo = user_info;
@@ -43,7 +43,7 @@ window.onload = async () => {
     }
     document.getElementById("name").innerHTML = userInfo.username;
     document.getElementById("id").innerHTML = userInfo.user_id;
-    
+
     buildings_place = await get_buildings_by_id(1);
     resources = await get_resources_by_id(1, userInfo.user_id);
     document.getElementById("iron").innerHTML = resources[0].rsc_amount;
@@ -193,7 +193,8 @@ async function keyPressed() {
 
                             case 's':
                             case 'S':
-
+                                let current_y = troop_array[i].y
+                                if (current_y +=1 <= 19 )
                                 troop_array[i].y += 1;
                                 troop_array[i].movement -= 1
                                 await update_troops_id(userInfo.user_id, troop_array[i].user_trp_id, troop_array[i].x, troop_array[i].y, troop_array[i].health);
@@ -274,11 +275,12 @@ async function build_building() {
     for (let i = 0; i < troop_array.length; i++) {
         if (troop_array[i].user_id == userInfo.user_id) {
             if (troop_array[i].selected) {
-                await build(userInfo.user_id, 1, troop_array[i].x, troop_array[i].y, 5)
+                await build(userInfo.user_id, 2, troop_array[i].x, troop_array[i].y, 5)
                 break
             }
         }
     }
+    document.location.reload(true)
 }
 
 function set_attacker() {
@@ -309,7 +311,7 @@ async function make_attack() {
     let attacker_index = null;
     let defender_index = null;
     let can_attack = false;
-    let dice_dmg_multiplier=null;
+    let dice_dmg_multiplier = null;
 
     for (let i = 0; i < troop_array.length; i++) {
         if (troop_array[i].user_id == userInfo.user_id) {
@@ -317,7 +319,7 @@ async function make_attack() {
                 attacker = troop_array[i]
                 attacker_index = i
                 break;
-            }   
+            }
         }
     }
     for (let i = 0; i < troop_array.length; i++) {
@@ -330,9 +332,9 @@ async function make_attack() {
         }
     }
     can_attack = get_dist_attack(attacker, defender)
-    dice_dmg_multiplier = roll_dice(3,6)
-    if (can_attack && dice_dmg_multiplier>=1) {
-        defender.health -= attacker.attack*dice_dmg_multiplier;
+    dice_dmg_multiplier = roll_dice(3, 6)
+    if (can_attack && dice_dmg_multiplier >= 1) {
+        defender.health -= attacker.attack * dice_dmg_multiplier;
         if (defender.health <= 0) {
             await delete_troops_id(troop_array[defender_index].user_trp_id)
         }
@@ -354,12 +356,18 @@ async function train() {
     for (let i = 0; i < buildings_place.length; i++) {
         if (buildings_place[i].bld_name == 'Training Camp') {
             if (buildings_place[i].user_id == userInfo.user_id) {
-                await train_troop(userInfo.user_id, 1, buildings_place[i].bld_x, buildings_place[i].bld_y, 5)
-                await update_resources_id(userInfo.user_id, resources[0].rsc_amount - troop_iron_cost, 1)
-                await update_resources_id(userInfo.user_id, resources[1].rsc_amount - troop_food_cost, 2)
+                if ((resources[0].rsc_amount - troop_iron_cost >= 0) && (resources[1].rsc_amount - troop_food_cost >= 0)) {
+                    alert("Troop Successfully Trained");
+                    await train_troop(userInfo.user_id, 1, buildings_place[i].bld_x, buildings_place[i].bld_y, 5)
+                    await update_resources_id(userInfo.user_id, resources[0].rsc_amount - troop_iron_cost, 1)
+                    await update_resources_id(userInfo.user_id, resources[1].rsc_amount - troop_food_cost, 2)
+                    document.location.reload(true)
+                }
+
             }
         }
     }
+    
 }
 
 async function check_current_playing() {
@@ -368,6 +376,7 @@ async function check_current_playing() {
 }
 
 async function end_turn() {
+
     let bol = await check_current_playing()
     console.log(bol)
     if (bol[0].current_user_playing == userInfo.user_id) {
@@ -383,7 +392,7 @@ async function end_turn() {
         await update_current_playing(1, userInfo.user_id);
         your_turn()
     }
-
+    document.location.reload(true)
 }
 
 function your_turn() {
@@ -417,9 +426,9 @@ function disable_button(button) {
 function roll_dice(min, sides) {
     dice_number = dice(1, sides);
     document.getElementById("dice").innerHTML = dice_number;
-    if (dice_number==sides){
+    if (dice_number == sides) {
         return 2
-    }else if(dice_number>=min){
+    } else if (dice_number >= min) {
         return 1
     }
     return 0
