@@ -5,7 +5,13 @@ var troop_model = require("../models/troop_model");
 
 
 
-
+router.delete('/delete/:id', async function(req, res, next) {
+  let id = req.params.id;
+  console.log(id)
+  console.log("Get troop with id "+id)
+  let result = await troop_model.delete_troop(id);
+  res.status(result.status).send(result.result);
+});
 
 router.put('/update/:id', async function(req, res, next) {
   let id = req.params.id;
@@ -13,6 +19,7 @@ router.put('/update/:id', async function(req, res, next) {
   let x = req.body.x;
   let y = req.body.y;
   let health = req.body.health;
+  console.log(health+'aaaa')
   console.log("Get troop with id "+id)
   console.log(id, user_trp_id,x,y)
   let result = await troop_model.update_troop(id,user_trp_id,x,y,health);

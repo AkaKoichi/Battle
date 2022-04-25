@@ -19,7 +19,7 @@ window.onload = async () => {
     });
 }
 async function enter_room() {
-    window.location = "map.html";
+    window.location = "gamelib.html";
 }
 
 async function how_to_play_link() {
