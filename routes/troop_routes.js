@@ -30,7 +30,7 @@ router.put('/update/:id', async function(req, res, next) {
 
 router.get('/:id', async function(req, res, next) {
   let id = req.params.id;
-  console.log("Get troop with iddd "+id)
+  console.log("Get troop with id "+id)
   let result = await troop_model.get_troops_id(id);
   res.status(result.status).send(result.result);
 });
@@ -47,7 +47,6 @@ router.post('/train/:id', async function(req, res, next) {
   let troop_y = req.body.troop_y;
   let troop_current_health = req.body.troop_current_health;
   let troop_movement = req.body.movement
-  console.log(troop_movement+'aaaaaaaaaaaaaaaaaaaaaaaa')
   console.log("Get troop with id "+id)
   let result = await troop_model.train(id,troop_id,troop_x,troop_y,troop_current_health,troop_movement);
   res.status(result.status).send(result.result);
