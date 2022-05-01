@@ -29,10 +29,6 @@ window.onload = async () => {
 
     let user_info = await get_user_info();
     userInfo = user_info;
-
-    
-
-    
     let bol = await check_current_playing()
     if (bol[0].current_user_playing == userInfo.user_id) {
         its_my_turn = true;
@@ -91,14 +87,15 @@ function setup() {
         }
     }
     
-    
     end_turn_button = createButton('End Turn');
     end_turn_button.position(500, 155);
     end_turn_button.mousePressed(end_turn);
 
     train_troop_button = createButton('train troop');
     train_troop_button.position(500, 245);
-    train_troop_button.mousePressed(train(buildings_place,1,resources));
+    train_troop_button.mousePressed(function(){
+        train(buildings_place,1,resources)
+    });
 
 }
 
