@@ -74,7 +74,7 @@ async function get_troops_by_id(id) {
 
 async function delete_troops_id(id) {
     try {
-        const response = await fetch(`/api/troops/delete/${id}`,{
+        const response = await fetch(`/api/troops/delete/${id}  `,{
             method:"DELETE"
         });
         if (response.status == 200) {
