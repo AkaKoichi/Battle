@@ -159,6 +159,7 @@ function mousePressed() {
     let x =(int)(mouseX / tilesize)
     let y= (int)(mouseY / tilesize)
     mouse_pressed_troops(troop_array)
+    mouse_pressed_buildings(buildings_array,x,y)
     
     console.log(x,y)  
 

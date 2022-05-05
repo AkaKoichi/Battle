@@ -1,20 +1,29 @@
 
-class building{
-    constructor(user_id,user_bld_id,bld_id,name,health,bld_x,bld_y){
-        this.user_id = user_id ;
-        this.user_bld_id=user_bld_id;
-        this.bld_id=bld_id;
-        this.bld_x=bld_x;
-        this.bld_y=bld_y;
-        this.bld_name= name;
+class building {
+    constructor(user_id, user_bld_id, bld_id, name, health, bld_x, bld_y) {
+        this.user_id = user_id;
+        this.user_bld_id = user_bld_id;
+        this.bld_id = bld_id;
+        this.bld_x = bld_x;
+        this.bld_y = bld_y;
+        this.bld_name = name;
         this.bld_health = health;
         this.selected = false;
     }
 
-    select(building){
-
+    select() {
+        this.selected = true;
+        document.getElementById("building").innerHTML = this.bld_name;
     }
+
+    unselect() {
+        this.selected = false;
+        document.getElementById("building").innerHTML = '';
+      
+    }
+
 }
+
 
 async function draw_buildings(matrix, buildings_array, num_squares, user_id, square_size, tilesize, x, y) {
     let c = color(255, 204, 0);
@@ -46,7 +55,7 @@ async function draw_buildings(matrix, buildings_array, num_squares, user_id, squ
     }
 }
 
-async function key_buildings(its_my_turn,troop_array,user_id,resources) {
+async function key_buildings(its_my_turn, troop_array, user_id, resources) {
     if (its_my_turn) {
         for (i = 0; i < troop_array.length; i++) {
             if (troop_array[i].user_id == user_id) {
@@ -64,6 +73,8 @@ async function key_buildings(its_my_turn,troop_array,user_id,resources) {
         }
     }
 }
+
+
 
 async function build_building(troop_array, user_id, resources) {
     let building_iron_cost = 4;
@@ -86,17 +97,21 @@ async function build_building(troop_array, user_id, resources) {
     }
 }
 
-function mouse_pressed_buildings(building_array){
-    for (let i = 0; i < troop_array.length; i++) {
-        troop_array[i].selected = false;
-        let distance = dist(mouseX, mouseY, troop_array[i].square_x, troop_array[i].square_y);
-        if (distance < radius) {
-            troop_array[i].selected = true;
-            troop_array[i].select(troop_array[i])
+function mouse_pressed_buildings(building_array,x,y) {
+    for (let i = 0; i < building_array.length; i++) {
+        building_array[i].selected = false;
+        console.log('x:'+x)
+        console.log('y:'+y)
+        console.log('BLD_X:'+building_array.bld_x)
+        console.log('BLD_y:'+building_array.bld_y)
+        if (x == building_array.bld_x && y == building_array.bld_y) {
+            console.log('AAAAAAAAAA')
+            building_array[i].select()
             break
         } else {
-            troop_array[i].selected = false;
-            troop_array[i].select('')
+            building_array[i].unselect()
         }
     }
 }
+
+
