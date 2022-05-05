@@ -20,7 +20,6 @@ router.put('/update/:id', async function(req, res, next) {
   let y = req.body.y;
   let health = req.body.health;
   let movement = req.body.movement;
-  console.log(health+'aaaa')
   console.log("Get troop with id "+id)
   console.log(id, user_trp_id,x,y)
   let result = await troop_model.update_troop(id,user_trp_id,x,y,health,movement);

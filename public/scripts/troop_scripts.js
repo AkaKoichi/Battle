@@ -1,4 +1,41 @@
 
+
+
+
+class troop{
+    constructor(user_id,user_trp_id,name,health,init_movement,movement,attack,range, max_amount,x,y){
+        this.user_id = user_id ;
+        this.user_trp_id = user_trp_id;
+        this.name = name;
+        this.health = health;
+        this.init_movement = init_movement;
+        this.movement = movement;
+        this.attack = attack;
+        this.range = range;
+        this.max_amount = max_amount;
+        this.x = x ;
+        this.y = y ;
+        this.selected = false;
+        this.attacker = false;
+        this.defender = false;
+        this.square_x = 0;
+        this.square_y = 0
+    }
+    select() {
+            this.selected = true;
+            document.getElementById("troop").innerHTML = this.name;
+            document.getElementById("movement").innerHTML = this.movement;
+            document.getElementById("attack").innerHTML = this.attack;
+    }
+
+    unselect() {
+        this.selected = false;
+        document.getElementById("troop").innerHTML = '';
+        document.getElementById("movement").innerHTML = '';
+        document.getElementById("attack").innerHTML = '';
+    }
+
+}
 async function draw_troops(matrix,troop_array,num_squares,user_id,square_size,diameter,x,y){
   
     let c = color(255, 204, 0);
@@ -102,27 +139,17 @@ function mouse_pressed_troops(troop_array){
         troop_array[i].selected = false;
         let distance = dist(mouseX, mouseY, troop_array[i].square_x, troop_array[i].square_y);
         if (distance < radius) {
-            troop_array[i].selected = true;
-            troop_selected(troop_array[i])
+            //troop_array[i].selected = true;
+            troop_array[i].select()
             break
         } else {
-            troop_array[i].selected = false;
-            troop_selected('')
+            //troop_array[i].selected = false;
+            troop_array[i].unselect()
         }
     }
 }
 
-function troop_selected(troop) {
-    if (troop != '') {
-        document.getElementById("troop").innerHTML = troop.name;
-        document.getElementById("movement").innerHTML = troop.movement;
-        document.getElementById("attack").innerHTML = troop.attack;
-    } else {
-        document.getElementById("movement").innerHTML = '';
-        document.getElementById("troop").innerHTML = '';
-        document.getElementById("attack").innerHTML = '';
-    }
-}
+
 
 function set_attacker(troop_array,user_id) {
     for (let i = 0; i < troop_array.length; i++) {
@@ -192,17 +219,17 @@ function get_dist_attack(attacker, defender) {
     distX = Math.abs(attacker.x - defender.x)
     distY = Math.abs(attacker.y - defender.y)
     return distX <= attacker.range && distY <= attacker.range;
-}
+} 
 
-async function train(buildings_place,user_id,resources) {
+async function train(buildings,user_id,resources) {
     let troop_iron_cost = 5;
     let troop_food_cost = 5;
-    for (let i = 0; i < buildings_place.length; i++) {
-        if (buildings_place[i].bld_name == 'Training Camp') {
-            if (buildings_place[i].user_id == user_id) {
+    for (let i = 0; i < buildings.length; i++) {
+        if (buildings[i].bld_name == 'Training Camp') {
+            if (buildings[i].user_id == user_id) {
                 if ((resources[0].rsc_amount - troop_iron_cost >= 0) && (resources[1].rsc_amount - troop_food_cost >= 0)) {
                     alert("Troop Successfully Trained");
-                    await train_troop(user_id, 1, buildings_place[i].bld_x, buildings_place[i].bld_y, 5, 2)
+                    await train_troop(user_id, 1, buildings[i].bld_x, buildings[i].bld_y, 5, 2)
                     await update_resources_id(user_id, resources[0].rsc_amount - troop_iron_cost, 1)
                     await update_resources_id(user_id, resources[1].rsc_amount - troop_food_cost, 2)
                     document.location.reload(true)

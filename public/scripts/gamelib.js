@@ -4,8 +4,9 @@ var userInfo;
 let resources;
 
 let troop_array = []
-let troop_movement = [];
-let buildings_place = [];
+let troops = [];
+let buildings_array = [];
+let buildings = [];
 
 let end_turn_button;
 let train_troop_button;
@@ -21,11 +22,11 @@ const radius = tilesize / 2;
 const diameter = radius * 2;
 
 window.onload = async () => {
-    setInterval(() => {
+     setInterval(() => {
         if (its_my_turn == false) {
-            document.location.reload(true)
+           // troops = await get_troops_by_id(1);
         }
-    }, 5000)
+    },4000) 
 
     let user_info = await get_user_info();
     userInfo = user_info;
@@ -43,35 +44,45 @@ window.onload = async () => {
     document.getElementById("name").innerHTML = userInfo.username;
     document.getElementById("id").innerHTML = userInfo.user_id;
 
-    buildings_place = await get_buildings_by_id(1);
+    buildings = await get_buildings_by_id(1);
     resources = await get_resources_by_id(1, userInfo.user_id);
     document.getElementById("iron").innerHTML = resources[0].rsc_amount;
     document.getElementById("food").innerHTML = resources[1].rsc_amount;
     let troops = await get_troops_by_id(1);
-    troop_movement = troops;
 
-    for (let i = 0; i < troop_movement.length; i++) {
-        troop_array.push({
-            user_id: troop_movement[i].user_id,
-            user_trp_id: troop_movement[i].user_trp_id,
-            name: troop_movement[i].trp_name,
-            health: troop_movement[i].troop_current_health,
-            init_movement: troop_movement[i].trp_movement,
-            movement: troop_movement[i].troop_current_movement,
-            attack: troop_movement[i].trp_attack,
-            range: troop_movement[i].trp_range,
-            max_amount: troop_movement[i].trp_max_amount,
-            x: troop_movement[i].troop_x,
-            y: troop_movement[i].troop_y,
-            selected: false,
-            attacker: false,
-            defender: false,
-            square_x: 0,
-            square_y: 0
-        });
+    for (let i = 0; i < troops.length; i++) {
+        
+        let temp_troop = new troop(
+            troops[i].user_id,
+            troops[i].user_trp_id,
+            troops[i].trp_name,
+            troops[i].troop_current_health,
+            troops[i].trp_movement,
+            troops[i].troop_current_movement,
+            troops[i].trp_attack,
+            troops[i].trp_range,
+            troops[i].trp_max_amount,
+            troops[i].troop_x,
+            troops[i].troop_y)
+        troop_array.push(
+            temp_troop,
+        );
     }
-   
-}
+
+    for (let i = 0; i < buildings.length; i++) {
+        let temp_building = new building(
+            buildings[i].user_id,
+            buildings[i].user_bld_id,
+            buildings[i].bld_id,
+            buildings[i].bld_name,
+            buildings[i].bld_health,
+            buildings[i].bld_x,
+            buildings[i].bld_y)
+        buildings_array.push(
+            temp_building,
+        );
+    }
+} 
 
 function setup() {
     let cnv = createCanvas(700, 700);
@@ -94,12 +105,14 @@ function setup() {
     train_troop_button = createButton('train troop');
     train_troop_button.position(500, 245);
     train_troop_button.mousePressed(function(){
-        train(buildings_place,1,resources)
+        train(buildings,1,resources)
     });
 
 }
 
 async function draw() {
+    if (userInfo == undefined)
+        return;
 
     background("black");
     let square_size = width / 20;
@@ -111,28 +124,44 @@ async function draw() {
     let p = color('purple');
     let bl = color('blue');
     let g = color('gray');
+    let hovered_tile = mouse_over_tile();
+   
+     
 
-    for (let x = 0; x < height; x += square_size) {
-        for (let y = 0; y < width; y += square_size) {
+    for (let y = 0; y < height; y += square_size) {
+        for (let x = 0; x < width; x += square_size) {
+            if (matrix[hovered_tile.y][hovered_tile.x-1] == num_squares){
+                fill(p)
+                rect(x, y, square_size, square_size);
+                fill(w)
 
-            rect(x, y, square_size, square_size);
+            }else{
+                rect(x, y, square_size, square_size);
+            }
+
+            
             fill(b);
             text(num_squares,x+square_size/2 - 10,y+square_size/2)
             fill(w)
             num_squares++
-            await draw_buildings(matrix,buildings_place,num_squares,1,square_size,tilesize,x,y)
-            await draw_troops(matrix,troop_array,num_squares,1,square_size,diameter,x,y)
+            await draw_buildings(matrix,buildings_array,num_squares,userInfo.user_id,square_size,tilesize,x,y)
+            await draw_troops(matrix,troop_array,num_squares,userInfo.user_id,square_size,diameter,x,y)
         }
     }
 }
 
 async function keyPressed() {
-    await key_troops(its_my_turn,troop_array,1)
-    await key_buildings(its_my_turn,troop_array,1,resources)
+    await key_troops(its_my_turn,troop_array,userInfo.user_id)
+    await key_buildings(its_my_turn,troop_array,userInfo.user_id,resources)
 }
  
 function mousePressed() {
+    let x =(int)(mouseX / tilesize)
+    let y= (int)(mouseY / tilesize)
     mouse_pressed_troops(troop_array)
+    
+    console.log(x,y)  
+
 }
 
 async function check_current_playing() {
@@ -143,12 +172,12 @@ async function check_current_playing() {
 async function end_turn() {
     let resources_per_turn = 2
 
-    for (let i = 0; i < buildings_place.length; i++) {
-        if (buildings_place[i].user_id == userInfo.user_id) {
-            if (buildings_place[i].bld_name == 'Mine') {
+    for (let i = 0; i < buildings.length; i++) {
+        if (buildings[i].user_id == userInfo.user_id) {
+            if (buildings[i].bld_name == 'Mine') {
                 await update_resources_id(userInfo.user_id, resources[0].rsc_amount + resources_per_turn, 1)
             }
-            if (buildings_place[i].bld_name == 'Field') {
+            if (buildings[i].bld_name == 'Field') {
                 await update_resources_id(userInfo.user_id, resources[1].rsc_amount + resources_per_turn, 2)
             }
         }
@@ -206,3 +235,6 @@ function disable_button(button) {
     button.attribute('disabled', '');
 }
 
+function mouse_over_tile(){
+    return { x: (int)(mouseX / tilesize), y: (int)(mouseY / tilesize) };
+}

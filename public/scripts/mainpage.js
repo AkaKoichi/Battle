@@ -3,9 +3,11 @@ let room;
 let userInfo;
 let userid;;
 var username;
-let user_board;
+let user_board=[];
 
 var trophies;
+let x = 950;
+let y= 130;
 
 window.onload = async () => {
     get_user_info().then((user_info) => {
@@ -27,13 +29,14 @@ async function how_to_play_link() {
 }
 
 function preload() {
+    leader_board_img = loadImage('images/leader_board.png')
     avatar_img = loadImage('/images/avatar.png');
     how_to_play_button = createImg('/images/buttons/how_to_play.png');
     join_lobby_button = createImg('/images/buttons/join_lobby.png');
     sound_button = createImg('/images/buttons/som.png');
     music_button = createImg('/images/buttons/musica.png');
     trophies_img = loadImage('/images/trophie.png');
-    leader_board_img = loadImage('images/leader_board.png')
+    
 }
 
 
@@ -51,18 +54,21 @@ function setup() {
     how_to_play_button.mousePressed(how_to_play_link);
 }
 
-function draw() {
+async function draw() {
+
+    user_board = await leader_board();
+    for (let i = 0; i < user_board.length; i++) {
+        text(user_board[i].username,x,y);
+        y += 90;  
+    }
+    
     image(avatar_img, 75, 20);
     image(trophies_img, 215,535);
     image(leader_board_img, 1050,10);
     textSize(20);
     text(username,275,500);
     text(trophies,270,590);
-    // user_board = await leader_board();
-    // for (let i = 0; i <= 7; x++) {
-    //     let x = 0;
-    //     let y= 0;
-    //     text(user_board[i].username,x,y);
-    //     y =+ 20;
-    // }
+   
+    
+    
 }
