@@ -25,6 +25,7 @@ class troop{
             this.selected = true;
             document.getElementById("troop").innerHTML = this.name;
             document.getElementById("movement").innerHTML = this.movement;
+            document.getElementById("health").innerHTML = this.health;
             document.getElementById("attack").innerHTML = this.attack;
     }
 
@@ -74,26 +75,26 @@ async function key_troops(its_my_turn,troop_array,user_id){
                         switch (key) {
                             case 'd':
                             case 'D':
-                                troop_array[i].x += 1;
+                                troop_array[i].y += 1;
                                 troop_array[i].movement -= 1
                                 await update_troops_id(user_id, troop_array[i].user_trp_id, troop_array[i].x, troop_array[i].y, troop_array[i].health, troop_array[i].movement);
                                 break;
 
                             case 'a':
                             case 'A':
-                                troop_array[i].x -= 1;
+                                troop_array[i].y -= 1;
                                 troop_array[i].movement -= 1
                                 await update_troops_id(user_id, troop_array[i].user_trp_id, troop_array[i].x, troop_array[i].y, troop_array[i].health, troop_array[i].movement);
                                 break;
                             case 'w':
                             case 'W':
-                                troop_array[i].y -= 1;
+                                troop_array[i].x -= 1;
                                 troop_array[i].movement -= 1
                                 await update_troops_id(user_id, troop_array[i].user_trp_id, troop_array[i].x, troop_array[i].y, troop_array[i].health, troop_array[i].movement);
                                 break;
                             case 's':
                             case 'S':
-                                troop_array[i].y += 1;
+                                troop_array[i].x += 1;
                                 troop_array[i].movement -= 1
                                 await update_troops_id(user_id, troop_array[i].user_trp_id, troop_array[i].x, troop_array[i].y, troop_array[i].health, troop_array[i].movement);
                                 break;
@@ -114,7 +115,7 @@ async function key_troops(its_my_turn,troop_array,user_id){
                             break;
                         case 'i':
                         case 'I':
-                            set_attacker(troop_array,1)
+                            set_attacker(troop_array,userInfo.user_id)
                             break;
                     }
                     document.getElementById("movement").innerHTML = troop_array[i].movement;
@@ -124,11 +125,11 @@ async function key_troops(its_my_turn,troop_array,user_id){
         switch (key) {
             case 'p':
             case 'P':
-                make_attack(troop_array,1)
+                make_attack(troop_array,userInfo.user_id)
                 break;
             case 'o':
             case 'O':
-                set_defender(troop_array,1)
+                set_defender(troop_array,userInfo.user_id)
                 break;
         }
     }
@@ -212,7 +213,6 @@ async function make_attack(troop_array,user_id) {
         troop_array[defender_index].defender = false;
         document.location.reload(true)
     }
-    
 }
 
 function get_dist_attack(attacker, defender) {

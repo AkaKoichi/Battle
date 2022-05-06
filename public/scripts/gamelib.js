@@ -22,11 +22,11 @@ const radius = tilesize / 2;
 const diameter = radius * 2;
 
 window.onload = async () => {
-     setInterval(() => {
+    setInterval(() => {
         if (its_my_turn == false) {
-           // troops = await get_troops_by_id(1);
+            // troops = await get_troops_by_id(1);
         }
-    },4000) 
+    }, 4000)
 
     let user_info = await get_user_info();
     userInfo = user_info;
@@ -51,7 +51,7 @@ window.onload = async () => {
     let troops = await get_troops_by_id(1);
 
     for (let i = 0; i < troops.length; i++) {
-        
+
         let temp_troop = new troop(
             troops[i].user_id,
             troops[i].user_trp_id,
@@ -82,7 +82,7 @@ window.onload = async () => {
             temp_building,
         );
     }
-} 
+}
 
 function setup() {
     let cnv = createCanvas(700, 700);
@@ -97,15 +97,15 @@ function setup() {
             matrix[x][y] = pos;
         }
     }
-    
+
     end_turn_button = createButton('End Turn');
     end_turn_button.position(500, 155);
     end_turn_button.mousePressed(end_turn);
 
     train_troop_button = createButton('train troop');
     train_troop_button.position(500, 245);
-    train_troop_button.mousePressed(function(){
-        train(buildings,1,resources)
+    train_troop_button.mousePressed(function () {
+        train(buildings, 1, resources)
     });
 
 }
@@ -125,43 +125,44 @@ async function draw() {
     let bl = color('blue');
     let g = color('gray');
     let hovered_tile = mouse_over_tile();
-   
-     
+
+
 
     for (let y = 0; y < height; y += square_size) {
         for (let x = 0; x < width; x += square_size) {
-            if (matrix[hovered_tile.y][hovered_tile.x-1] == num_squares){
+            if (matrix[hovered_tile.y][hovered_tile.x - 1   ] == num_squares) {
                 fill(p)
                 rect(x, y, square_size, square_size);
                 fill(w)
 
-            }else{
+            } else {
                 rect(x, y, square_size, square_size);
             }
 
-            
+
             fill(b);
-            text(num_squares,x+square_size/2 - 10,y+square_size/2)
+            text(num_squares, x + square_size / 2 - 10, y + square_size / 2)
             fill(w)
             num_squares++
-            await draw_buildings(matrix,buildings_array,num_squares,userInfo.user_id,square_size,tilesize,x,y)
-            await draw_troops(matrix,troop_array,num_squares,userInfo.user_id,square_size,diameter,x,y)
+            await draw_buildings(matrix, buildings_array, num_squares, userInfo.user_id, square_size, tilesize, x, y)
+            await draw_troops(matrix, troop_array, num_squares, userInfo.user_id, square_size, diameter, x, y)
         }
     }
 }
 
 async function keyPressed() {
-    await key_troops(its_my_turn,troop_array,userInfo.user_id)
-    await key_buildings(its_my_turn,troop_array,userInfo.user_id,resources)
+    await key_troops(its_my_turn, troop_array, userInfo.user_id)
+    await key_buildings(its_my_turn, troop_array, userInfo.user_id, resources)
 }
- 
+
 function mousePressed() {
-    let x =(int)(mouseX / tilesize)
-    let y= (int)(mouseY / tilesize)
+    let y = (int)(mouseX / tilesize)
+    let x = (int)(mouseY / tilesize)
     mouse_pressed_troops(troop_array)
-    mouse_pressed_buildings(buildings_array,x,y)
-    
-    console.log(x,y)  
+
+
+    mouse_pressed_buildings(buildings_array, x, y)
+
 
 }
 
@@ -236,6 +237,11 @@ function disable_button(button) {
     button.attribute('disabled', '');
 }
 
-function mouse_over_tile(){
-    return { x: (int)(mouseX / tilesize), y: (int)(mouseY / tilesize) };
+function mouse_over_tile() {
+    let x = (int)(mouseX / tilesize)
+    let y = (int)(mouseY / tilesize)
+
+    return { x: x, y: y };
+
+
 }

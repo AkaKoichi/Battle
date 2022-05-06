@@ -35,7 +35,6 @@ async function draw_buildings(matrix, buildings_array, num_squares, user_id, squ
     let g = color('gray');
     for (let i = 0; i < buildings_array.length; i++) {
         if (matrix[buildings_array[i].bld_x][buildings_array[i].bld_y] == num_squares) {
-            //console.log(userInfo)
             if (buildings_array[i].user_id == user_id) {
                 fill(bl);
                 rect(x, y, tilesize, tilesize);
@@ -79,7 +78,6 @@ async function key_buildings(its_my_turn, troop_array, user_id, resources) {
 async function build_building(troop_array, user_id, resources) {
     let building_iron_cost = 4;
     let building_food_cost = 4;
-    console.log(troop_array)
 
     for (let i = 0; i < troop_array.length; i++) {
         if (troop_array[i].user_id == user_id) {
@@ -99,13 +97,7 @@ async function build_building(troop_array, user_id, resources) {
 
 function mouse_pressed_buildings(building_array,x,y) {
     for (let i = 0; i < building_array.length; i++) {
-        building_array[i].selected = false;
-        console.log('x:'+x)
-        console.log('y:'+y)
-        console.log('BLD_X:'+building_array.bld_x)
-        console.log('BLD_y:'+building_array.bld_y)
-        if (x == building_array.bld_x && y == building_array.bld_y) {
-            console.log('AAAAAAAAAA')
+        if (x == building_array[i].bld_x && y == building_array[i].bld_y) {
             building_array[i].select()
             break
         } else {
