@@ -16,7 +16,6 @@ window.onload = async () => {
         username = userInfo.username;
         userid = userInfo.user_id;
         trophies = userInfo.user_trophies;
-        console.log();
 
     });
 }

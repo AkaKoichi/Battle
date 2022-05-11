@@ -14,20 +14,18 @@ class building {
     select() {
         this.selected = true;
         document.getElementById("building").innerHTML = this.bld_name;
-        fill(color('black'))
-        noCanvas()
     }
 
     unselect() {
         this.selected = false;
         document.getElementById("building").innerHTML = '';
-        createCanvas(700, 700)
+      
     }
 
 }
 
 
-async function draw_buildings(matrix, buildings_array, num_squares, user_id, square_size, tilesize, x, y) {
+function draw_buildings(matrix, buildings_array, num_squares, user_id, square_size, tilesize, x, y) {
     let c = color(255, 204, 0);
     let w = color('white');
     let b = color('black');

@@ -37,7 +37,7 @@ class troop{
     }
 
 }
-async function draw_troops(matrix,troop_array,num_squares,user_id,square_size,diameter,x,y){
+function draw_troops(matrix,troop_array,num_squares,user_id,square_size,diameter,x,y){
   
     let c = color(255, 204, 0);
     let w = color('white');
@@ -221,23 +221,7 @@ function get_dist_attack(attacker, defender) {
     return distX <= attacker.range && distY <= attacker.range;
 } 
 
-async function train(buildings,user_id,resources) {
-    let troop_iron_cost = 5;
-    let troop_food_cost = 5;
-    for (let i = 0; i < buildings.length; i++) {
-        if (buildings[i].bld_name == 'Training Camp') {
-            if (buildings[i].user_id == user_id) {
-                if ((resources[0].rsc_amount - troop_iron_cost >= 0) && (resources[1].rsc_amount - troop_food_cost >= 0)) {
-                    alert("Troop Successfully Trained");
-                    await train_troop(user_id, 1, buildings[i].bld_x, buildings[i].bld_y, 5, 2)
-                    await update_resources_id(user_id, resources[0].rsc_amount - troop_iron_cost, 1)
-                    await update_resources_id(user_id, resources[1].rsc_amount - troop_food_cost, 2)
-                    document.location.reload(true)
-                }
-            }
-        }
-    }
-}
+
 
 function roll_dice(min, sides) {
     dice_number = dice(1, sides);
@@ -253,5 +237,7 @@ function roll_dice(min, sides) {
 function dice(min, max) {
     return Math.floor(Math.random() * (max - min + 1) + min);
 }
+
+
 
 

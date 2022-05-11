@@ -10,6 +10,6 @@ const pool = new Pool({
         require: true, 
         rejectUnauthorized: false
     }
-})
+});
 module.exports = pool
 
