@@ -1,5 +1,7 @@
 //TESTE TESTE TRABALHA 
 
+
+
 var pool = require('./connection.js')
 let {update_resources} = require('./resources_model')
 
