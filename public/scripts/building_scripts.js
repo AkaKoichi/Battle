@@ -14,12 +14,14 @@ class building {
     select() {
         this.selected = true;
         document.getElementById("building").innerHTML = this.bld_name;
+        fill(color('black'))
+        noCanvas()
     }
 
     unselect() {
         this.selected = false;
         document.getElementById("building").innerHTML = '';
-      
+        createCanvas(700, 700)
     }
 
 }
