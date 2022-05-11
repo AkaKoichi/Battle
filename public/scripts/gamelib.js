@@ -1,9 +1,12 @@
-let userInfo;
+
+
+var userInfo;
 let resources;
 
 let troop_array = []
-let troop_movement = [];
-let buildings_place = [];
+let troops = [];
+let buildings_array = [];
+let buildings = [];
 
 let end_turn_button;
 let train_troop_button;
@@ -15,18 +18,15 @@ let its_my_turn;
 
 let dice_number = '';
 
-
-
-
 const radius = tilesize / 2;
 const diameter = radius * 2;
 
 window.onload = async () => {
     setInterval(() => {
         if (its_my_turn == false) {
-            document.location.reload(true)
+            // troops = await get_troops_by_id(1);
         }
-    }, 5000)
+    }, 4000)
 
     let user_info = await get_user_info();
     userInfo = user_info;
@@ -44,36 +44,47 @@ window.onload = async () => {
     document.getElementById("name").innerHTML = userInfo.username;
     document.getElementById("id").innerHTML = userInfo.user_id;
 
-    buildings_place = await get_buildings_by_id(1);
+    buildings = await get_buildings_by_id(1);
     resources = await get_resources_by_id(1, userInfo.user_id);
     document.getElementById("iron").innerHTML = resources[0].rsc_amount;
     document.getElementById("food").innerHTML = resources[1].rsc_amount;
     let troops = await get_troops_by_id(1);
-    troop_movement = troops;
-    for (let i = 0; i < troop_movement.length; i++) {
-        troop_array.push({
-            user_id: troop_movement[i].user_id,
-            user_trp_id: troop_movement[i].user_trp_id,
-            name: troop_movement[i].trp_name,
-            health: troop_movement[i].troop_current_health,
-            init_movement: troop_movement[i].trp_movement,
-            movement: troop_movement[i].troop_current_movement,
-            attack: troop_movement[i].trp_attack,
-            range: troop_movement[i].trp_range,
-            max_amount: troop_movement[i].trp_max_amount,
-            x: troop_movement[i].troop_x,
-            y: troop_movement[i].troop_y,
-            selected: false,
-            attacker: false,
-            defender: false,
-            square_x: 0,
-            square_y: 0
-        });
+
+    for (let i = 0; i < troops.length; i++) {
+
+        let temp_troop = new troop(
+            troops[i].user_id,
+            troops[i].user_trp_id,
+            troops[i].trp_name,
+            troops[i].troop_current_health,
+            troops[i].trp_movement,
+            troops[i].troop_current_movement,
+            troops[i].trp_attack,
+            troops[i].trp_range,
+            troops[i].trp_max_amount,
+            troops[i].troop_x,
+            troops[i].troop_y)
+        troop_array.push(
+            temp_troop,
+        );
+    }
+
+    for (let i = 0; i < buildings.length; i++) {
+        let temp_building = new building(
+            buildings[i].user_id,
+            buildings[i].user_bld_id,
+            buildings[i].bld_id,
+            buildings[i].bld_name,
+            buildings[i].bld_health,
+            buildings[i].bld_x,
+            buildings[i].bld_y)
+        buildings_array.push(
+            temp_building,
+        );
     }
 }
 
 function setup() {
-
     let cnv = createCanvas(700, 700);
     cnv.position(700, 30);
     tilesize = width / 20;
@@ -82,22 +93,26 @@ function setup() {
     for (let x = 0; x < 20; x++) {
         matrix[x] = []
         for (let y = 0; y < 20; y++) {
-
             pos++;
             matrix[x][y] = pos;
-
         }
     }
+
     end_turn_button = createButton('End Turn');
     end_turn_button.position(500, 155);
     end_turn_button.mousePressed(end_turn);
 
     train_troop_button = createButton('train troop');
     train_troop_button.position(500, 245);
-    train_troop_button.mousePressed(train);
+    train_troop_button.mousePressed(function () {
+        train(buildings, 1, resources)
+    });
 
 }
-function draw() {
+
+async function draw() {
+    if (userInfo == undefined)
+        return;
 
     background("black");
     let square_size = width / 20;
@@ -109,59 +124,34 @@ function draw() {
     let p = color('purple');
     let bl = color('blue');
     let g = color('gray');
+    let hovered_tile = mouse_over_tile();
 
-    for (let x = 0; x < height; x += square_size) {
-        for (let y = 0; y < width; y += square_size) {
 
-            rect(x, y, square_size, square_size);
+
+    for (let y = 0; y < height; y += square_size) {
+        for (let x = 0; x < width; x += square_size) {
+            if (matrix[hovered_tile.y][hovered_tile.x - 1   ] == num_squares) {
+                fill(p)
+                rect(x, y, square_size, square_size);
+                fill(w)
+
+            } else {
+                rect(x, y, square_size, square_size);
+            }
+
+
             fill(b);
-            text(num_squares,x+square_size/2 - 10,y+square_size/2)
+            text(num_squares, x + square_size / 2 - 10, y + square_size / 2)
             fill(w)
             num_squares++
-
-            for (let i = 0; i < buildings_place.length; i++) {
-                if (matrix[buildings_place[i].bld_x][buildings_place[i].bld_y] == num_squares) {
-                    if (buildings_place[i].user_id == userInfo.user_id) {
-                        fill(bl);
-                        rect(x, y, tilesize, tilesize);
-                        fill(b);
-                        textWrap(CHAR);
-                        text(buildings_place[i].bld_name, x + square_size / 2 - 10, y + square_size / 2);
-                        fill(w);
-
-                    } else {
-
-                        fill(r);
-                        rect(x, y, tilesize, tilesize);
-                        fill(b);
-                        text(buildings_place[i].bld_name, x + square_size / 2 - 10, y + square_size / 2);
-                        fill(w);
-                    }
-                }
-            }
-            for (let i = 0; i < troop_array.length; i++) {
-                if (matrix[troop_array[i].x][troop_array[i].y] == num_squares) {
-                    if (troop_array[i].user_id == userInfo.user_id) {
-
-                        fill(bl);
-                        circle(x + square_size / 2, y + square_size / 2, diameter);
-                        fill(w);
-                        troop_array[i].square_x = x + square_size / 2
-                        troop_array[i].square_y = y + square_size / 2
-                    } else {
-                        fill(r);
-                        circle(x + square_size / 2, y + square_size / 2, diameter);
-                        fill(w);
-                        troop_array[i].square_x = x + square_size / 2
-                        troop_array[i].square_y = y + square_size / 2
-                    }
-                }
-            }
+            await draw_buildings(matrix, buildings_array, num_squares, userInfo.user_id, square_size, tilesize, x, y)
+            await draw_troops(matrix, troop_array, num_squares, userInfo.user_id, square_size, diameter, x, y)
         }
     }
 }
 
 async function keyPressed() {
+<<<<<<< HEAD
     if (its_my_turn) {
         for (i = 0; i < troop_array.length; i++) {
             if (troop_array[i].user_id == userInfo.user_id ) {
@@ -240,140 +230,21 @@ async function keyPressed() {
                 break;
         }
     }
+=======
+    await key_troops(its_my_turn, troop_array, userInfo.user_id)
+    await key_buildings(its_my_turn, troop_array, userInfo.user_id, resources)
+>>>>>>> d19a9ad21cdc95b3346b094aed392cba8f470658
 }
 
 function mousePressed() {
-    for (let i = 0; i < troop_array.length; i++) {
-        troop_array[i].selected = false;
-        let distance = dist(mouseX, mouseY, troop_array[i].square_x, troop_array[i].square_y);
-        if (distance < radius) {
-            troop_array[i].selected = true;
-            troop_selected(troop_array[i])
-            break
-        } else {
-            troop_array[i].selected = false;
-            troop_selected('')
-        }
-    }
-}
+    let y = (int)(mouseX / tilesize)
+    let x = (int)(mouseY / tilesize)
+    mouse_pressed_troops(troop_array)
 
-function troop_selected(troop) {
-    if (troop != '') {
-        document.getElementById("troop").innerHTML = troop.name;
-        document.getElementById("movement").innerHTML = troop.movement;
-        document.getElementById("attack").innerHTML = troop.attack;
-    } else {
-        document.getElementById("movement").innerHTML = '';
-        document.getElementById("troop").innerHTML = '';
-        document.getElementById("attack").innerHTML = '';
-    }
-}
 
-async function build_building() {
-    let building_iron_cost = 4;
-    let building_food_cost = 4;
+    mouse_pressed_buildings(buildings_array, x, y)
 
-    for (let i = 0; i < troop_array.length; i++) {
-        if (troop_array[i].user_id == userInfo.user_id) {
-            if (troop_array[i].selected) {
-                if ((resources[0].rsc_amount - building_iron_cost >= 0) && (resources[1].rsc_amount - building_food_cost >= 0)) {
-                    alert("Building Successfully Built");
-                    await build(userInfo.user_id, 2, troop_array[i].x, troop_array[i].y, 5)
-                    await update_resources_id(userInfo.user_id, resources[0].rsc_amount - building_iron_cost, 1)
-                    await update_resources_id(userInfo.user_id, resources[1].rsc_amount - building_food_cost, 2)
-                    document.location.reload(true)
-                    break
-                }
-            }
-        }
-    }
-}
 
-function set_attacker() {
-    for (let i = 0; i < troop_array.length; i++) {
-        if (troop_array[i].user_id == userInfo.user_id) {
-            if (troop_array[i].selected) {
-                troop_array[i].attacker = true;
-                break;
-            }
-        }
-    }
-}
-
-function set_defender() {
-    for (let i = 0; i < troop_array.length; i++) {
-        if (troop_array[i].user_id != userInfo.user_id) {
-            if (troop_array[i].selected) {
-                troop_array[i].defender = true;
-                break;
-            }
-        }
-    }
-}
-
-async function make_attack() {
-    var attacker = {};
-    var defender = {};
-    let attacker_index = null;
-    let defender_index = null;
-    let can_attack = false;
-    let dice_dmg_multiplier = null;
-
-    for (let i = 0; i < troop_array.length; i++) {
-        if (troop_array[i].user_id == userInfo.user_id) {
-            if (troop_array[i].attacker) {
-                attacker = troop_array[i]
-                attacker_index = i
-                break;
-            }
-        }
-    }
-    for (let i = 0; i < troop_array.length; i++) {
-        if (troop_array[i].user_id != userInfo.user_id) {
-            if (troop_array[i].defender) {
-                defender = troop_array[i]
-                defender_index = i
-                break;
-            }
-        }
-    }
-    can_attack = get_dist_attack(attacker, defender)
-    dice_dmg_multiplier = roll_dice(3, 6)
-    if (can_attack && dice_dmg_multiplier >= 1) {
-        defender.health -= attacker.attack * dice_dmg_multiplier;
-        if (defender.health <= 0) {
-            await delete_troops_id(troop_array[defender_index].user_trp_id)
-        }
-        await update_troops_id(defender.user_id, defender.user_trp_id, defender.x, defender.y, defender.health);
-        alert('defender health after attack'+defender.health)
-        troop_array[attacker_index].attacker = false;
-        troop_array[defender_index].defender = false;
-    }
-    document.location.reload(true)
-}
-
-function get_dist_attack(attacker, defender) {
-    distX = Math.abs(attacker.x - defender.x)
-    distY = Math.abs(attacker.y - defender.y)
-    return distX <= attacker.range && distY <= attacker.range;
-}
-
-async function train() {
-    let troop_iron_cost = 5;
-    let troop_food_cost = 5;
-    for (let i = 0; i < buildings_place.length; i++) {
-        if (buildings_place[i].bld_name == 'Training Camp') {
-            if (buildings_place[i].user_id == userInfo.user_id) {
-                if ((resources[0].rsc_amount - troop_iron_cost >= 0) && (resources[1].rsc_amount - troop_food_cost >= 0)) {
-                    alert("Troop Successfully Trained");
-                    await train_troop(userInfo.user_id, 1, buildings_place[i].bld_x, buildings_place[i].bld_y, 5, 2)
-                    await update_resources_id(userInfo.user_id, resources[0].rsc_amount - troop_iron_cost, 1)
-                    await update_resources_id(userInfo.user_id, resources[1].rsc_amount - troop_food_cost, 2)
-                    document.location.reload(true)
-                }
-            }
-        }
-    }
 }
 
 async function check_current_playing() {
@@ -384,12 +255,12 @@ async function check_current_playing() {
 async function end_turn() {
     let resources_per_turn = 2
 
-    for (let i = 0; i < buildings_place.length; i++) {
-        if (buildings_place[i].user_id == userInfo.user_id) {
-            if (buildings_place[i].bld_name == 'Mine') {
+    for (let i = 0; i < buildings.length; i++) {
+        if (buildings[i].user_id == userInfo.user_id) {
+            if (buildings[i].bld_name == 'Mine') {
                 await update_resources_id(userInfo.user_id, resources[0].rsc_amount + resources_per_turn, 1)
             }
-            if (buildings_place[i].bld_name == 'Field') {
+            if (buildings[i].bld_name == 'Field') {
                 await update_resources_id(userInfo.user_id, resources[1].rsc_amount + resources_per_turn, 2)
             }
         }
@@ -421,8 +292,6 @@ async function end_turn() {
 }
 
 async function your_turn() {
-
-    console.log('y')
     its_my_turn = true;
     end_turn_button.removeAttribute('disabled')
     train_troop_button.removeAttribute('disabled')
@@ -449,17 +318,11 @@ function disable_button(button) {
     button.attribute('disabled', '');
 }
 
-function roll_dice(min, sides) {
-    dice_number = dice(1, sides);
-    document.getElementById("dice").innerHTML = dice_number;
-    if (dice_number == sides) {
-        return 2
-    } else if (dice_number >= min) {
-        return 1
-    }
-    return 0
-}
+function mouse_over_tile() {
+    let x = (int)(mouseX / tilesize)
+    let y = (int)(mouseY / tilesize)
 
-function dice(min, max) {
-    return Math.floor(Math.random() * (max - min + 1) + min);
+    return { x: x, y: y };
+
+
 }

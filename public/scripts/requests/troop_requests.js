@@ -28,7 +28,7 @@ async function get_troops_by_id(id) {
         // Treat 500 errors here    
         console.log(err);
     }
-}   
+}  
 
  async function update_troops_id(id,user_trp_id,x,y,health,movement) {
      try {
@@ -38,7 +38,6 @@ async function get_troops_by_id(id) {
                 "Content-Type": "application/json"
               },
             body: JSON.stringify({user_trp_id,x,y,health,movement})
-
          });
          if (response.status == 200) {
             var troops = await response.json();
@@ -74,7 +73,7 @@ async function get_troops_by_id(id) {
 
 async function delete_troops_id(id) {
     try {
-        const response = await fetch(`/api/troops/delete/${id}`,{
+        const response = await fetch(`/api/troops/delete/${id}  `,{
             method:"DELETE"
         });
         if (response.status == 200) {
