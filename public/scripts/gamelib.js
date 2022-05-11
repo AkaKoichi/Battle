@@ -164,7 +164,7 @@ function draw() {
 async function keyPressed() {
     if (its_my_turn) {
         for (i = 0; i < troop_array.length; i++) {
-            if (troop_array[i].user_id == userInfo.user_id) {
+            if (troop_array[i].user_id == userInfo.user_id ) {
                 if (troop_array[i].selected) {
                     if (troop_array[i].movement > 0) {
                         switch (key) {
