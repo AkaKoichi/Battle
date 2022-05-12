@@ -1,7 +1,3 @@
-//TESTE TESTE TRABALHA 
-
-
-
 var pool = require('./connection.js')
 let {update_resources} = require('./resources_model')
 
@@ -90,7 +86,19 @@ module.exports.delete_troop = async function (id) {
   }
 }
 
-
+module.exports.get_all_troops_resources = async function () {
+  try {
+    let sql = `select trp_name,rsc_type,rsc_amount from resources_troops 
+    inner join troops on resources_troops.trp_id = troops.trp_id
+    inner join resources on resources_troops.rsc_id = resources.rsc_id;`;
+    let result = await pool.query(sql);
+    let troops = result.rows;
+    return { status: 200, result: troops };
+  } catch (err) {
+    console.log(err);
+    return { status: 500, result: err };
+  }
+}
 
 
 
