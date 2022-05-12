@@ -1,5 +1,5 @@
 let infantry_img;
-// test mf test
+// test mf test testttttttt
 
 
 class troop{
