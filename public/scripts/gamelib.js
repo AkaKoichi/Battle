@@ -8,6 +8,8 @@ let troops = [];
 let buildings_array = [];
 let buildings = [];
 
+
+let inpit_troop;
 let end_turn_button;
 let train_troop_button;
 let board_size = 16
@@ -28,10 +30,10 @@ window.onload = async () => {
     user_info = await get_user_info();
     resources = await get_resources_by_id(1, user_info.user_id);
 
-    setInterval(() => {
+    /* setInterval(() => {
         if (its_my_turn == false) initialize_game()
         
-    }, 1000);
+    }, 1000); */
     await initialize_game()
 
 
@@ -52,9 +54,6 @@ window.onload = async () => {
     document.getElementById("id").innerHTML = user_info.user_id;
     document.getElementById("iron").innerHTML = resources[0].rsc_amount;
     document.getElementById("food").innerHTML = resources[1].rsc_amount;
-
-
-
 }
 
 async function setup() {
@@ -71,18 +70,18 @@ async function setup() {
             matrix[x][y] = pos;
         }
     }
+    
     end_turn_button = createButton('End Turn');
     end_turn_button.position(500, 155);
     end_turn_button.mousePressed(end_turn);
 
+    input_troop = createInput();
+    input_troop.position(500, 220);
+
     train_troop_button = createButton('train troop');
     train_troop_button.position(500, 245);
     train_troop_button.mousePressed(async function () {
-        let result = await train_troop(user_info.user_id, 1, 5, 2, buildings, resources)
-        if (result.inserted) {
-            alert('a')
-            //document.location.reload(true)
-        }
+        train(user_info.user_id,input_troop.value(),buildings,resources)
     });
 
 }

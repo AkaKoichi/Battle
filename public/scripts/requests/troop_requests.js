@@ -52,16 +52,16 @@ async function get_troops_by_id(id) {
      }
  }  
  
- async function train_troop(id,troop_id,troop_current_health,movement,buildings,resources) {
+ async function train_troop(user_id, troop_id, x, y, resources) {
     try {
         // TODO: Verify user information  and give errors
-        const response = await fetch(`/api/troops/train/${id}`,
+        const response = await fetch(`/api/troops/train/${troop_id}`,
         {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
               },
-            body: JSON.stringify({troop_id,troop_current_health,movement,buildings,resources}) 
+            body: JSON.stringify({user_id, x, y, resources}) 
         });
         var result= await response.json();
         console.log('aaaa')

@@ -3,7 +3,16 @@ var router = express.Router();
 var troop_model = require("../models/troop_model");
             
 
-
+router.post('/train/:id', async function(req, res, next) {
+  let troop_id  = req.params.id;
+  let id = req.body.user_id;
+  let x =req.body.x;
+  let y =req.body.y;
+  let resources = req.body.resources
+  console.log("Get troop with id "+troop_id)
+  let result = await troop_model.train(id,troop_id,x,y,resources);
+  res.status(result.status).send(result.result);
+});
 
 router.delete('/delete/:id', async function(req, res, next) {
   let id = req.params.id;
@@ -39,16 +48,6 @@ router.get('/', async function(req, res, next) {
   res.status(result.status).send(result.result);
 });
 
-router.post('/train/:id', async function(req, res, next) {
-  let id = req.params.id;
-  let troop_id = req.body.troop_id;
-  let troop_current_health = req.body.troop_current_health;
-  let troop_movement = req.body.movement
-  let buildings = req.body.buildings
-  let resources = req.body.resources
-  console.log("Get troop with id "+id)
-  let result = await troop_model.train(id,troop_id,troop_current_health,troop_movement,buildings,resources);
-  res.status(result.status).send(result.result);
-});
+
       
 module.exports = router;
