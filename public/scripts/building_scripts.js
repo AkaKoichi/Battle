@@ -1,3 +1,4 @@
+let prepare_to_train = false;
 
 class building {
     constructor(user_id, user_bld_id, bld_id, name, health, bld_x, bld_y) {
@@ -19,7 +20,6 @@ class building {
     unselect() {
         this.selected = false;
         document.getElementById("building").innerHTML = '';
-      
     }
 
 }
@@ -50,12 +50,17 @@ function draw_buildings(matrix, buildings_array, num_squares, user_id, square_si
                 text(buildings_array[i].bld_name, x + square_size / 2 - 10, y + square_size / 2);
                 fill(w);
             }
-            if(buildings_array[i].selected == true)
-            {
-                fill(127, 129, 133,127); 
-                rect(100, 100, tilesize, tilesize);
-                fill(w)
+            if(prepare_to_train == false){
+                if(buildings_array[i].selected == true)
+                {
+                    fill(127, 129, 133,127); 
+                    rect(100, 100, 500, 500);
+                    fill(w)
+                    prepare_to_train = true;
+                }
             }
+            else prepare_to_train = false;
+
         }
     }
 }
