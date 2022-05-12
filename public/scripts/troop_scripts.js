@@ -1,4 +1,4 @@
-let infantry_img;
+
 // test mf test testttttttt
 
 
@@ -21,6 +21,7 @@ class troop{
         this.square_x = 0;
         this.square_y = 0;
         this.url = url
+        this.image = loadImage(url)
     }
     select() {
             this.selected = true;
@@ -38,11 +39,8 @@ class troop{
     }
 
 }
-function troop_setup() {
-    infantry_img = loadImage('/images/troops/infatry.png');
-    
-}
-function draw_troops(matrix,troop_array,num_squares,user_id,square_size,diameter,x,y){
+
+function draw_troops(matrix,troop_array,num_squares,user_id,square_size,diameter,x,y,){
   
     let c = color(255, 204, 0);
     let w = color('white');
@@ -54,17 +52,19 @@ function draw_troops(matrix,troop_array,num_squares,user_id,square_size,diameter
     for (let i = 0; i < troop_array.length; i++) {
         if (matrix[troop_array[i].x][troop_array[i].y] == num_squares) {
             if (troop_array[i].user_id == user_id) {
+                
 
                 fill(bl);
                 circle(x + square_size / 2, y + square_size / 2, diameter);
-                image(infantry_img,x+1 , y+1,(width/square_size)*2.65, (height/square_size)*2.6);
+                //image(troop_array[1].image,x+1 , y+1,10,10);
+                // ,(width/square_size)*2.65, (height/square_size)*2.6
                 fill(w);
                 troop_array[i].square_x = x + square_size / 2
                 troop_array[i].square_y = y + square_size / 2
             } else {
                 fill(r);
                 circle(x + square_size / 2, y + square_size / 2, diameter);
-                image(infantry_img,x+1 , y+1,(width/square_size)*2.65, (height/square_size)*2.6);
+                //image(troop_array[1].image,x+1 , y+1,10,10);
                 fill(w);
                 troop_array[i].square_x = x + square_size / 2
                 troop_array[i].square_y = y + square_size / 2
