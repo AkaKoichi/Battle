@@ -1,4 +1,6 @@
 let prepare_to_train = false;
+let tc_img;
+
 
 class building {
     constructor(user_id, user_bld_id, bld_id, name, health, bld_x, bld_y) {
@@ -24,6 +26,10 @@ class building {
 
 }
 
+function building_setup() {
+    tc_img = loadImage('/images/buildings/tc.png');
+    
+}
 
 function draw_buildings(matrix, buildings_array, num_squares, user_id, square_size, tilesize, x, y) {
     let c = color(255, 204, 0);
@@ -38,6 +44,7 @@ function draw_buildings(matrix, buildings_array, num_squares, user_id, square_si
             if (buildings_array[i].user_id == user_id) {
                 fill(bl);
                 rect(x, y, tilesize, tilesize);
+                image(tc_img,x , y,tilesize,tilesize);
                 fill(b);
                 text(buildings_array[i].bld_name, x + square_size / 2 - 10, y + square_size / 2);
                 fill(w);
@@ -46,6 +53,7 @@ function draw_buildings(matrix, buildings_array, num_squares, user_id, square_si
 
                 fill(r);
                 rect(x, y, tilesize, tilesize);
+                image(tc_img,x , y,tilesize,tilesize);
                 fill(b);
                 text(buildings_array[i].bld_name, x + square_size / 2 - 10, y + square_size / 2);
                 fill(w);
