@@ -1,6 +1,6 @@
 
 // test mf test testttttttt
-
+let trp_image;
 
 class troop{
     constructor(user_id,user_trp_id,name,health,init_movement,movement,attack,range, max_amount,x,y,url){
@@ -20,8 +20,7 @@ class troop{
         this.defender = false;
         this.square_x = 0;
         this.square_y = 0;
-        this.url = url
-        this.image = loadImage(url)
+        this.url = url;
     }
     select() {
             this.selected = true;
@@ -40,7 +39,7 @@ class troop{
 
 }
 
-function draw_troops(matrix,troop_array,num_squares,user_id,square_size,diameter,x,y,){
+function draw_troops(matrix,troop_array,num_squares,user_id,square_size,diameter,x,y){
   
     let c = color(255, 204, 0);
     let w = color('white');
@@ -52,19 +51,20 @@ function draw_troops(matrix,troop_array,num_squares,user_id,square_size,diameter
     for (let i = 0; i < troop_array.length; i++) {
         if (matrix[troop_array[i].x][troop_array[i].y] == num_squares) {
             if (troop_array[i].user_id == user_id) {
-                
+                //trp_image=give_img(troop_array[1].url)
 
                 fill(bl);
                 circle(x + square_size / 2, y + square_size / 2, diameter);
-                //image(troop_array[1].image,x+1 , y+1,10,10);
+                //image(trp_image,x+1 , y+1,10,10);
                 // ,(width/square_size)*2.65, (height/square_size)*2.6
                 fill(w);
                 troop_array[i].square_x = x + square_size / 2
                 troop_array[i].square_y = y + square_size / 2
             } else {
+                //trp_image=give_img(troop_array[1].url)
                 fill(r);
                 circle(x + square_size / 2, y + square_size / 2, diameter);
-                //image(troop_array[1].image,x+1 , y+1,10,10);
+               // image(trp_image,x+1 , y+1,10,10);
                 fill(w);
                 troop_array[i].square_x = x + square_size / 2
                 troop_array[i].square_y = y + square_size / 2
@@ -243,6 +243,10 @@ function roll_dice(min, sides) {
 
 function dice(min, max) {
     return Math.floor(Math.random() * (max - min + 1) + min);
+}
+
+async function train (){
+    
 }
 
 
