@@ -1,5 +1,5 @@
-
-
+let infantry_img;
+// test mf test
 
 
 class troop{
@@ -37,6 +37,10 @@ class troop{
     }
 
 }
+function troop_setup() {
+    infantry_img = loadImage('/images/troops/infatry.png');
+    
+}
 function draw_troops(matrix,troop_array,num_squares,user_id,square_size,diameter,x,y){
   
     let c = color(255, 204, 0);
@@ -52,12 +56,14 @@ function draw_troops(matrix,troop_array,num_squares,user_id,square_size,diameter
 
                 fill(bl);
                 circle(x + square_size / 2, y + square_size / 2, diameter);
+                image(infantry_img,x+1 , y+1,(width/square_size)*2.65, (height/square_size)*2.6);
                 fill(w);
                 troop_array[i].square_x = x + square_size / 2
                 troop_array[i].square_y = y + square_size / 2
             } else {
                 fill(r);
                 circle(x + square_size / 2, y + square_size / 2, diameter);
+                image(infantry_img,x+1 , y+1,(width/square_size)*2.65, (height/square_size)*2.6);
                 fill(w);
                 troop_array[i].square_x = x + square_size / 2
                 troop_array[i].square_y = y + square_size / 2
