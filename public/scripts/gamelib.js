@@ -18,51 +18,22 @@ let its_my_turn;
 
 let dice_number = '';
 
-let update_interval = 1000;
+let update_interval = 0;
 let update_timer = 0;
 
 const radius = tilesize / 2;
 const diameter = radius * 2;
 
 window.onload = async () => {
-
     user_info = await get_user_info();
     resources = await get_resources_by_id(1, user_info.user_id);
-    
 
+    setInterval(() => {
+        if (its_my_turn == false) initialize_game()
+        
+    }, 1000);
     await initialize_game()
-    for (let i = 0; i < troops.length; i++) {
 
-        let temp_troop = new troop(
-            troops[i].user_id,
-            troops[i].user_trp_id,
-            troops[i].trp_name,
-            troops[i].troop_current_health,
-            troops[i].trp_movement,
-            troops[i].troop_current_movement,
-            troops[i].trp_attack,
-            troops[i].trp_range,
-            troops[i].trp_max_amount,
-            troops[i].troop_x,
-            troops[i].troop_y)
-        troop_array.push(
-            temp_troop,
-        );
-    }
-
-    for (let i = 0; i < buildings.length; i++) {
-        let temp_building = new building(
-            buildings[i].user_id,
-            buildings[i].user_bld_id,
-            buildings[i].bld_id,
-            buildings[i].bld_name,
-            buildings[i].bld_health,
-            buildings[i].bld_x,
-            buildings[i].bld_y)
-        buildings_array.push(
-            temp_building,
-        );
-    }
 
 
 
@@ -87,9 +58,8 @@ window.onload = async () => {
 }
 
 async function setup() {
-    troop_setup()
     building_setup()
-    let cnv = createCanvas(board_size*tilesize, board_size*tilesize);
+    let cnv = createCanvas(board_size * tilesize, board_size * tilesize);
     cnv.position(700, 30);
     //tilesize = width / board_size;
 
@@ -119,15 +89,15 @@ async function setup() {
 
 async function draw() {
 
-    if (!its_my_turn) {
-        if (update_timer == update_interval)
-        {
+ /*    if (its_my_turn == false) {
+        update_timer += deltaTime;
+        if (update_timer == update_interval) {
+            console.log('a');
+
             initialize_game();
             update_time = 0;
         }
-        else
-            update_timer += deltaTime;
-    }
+    } */
 
     if (user_info == undefined)
         return;
@@ -261,7 +231,41 @@ function mouse_over_tile() {
 }
 
 async function initialize_game() {
+    troop_array = []
     buildings = await get_buildings_by_id(1);
     troops = await get_troops_by_id(1);
+    for (let i = 0; i < troops.length; i++) {
+
+        let temp_troop = new troop(
+            troops[i].user_id,
+            troops[i].user_trp_id,
+            troops[i].trp_name,
+            troops[i].troop_current_health,
+            troops[i].trp_movement,
+            troops[i].troop_current_movement,
+            troops[i].trp_attack,
+            troops[i].trp_range,
+            troops[i].trp_max_amount,
+            troops[i].troop_x,
+            troops[i].troop_y,
+            troops[i].trp_url
+        )
+        troop_array.push(
+            temp_troop,
+        );
+    }
+    for (let i = 0; i < buildings.length; i++) {
+        let temp_building = new building(
+            buildings[i].user_id,
+            buildings[i].user_bld_id,
+            buildings[i].bld_id,
+            buildings[i].bld_name,
+            buildings[i].bld_health,
+            buildings[i].bld_x,
+            buildings[i].bld_y)
+        buildings_array.push(
+            temp_building,
+        );
+    }
 
 }
