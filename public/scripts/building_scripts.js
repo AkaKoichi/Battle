@@ -40,6 +40,17 @@ function draw_buildings(matrix, buildings_array, num_squares, user_id, square_si
     let bl = color('blue');
     let g = color('gray');
     for (let i = 0; i < buildings_array.length; i++) {
+        if(prepare_to_train == false){
+            if(buildings_array[i].selected == true)
+            {
+                fill(15, 166, 55, 10); 
+                rect(100, 100, 500, 500);
+                fill(w);
+                prepare_to_train = true;
+            }
+        }
+        else prepare_to_train = false;
+
         if (matrix[buildings_array[i].bld_x][buildings_array[i].bld_y] == num_squares) {
             if (buildings_array[i].user_id == user_id) {
                 fill(bl);
@@ -58,16 +69,6 @@ function draw_buildings(matrix, buildings_array, num_squares, user_id, square_si
                 text(buildings_array[i].bld_name, x + square_size / 2 - 10, y + square_size / 2);
                 fill(w);
             }
-            if(prepare_to_train == false){
-                if(buildings_array[i].selected == true)
-                {
-                    fill(127, 129, 133,127); 
-                    rect(100, 100, 500, 500);
-                    fill(w)
-                    prepare_to_train = true;
-                }
-            }
-            else prepare_to_train = false;
 
         }
     }

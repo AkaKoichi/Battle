@@ -1,5 +1,5 @@
 var pool = require('./connection.js')
-let {update_resources} = require('./resources_model')
+let { update_resources } = require('./resources_model')
 
 module.exports.get_all_troops = async function () {
   try {

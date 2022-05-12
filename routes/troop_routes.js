@@ -3,7 +3,10 @@ var router = express.Router();
 var troop_model = require("../models/troop_model");
             
 
-
+router.get('/resources', async function(req, res, next) {
+  let result = await troop_model.get_all_troops_resources();
+  res.status(result.status).send(result.result);
+});
 
 router.delete('/delete/:id', async function(req, res, next) {
   let id = req.params.id;
@@ -25,7 +28,6 @@ router.put('/update/:id', async function(req, res, next) {
   let result = await troop_model.update_troop(id,user_trp_id,x,y,health,movement);
   res.status(result.status).send(result.result);
 });
-
 
 router.get('/:id', async function(req, res, next) {
   let id = req.params.id;
@@ -50,5 +52,7 @@ router.post('/train/:id', async function(req, res, next) {
   let result = await troop_model.train(id,troop_id,troop_current_health,troop_movement,buildings,resources);
   res.status(result.status).send(result.result);
 });
-      
+
+
+
 module.exports = router;
