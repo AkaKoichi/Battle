@@ -3,7 +3,7 @@ let infantry_img;
 
 
 class troop{
-    constructor(user_id,user_trp_id,name,health,init_movement,movement,attack,range, max_amount,x,y){
+    constructor(user_id,user_trp_id,name,health,init_movement,movement,attack,range, max_amount,x,y,url){
         this.user_id = user_id ;
         this.user_trp_id = user_trp_id;
         this.name = name;
@@ -19,7 +19,8 @@ class troop{
         this.attacker = false;
         this.defender = false;
         this.square_x = 0;
-        this.square_y = 0
+        this.square_y = 0;
+        this.url = url
     }
     select() {
             this.selected = true;

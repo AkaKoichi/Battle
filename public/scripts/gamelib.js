@@ -44,7 +44,8 @@ window.onload = async () => {
             troops[i].trp_range,
             troops[i].trp_max_amount,
             troops[i].troop_x,
-            troops[i].troop_y)
+            troops[i].troop_y,
+            troops[i].trp_url)
         troop_array.push(
             temp_troop,
         );
