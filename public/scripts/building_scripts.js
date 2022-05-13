@@ -66,9 +66,7 @@ function draw_buildings(matrix, buildings_array, num_squares, user_id, square_si
                             text(troops_resources[i].rsc_amount,300,y_pop)
                             last_name = troops_resources[i].trp_name;
                         }
-                        
-                        y_pop+=20
-                        
+                        y_pop+=20 
                     }
                     fill(15, 166, 55, 10); 
                     rect(100, 100, 500, 500);
