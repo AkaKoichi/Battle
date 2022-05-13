@@ -1,3 +1,5 @@
+
+
 let prepare_to_train = false;
 let tc_img;
 let troops_resources = [];
@@ -52,14 +54,26 @@ function draw_buildings(matrix, buildings_array, num_squares, user_id, square_si
                 if(troops_resources == []){
                     return
                 }else{
-                    for(let y = 0; y < troops_resources.length; y+=2){
-                        //text(troops_resources[i].trp_name,250,250)
-                        fill(15, 166, 55, 10); 
-                        rect(100, 100, 500, 500);
-                        fill(w);
-                        prepare_to_train = true;
-                    }
+                    let y_pop =250
+                    let last_name ;
+                    for(let i = 0; i < troops_resources.length; i++){
+                       
+                        if (last_name == troops_resources[i].trp_name){
+                            text(troops_resources[i].rsc_amount,250,y_pop) 
 
+                        }else{
+                            text(troops_resources[i].trp_name,250,y_pop)
+                            text(troops_resources[i].rsc_amount,300,y_pop)
+                            last_name = troops_resources[i].trp_name;
+                        }
+                        
+                        y_pop+=20
+                        
+                    }
+                    fill(15, 166, 55, 10); 
+                    rect(100, 100, 500, 500);
+                    fill(w);
+                    prepare_to_train = true;
             }
         }
         else prepare_to_train = false;
