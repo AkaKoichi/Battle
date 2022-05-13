@@ -30,10 +30,10 @@ window.onload = async () => {
     user_info = await get_user_info();
     resources = await get_resources_by_id(1, user_info.user_id);
 
-    /* setInterval(() => {
+    setInterval(() => {
         if (its_my_turn == false) initialize_game()
-        
-    }, 1000); */
+
+    }, 500);
     await initialize_game()
 
 
@@ -237,9 +237,9 @@ function mouse_over_tile() {
 }
 
 async function initialize_game() {
-    troop_array = []
     buildings = await get_buildings_by_id(1);
     troops = await get_troops_by_id(1);
+    troop_array = []
     for (let i = 0; i < troops.length; i++) {
 
         let temp_troop = new troop(

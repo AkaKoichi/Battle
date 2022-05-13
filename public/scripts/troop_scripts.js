@@ -55,21 +55,21 @@ function draw_troops(matrix, troop_array, num_squares, user_id, square_size, dia
             if (troop_array[i].user_id == user_id) {
                 
 
-                fill(bl);
-                circle(x + square_size / 2, y + square_size / 2, diameter);
+                
+               //circle(x + square_size / 2, y + square_size / 2, diameter);
                 image(trp_image,x+1 , y+1-square_size / 4,square_size, square_size);
                 //image(trp_image,x+1 , y+1,10,10);
                 // ,(width/square_size)*2.65, (height/square_size)*2.6
-                fill(w);
+            
                 troop_array[i].square_x = x + square_size / 2
                 troop_array[i].square_y = y + square_size / 2
             } else {
                 //trp_image=give_img(troop_array[1].url)
-                fill(r);
-                circle(x + square_size / 2, y + square_size / 2, diameter);
+                
+                //circle(x + square_size / 2, y + square_size / 2, diameter);
                 image(trp_image,x+1 , y+1-square_size / 4,square_size, square_size);
                 // image(trp_image,x+1 , y+1,10,10);
-                fill(w);
+                
                 troop_array[i].square_x = x + square_size / 2
                 troop_array[i].square_y = y + square_size / 2
             }
