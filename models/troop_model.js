@@ -42,36 +42,33 @@ module.exports.update_troop = async function (user_id, user_trp_id, x, y, health
   }
 }
 
-module.exports.train = async function (user_id, troop_id, troop_current_health, troop_movement, buildings, resources) {
+module.exports.train = async function (user_id, troop_id, x, y, resources) {
   let troop_iron_cost = 5;
   let troop_food_cost = 5;
-  for (let i = 0; i < buildings.length; i++) {
-    if ((buildings[i].bld_name == 'Training Camp') &&
-      (buildings[i].user_id == user_id) &&
-      (resources[0].rsc_amount - troop_iron_cost >= 0) &&
-      (resources[1].rsc_amount - troop_food_cost >= 0)) {
+  if (
+    (resources[0].rsc_amount - troop_iron_cost >= 0) &&
+    (resources[1].rsc_amount - troop_food_cost >= 0)) {
+    try {
+      let sql = `select trp_movement,trp_health from troops where trp_id = $1`
+      let result = await pool.query(sql, [troop_id]);
+      let troop_current_health = result.rows[0].trp_health;
+      let troop_movement = result.rows[0].trp_movement;
+      sql = `Insert into user_troops (user_id,troop_id,troop_x,troop_y,troop_current_health,troop_current_movement)values ($1,$2,$3,$4,$5,$6) `;
+      result = await pool.query(sql, [user_id, troop_id, x, y, troop_current_health, troop_movement]);
+      console.log(result)
+      let troops = result.rows;
+      await update_resources(user_id, resources[0].rsc_amount - troop_iron_cost, 1)
+      await update_resources(user_id, resources[1].rsc_amount - troop_food_cost, 2)
+      return { status: 200, result: troops };
 
-      try {
-        let sql = `Insert into user_troops (user_id,troop_id,troop_x,troop_y,troop_current_health,troop_current_movement)values ($1,$2,$3,$4,$5,$6) `;
-        let result = await pool.query(sql, [user_id, troop_id, buildings[i].bld_x, buildings[i].bld_y, troop_current_health, troop_movement]);
-        console.log(result)
-        let troops = result.rows;
-        sql = `Select * from troops`
-        result = await pool.query(sql);
-        console.log(result)
-        await update_resources(user_id, resources[0].rsc_amount - troop_iron_cost, 1)
-        await update_resources(user_id, resources[1].rsc_amount - troop_food_cost, 2)
-        console.log('ss')
-        return { status: 200, result: troops };
+    } catch (err) {
+      console.log(err);
+      return { status: 500, result: err };
 
-      } catch (err) {
-        console.log(err);
-        return { status: 500, result: err };
-
-      }
     }
   }
 }
+
 
 module.exports.delete_troop = async function (id) {
   try {
