@@ -1,5 +1,8 @@
 let prepare_to_train = false;
 let tc_img;
+let troops_resources = [];
+let y;
+let x;
 
 
 class building {
@@ -17,6 +20,7 @@ class building {
     select() {
         this.selected = true;
         document.getElementById("building").innerHTML = this.bld_name;
+        resources_for_troops();
     }
 
     unselect() {
@@ -26,9 +30,13 @@ class building {
 
 }
 
+async function resources_for_troops() {
+    troops_resources = await get_troops_resources();
+    console.log(troops_resources)
+}
+
 function building_setup() {
     tc_img = loadImage('/images/buildings/tc.png');
-    
 }
 
 function draw_buildings(matrix, buildings_array, num_squares, user_id, square_size, tilesize, x, y) {
@@ -40,13 +48,18 @@ function draw_buildings(matrix, buildings_array, num_squares, user_id, square_si
     let bl = color('blue');
     let g = color('gray');
     for (let i = 0; i < buildings_array.length; i++) {
-        if(prepare_to_train == false){
-            if(buildings_array[i].selected == true)
-            {
-                fill(15, 166, 55, 10); 
-                rect(100, 100, 500, 500);
-                fill(w);
-                prepare_to_train = true;
+        if(prepare_to_train == false && buildings_array[i].selected == true && buildings_array[i].bld_name == 'Training Camp'){
+                if(troops_resources == []){
+                    return
+                }else{
+                    for(let y = 0; y < troops_resources.length; y+=2){
+                        text(troops_resources[i].trp_name,250,250)
+                        fill(15, 166, 55, 10); 
+                        rect(100, 100, 500, 500);
+                        fill(w);
+                        prepare_to_train = true;
+                    }
+
             }
         }
         else prepare_to_train = false;
@@ -118,7 +131,8 @@ async function build_building(troop_array, user_id, resources) {
 function mouse_pressed_buildings(building_array,x,y) {
     for (let i = 0; i < building_array.length; i++) {
         if (x == building_array[i].bld_x && y == building_array[i].bld_y) {
-            building_array[i].select()
+            building_array[i].select();
+            
             break
         } else {
             building_array[i].unselect()
