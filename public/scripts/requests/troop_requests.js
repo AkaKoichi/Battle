@@ -92,7 +92,7 @@ async function delete_troops_id(id) {
 
 async function get_troops_resources() {
     try {
-        const response = await fetch(`/api/troopsResources`);
+        const response = await fetch(`/api/troops/resources`);
         if (response.status == 200) {
            var troops = await response.json();
            return troops;

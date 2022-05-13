@@ -53,7 +53,7 @@ function draw_buildings(matrix, buildings_array, num_squares, user_id, square_si
                     return
                 }else{
                     for(let y = 0; y < troops_resources.length; y+=2){
-                        text(troops_resources[i].trp_name,250,250)
+                        //text(troops_resources[i].trp_name,250,250)
                         fill(15, 166, 55, 10); 
                         rect(100, 100, 500, 500);
                         fill(w);
