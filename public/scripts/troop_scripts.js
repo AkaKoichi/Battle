@@ -3,8 +3,9 @@
 let trp_image;
 
 class troop {
-    constructor(user_id, user_trp_id, name, health, init_movement, movement, attack, range, max_amount, x, y, url) {
+    constructor(user_id,trp_id, user_trp_id, name, health, init_movement, movement, attack, range, max_amount, x, y, url) {
         this.user_id = user_id;
+        this.trp_id = trp_id;
         this.user_trp_id = user_trp_id;
         this.name = name;
         this.health = health;
@@ -39,7 +40,7 @@ class troop {
 
 }
 
-function draw_troops(matrix, troop_array, num_squares, user_id, square_size, diameter, x, y) {
+function draw_troops(matrix, troop_array, num_squares, user_id, square_size, diameter, x, y,images) {
 
     let c = color(255, 204, 0);
     let w = color('white');
@@ -49,12 +50,14 @@ function draw_troops(matrix, troop_array, num_squares, user_id, square_size, dia
     let bl = color('blue');
     let g = color('gray');
     for (let i = 0; i < troop_array.length; i++) {
+        trp_image=images[troop_array[i].trp_id]
         if (matrix[troop_array[i].x][troop_array[i].y] == num_squares) {
             if (troop_array[i].user_id == user_id) {
-                //trp_image=give_img(troop_array[1].url)
+                
 
                 fill(bl);
                 circle(x + square_size / 2, y + square_size / 2, diameter);
+                image(trp_image,x+1 , y+1-square_size / 4,square_size, square_size);
                 //image(trp_image,x+1 , y+1,10,10);
                 // ,(width/square_size)*2.65, (height/square_size)*2.6
                 fill(w);
@@ -64,6 +67,7 @@ function draw_troops(matrix, troop_array, num_squares, user_id, square_size, dia
                 //trp_image=give_img(troop_array[1].url)
                 fill(r);
                 circle(x + square_size / 2, y + square_size / 2, diameter);
+                image(trp_image,x+1 , y+1-square_size / 4,square_size, square_size);
                 // image(trp_image,x+1 , y+1,10,10);
                 fill(w);
                 troop_array[i].square_x = x + square_size / 2
