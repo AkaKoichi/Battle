@@ -2,7 +2,7 @@
 
 var user_info;
 let resources;
-
+var images = {};
 let troop_array = []
 let troops = [];
 let buildings_array = [];
@@ -30,10 +30,10 @@ window.onload = async () => {
     user_info = await get_user_info();
     resources = await get_resources_by_id(1, user_info.user_id);
 
-    /* setInterval(() => {
+    setInterval(() => {
         if (its_my_turn == false) initialize_game()
-        
-    }, 1000); */
+
+    }, 500);
     await initialize_game()
 
 
@@ -57,6 +57,13 @@ window.onload = async () => {
 }
 
 async function setup() {
+
+    let troopInfo = await get_troops();
+    for (let troop of troopInfo) {
+        if (troop.trp_url)
+            images[troop.trp_id] = await loadImage(troop.trp_url);
+    }
+
     building_setup()
     let cnv = createCanvas(board_size * tilesize, board_size * tilesize);
     cnv.position(700, 30);
@@ -70,7 +77,7 @@ async function setup() {
             matrix[x][y] = pos;
         }
     }
-    
+
     end_turn_button = createButton('End Turn');
     end_turn_button.position(500, 155);
     end_turn_button.mousePressed(end_turn);
@@ -81,22 +88,22 @@ async function setup() {
     train_troop_button = createButton('train troop');
     train_troop_button.position(500, 245);
     train_troop_button.mousePressed(async function () {
-        train(user_info.user_id,input_troop.value(),buildings,resources)
+        train(user_info.user_id, input_troop.value(), buildings, resources)
     });
 
 }
 
 async function draw() {
 
- /*    if (its_my_turn == false) {
-        update_timer += deltaTime;
-        if (update_timer == update_interval) {
-            console.log('a');
-
-            initialize_game();
-            update_time = 0;
-        }
-    } */
+    /*    if (its_my_turn == false) {
+           update_timer += deltaTime;
+           if (update_timer == update_interval) {
+               console.log('a');
+   
+               initialize_game();
+               update_time = 0;
+           }
+       } */
 
     if (user_info == undefined)
         return;
@@ -130,7 +137,7 @@ async function draw() {
             fill(w)
             num_squares++
             draw_buildings(matrix, buildings_array, num_squares, user_info.user_id, square_size, tilesize, x, y)
-            draw_troops(matrix, troop_array, num_squares, user_info.user_id, square_size, diameter, x, y)
+            draw_troops(matrix, troop_array, num_squares, user_info.user_id, square_size, diameter, x, y, images)
         }
     }
 }
@@ -230,13 +237,14 @@ function mouse_over_tile() {
 }
 
 async function initialize_game() {
-    troop_array = []
     buildings = await get_buildings_by_id(1);
     troops = await get_troops_by_id(1);
+    troop_array = []
     for (let i = 0; i < troops.length; i++) {
 
         let temp_troop = new troop(
             troops[i].user_id,
+            troops[i].trp_id,
             troops[i].user_trp_id,
             troops[i].trp_name,
             troops[i].troop_current_health,
