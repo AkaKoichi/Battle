@@ -42,23 +42,46 @@ module.exports.update_troop = async function (user_id, user_trp_id, x, y, health
   }
 }
 
-module.exports.train = async function (user_id, troop_id, x, y, resources) {
-  let troop_iron_cost = 5;
-  let troop_food_cost = 5;
+module.exports.train = async function (user_id, troop_id, bld_id) {
+  let troop_iron_cost;
+  let troop_food_cost;
+  let user_iron;
+  let user_food;
+  try {
+    let sql = `select rsc_amount from resources_troops where trp_id = $1`
+    let result = await pool.query(sql, [troop_id]);
+    troop_iron_cost =result.rows[0].rsc_amount
+    troop_food_cost = result.rows[1].rsc_amount
+
+    sql = `select rsc_amount from user_resources where user_id = $1`
+    result = await pool.query(sql, [user_id]);
+    console.log(result)
+    user_iron = result.rows[0].rsc_amount
+    user_food = result.rows[1].rsc_amount
+
+  } catch (err) {
+    return { status: 500, result: err };
+  }
   if (
-    (resources[0].rsc_amount - troop_iron_cost >= 0) &&
-    (resources[1].rsc_amount - troop_food_cost >= 0)) {
+    (user_iron- troop_iron_cost >= 0) &&
+    (user_food - troop_food_cost >= 0)) {
     try {
       let sql = `select trp_movement,trp_health from troops where trp_id = $1`
       let result = await pool.query(sql, [troop_id]);
       let troop_current_health = result.rows[0].trp_health;
       let troop_movement = result.rows[0].trp_movement;
+
+      sql = `select bld_x,bld_y from user_buildings where user_bld_id = $1`
+      let result_b = await pool.query(sql, [bld_id]);
+      let x = result_b.rows[0].bld_x;
+      let y = result_b.rows[0].bld_y;
+
       sql = `Insert into user_troops (user_id,troop_id,troop_x,troop_y,troop_current_health,troop_current_movement)values ($1,$2,$3,$4,$5,$6) `;
       result = await pool.query(sql, [user_id, troop_id, x, y, troop_current_health, troop_movement]);
       console.log(result)
       let troops = result.rows;
-      await update_resources(user_id, resources[0].rsc_amount - troop_iron_cost, 1)
-      await update_resources(user_id, resources[1].rsc_amount - troop_food_cost, 2)
+      await update_resources(user_id, user_iron - troop_iron_cost, 1)
+      await update_resources(user_id, user_food - troop_food_cost, 2)
       return { status: 200, result: troops };
 
     } catch (err) {

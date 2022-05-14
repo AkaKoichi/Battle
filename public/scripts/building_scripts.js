@@ -42,7 +42,7 @@ function building_setup() {
     tc_img = loadImage('/images/buildings/tc.png');
 }
 
-function draw_buildings(matrix, buildings_array, num_squares, user_id, square_size, tilesize, x, y) {
+function draw_buildings(matrix, buildings_array, num_squares, user_id, square_size, tilesize, x, y,images) {
     let c = color(255, 204, 0);
     let w = color('white');
     let b = color('black');
