@@ -41,7 +41,7 @@ function building_setup() {
     tc_img = loadImage('/images/buildings/tc.png');
 }
 
-function draw_buildings(matrix, buildings_array, num_squares, user_id, square_size, tilesize, x, y) {
+function draw_buildings(matrix, buildings_array, num_squares, user_id, square_size, tilesize, x, y,images) {
     let c = color(255, 204, 0);
     let w = color('white');
     let b = color('black');
@@ -50,6 +50,7 @@ function draw_buildings(matrix, buildings_array, num_squares, user_id, square_si
     let bl = color('blue');
     let g = color('gray');
     for (let i = 0; i < buildings_array.length; i++) {
+        bulding_image = images[buildings_array[i].bld_id]
         if(prepare_to_train == false && buildings_array[i].selected == true && buildings_array[i].bld_name == 'Training Camp'){
                 if(troops_resources == []){
                     return
@@ -78,21 +79,21 @@ function draw_buildings(matrix, buildings_array, num_squares, user_id, square_si
 
         if (matrix[buildings_array[i].bld_x][buildings_array[i].bld_y] == num_squares) {
             if (buildings_array[i].user_id == user_id) {
-                fill(bl);
-                rect(x, y, tilesize, tilesize);
-                image(tc_img,x , y,tilesize,tilesize);
-                fill(b);
-                text(buildings_array[i].bld_name, x + square_size / 2 - 10, y + square_size / 2);
-                fill(w);
+               // fill(bl);
+                //rect(x, y, tilesize, tilesize);
+                image(bulding_image,x , y,tilesize,tilesize);
+                //fill(b);
+                //text(buildings_array[i].bld_name, x + square_size / 2 - 10, y + square_size / 2);
+               // fill(w);
 
             } else {
 
-                fill(r);
-                rect(x, y, tilesize, tilesize);
-                image(tc_img,x , y,tilesize,tilesize);
-                fill(b);
-                text(buildings_array[i].bld_name, x + square_size / 2 - 10, y + square_size / 2);
-                fill(w);
+                //fill(r);
+               // rect(x, y, tilesize, tilesize);
+                image(bulding_image,x , y,tilesize,tilesize);
+               // fill(b);
+                //text(buildings_array[i].bld_name, x + square_size / 2 - 10, y + square_size / 2);
+                //fill(w);
             }
 
         }
