@@ -69,8 +69,6 @@ async function setup() {
         if (building.bld_url)
         buildings_images[building.bld_id] = await loadImage(building.bld_url);
     }
-
-    building_setup()
     let cnv = createCanvas(board_size * tilesize, board_size * tilesize);
     cnv.position(700, 30);
     //tilesize = width / board_size;
@@ -83,6 +81,8 @@ async function setup() {
             matrix[x][y] = pos;
         }
     }
+
+    buildings_setup()
 
     end_turn_button = createButton('End Turn');
     end_turn_button.position(500, 155);

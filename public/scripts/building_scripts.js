@@ -5,7 +5,7 @@ let buttons = [];
 let troops_resources = [];
 let y;
 let x;
-
+let y_pop_buttons = 250
 
 class building {
     constructor(user_id, user_bld_id, bld_id, name, health, bld_x, bld_y) {
@@ -22,7 +22,7 @@ class building {
     select() {
         this.selected = true;
         document.getElementById("building").innerHTML = this.bld_name;
-        resources_for_troops();
+
     }
 
     unselect() {
@@ -33,11 +33,18 @@ class building {
 }
 
 async function resources_for_troops() {
-    troops_resources = await get_troops_resources();
+
 }
 
-function building_setup() {
-    tc_img = loadImage('/images/buildings/tc.png');
+async function buildings_setup() {
+    troops_resources = await get_troops_resources();
+    for (let i = 0; i < troops_resources.length; i + 2) {
+        let temp_button = createButton('T');
+        temp_button.position(1320, y_pop_buttons);
+        temp_button.hide();
+        buttons.push(temp_button);
+        y_pop_buttons += 15
+    }   
 }
 
 function draw_buildings(matrix, buildings_array, num_squares, user_id, square_size, tilesize, x, y, images) {
@@ -55,22 +62,21 @@ function draw_buildings(matrix, buildings_array, num_squares, user_id, square_si
             if (troops_resources == []) {
                 return
             } else {
-                let y_pop = 250
+
                 let last_name;
 
                 fill(15, 166, 55);
                 rect(450, 0, 688, 688);
-                image(bulding_image, 465, 20, bulding_image.width/1.5, bulding_image.height/1.5);
+                image(bulding_image, 465, 20, bulding_image.width / 1.5, bulding_image.height / 1.5);
                 fill(w);
                 fill(b);
-                text(buildings[i].bld_health,535,210)
+                text(buildings[i].bld_health, 535, 210)
                 fill(w);
+                let y_pop = 250;
                 for (let i = 0; i < troops_resources.length; i++) {
                     if (last_name == troops_resources[i].trp_name) {
                         text(troops_resources[i].rsc_amount, 620, y_pop - 15)
-                        buttons = createButton('T');
-                        buttons.position(1320, y_pop);
-
+                        for (let i = 0; i < buttons.length; i++)  buttons[i].show()
                     } else {
                         text(troops_resources[i].trp_name, 455, y_pop)
                         text(troops_resources[i].rsc_amount, 575, y_pop)
