@@ -232,6 +232,7 @@ function mouse_over_tile() {
 }
 
 async function initialize_game() {
+    
     buildings = await get_buildings_by_id(1);
     troops = await get_troops_by_id(1);
     troop_array = []

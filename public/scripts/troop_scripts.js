@@ -57,7 +57,7 @@ function draw_troops(matrix, troop_array, num_squares, user_id, square_size, dia
 
 
                 //circle(x + square_size / 2, y + square_size / 2, diameter);
-                image(trp_image, x + 1, y + 1 - square_size / 2, trp_image.width/7, trp_image.height/7);
+                image(trp_image, x + 1, y + 1 - square_size / 2, trp_image.width / 7, trp_image.height / 7);
                 //image(trp_image,x+1 , y+1,10,10);
                 // ,(width/square_size)*2.65, (height/square_size)*2.6
 
@@ -67,7 +67,7 @@ function draw_troops(matrix, troop_array, num_squares, user_id, square_size, dia
                 //trp_image=give_img(troop_array[1].url)
 
                 //circle(x + square_size / 2, y + square_size / 2, diameter);
-                image(trp_image, x + 1, y + 1 - square_size / 2, trp_image.width/7, trp_image.height/7);
+                image(trp_image, x + 1, y + 1 - square_size / 2, trp_image.width / 7, trp_image.height / 7);
                 // image(trp_image,x+1 , y+1,10,10);
 
                 troop_array[i].square_x = x + square_size / 2
@@ -149,9 +149,11 @@ async function key_troops(its_my_turn, troop_array, user_id) {
 function mouse_pressed_troops(troop_array) {
     for (let i = 0; i < troop_array.length; i++) {
         troop_array[i].selected = false;
+
         let distance = dist(mouseX, mouseY, troop_array[i].square_x, troop_array[i].square_y);
         if (distance < radius) {
             //troop_array[i].selected = true;
+
             troop_array[i].select()
             break
         } else {
