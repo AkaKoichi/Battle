@@ -38,7 +38,7 @@ async function resources_for_troops() {
 
 async function buildings_setup() {
     troops_resources = await get_troops_resources();
-    for (let i = 0; i < troops_resources.length; i + 2) {
+    for (let i = 0; i < troops_resources.length; i ++) {
         let temp_button = createButton('T');
         temp_button.position(1320, y_pop_buttons);
         temp_button.hide();
