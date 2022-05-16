@@ -90,6 +90,20 @@ async function key_troops(its_my_turn, troop_array, user_id) {
                                 troop_array[i].movement -= 1
                                 await update_troops_id(user_id, troop_array[i].user_trp_id, troop_array[i].x, troop_array[i].y, troop_array[i].health, troop_array[i].movement);
                                 break;
+                            /*      for (j = 0; j < troop_array.length; j++) {
+                                     if (troop_array[i].x == troop_array[j].x && troop_array[i].y == troop_array[j].y - 1) {
+ 
+                                         console.log('no can andar')
+                                         break
+ 
+ 
+                                     }
+                                     console.log('aaaaaaaaaaaa')
+ 
+                                     
+ 
+                                 }
+                                 break */
 
                             case 'a':
                             case 'A':
@@ -126,7 +140,7 @@ async function key_troops(its_my_turn, troop_array, user_id) {
                             break;
                         case 'i':
                         case 'I':
-                            set_attacker(troop_array, userInfo.user_id)
+                            set_attacker(troop_array, user_id)
                             break;
                     }
                     document.getElementById("movement").innerHTML = troop_array[i].movement;
@@ -136,11 +150,11 @@ async function key_troops(its_my_turn, troop_array, user_id) {
         switch (key) {
             case 'p':
             case 'P':
-                make_attack(troop_array, userInfo.user_id)
+                make_attack(troop_array, user_id)
                 break;
             case 'o':
             case 'O':
-                set_defender(troop_array, userInfo.user_id)
+                set_defender(troop_array, user_id)
                 break;
         }
     }
@@ -170,6 +184,8 @@ function set_attacker(troop_array, user_id) {
         if (troop_array[i].user_id == user_id) {
             if (troop_array[i].selected) {
                 troop_array[i].attacker = true;
+
+                console.log('attacker')
                 break;
             }
         }
@@ -181,6 +197,7 @@ function set_defender(troop_array, user_id) {
         if (troop_array[i].user_id != user_id) {
             if (troop_array[i].selected) {
                 troop_array[i].defender = true;
+                console.log('defender')
                 break;
             }
         }
@@ -200,12 +217,13 @@ async function make_attack(troop_array, user_id) {
             if (troop_array[i].attacker) {
                 attacker = troop_array[i]
                 attacker_index = i
+
                 break;
             }
         }
     }
     for (let i = 0; i < troop_array.length; i++) {
-        if (troop_array[i].user_id != userInfo.user_id) {
+        if (troop_array[i].user_id != user_id) {
             if (troop_array[i].defender) {
                 defender = troop_array[i]
                 defender_index = i
@@ -216,10 +234,12 @@ async function make_attack(troop_array, user_id) {
     can_attack = get_dist_attack(attacker, defender)
     dice_dmg_multiplier = roll_dice(3, 6)
     if (can_attack && dice_dmg_multiplier >= 1) {
+        console.log('made attack')
         defender.health -= attacker.attack * dice_dmg_multiplier;
         if (defender.health <= 0) {
             await delete_troops_id(troop_array[defender_index].user_trp_id)
         }
+
         await update_troops_id(defender.user_id, defender.user_trp_id, defender.x, defender.y, defender.health);
         alert('defender health after attack : ' + defender.health)
         troop_array[attacker_index].attacker = false;

@@ -125,8 +125,6 @@ async function draw() {
             } else {
                 rect(x, y, square_size, square_size);
             }
-
-
             fill(b);
             text(num_squares, x + square_size / 2 - 10, y + square_size / 2)
             fill(w)
