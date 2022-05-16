@@ -1,5 +1,5 @@
 
-
+//no
 var user_info;
 let resources;
 var troop_images = {};
@@ -8,7 +8,7 @@ let troop_array = []
 let troops = [];
 let buildings_array = [];
 let buildings = [];
-
+let tile_image;
 
 let inpit_troop;
 let end_turn_button;
@@ -58,7 +58,8 @@ window.onload = async () => {
 }
 
 async function setup() {
-
+    tile_image= loadImage('./images/tile/tile.png')
+    console.log(tile_image)
     let troop_info = await get_troops();
     for (let troop of troop_info) {
         if (troop.trp_url)
@@ -123,7 +124,8 @@ async function draw() {
                 rect(x, y, square_size, square_size);
                 fill(w)
             } else {
-                rect(x, y, square_size, square_size);
+                //rect(x, y, square_size, square_size);
+                image(tile_image, x, y, tilesize, tilesize);
             }
             fill(b);
             text(num_squares, x + square_size / 2 - 10, y + square_size / 2)
