@@ -8,13 +8,15 @@ let troop_array = []
 let troops = [];
 let buildings_array = [];
 let buildings = [];
+
 let tile_image;
+let tile_image2;
 
 let inpit_troop;
 let end_turn_button;
 let train_troop_button;
 let board_size = 16
-let tilesize = 43 //700 / board_size;
+let tilesize = 47 //700 / board_size;
 let matrix = [];
 
 let its_my_turn;
@@ -59,6 +61,7 @@ window.onload = async () => {
 
 async function setup() {
     tile_image= loadImage('./images/tile/tile.png')
+    tile_image2= loadImage('./images/tile/tile2.png')
     console.log(tile_image)
     let troop_info = await get_troops();
     for (let troop of troop_info) {
@@ -71,7 +74,7 @@ async function setup() {
         buildings_images[building.bld_id] = await loadImage(building.bld_url);
     }
     let cnv = createCanvas(board_size * tilesize, board_size * tilesize);
-    cnv.position(700, 30);
+    cnv.position(700, 0);
     //tilesize = width / board_size;
 
     let pos = 0;
@@ -120,16 +123,17 @@ async function draw() {
         for (let x = 0; x < width; x += square_size) {
             if (hovered_tile.x * square_size == x && hovered_tile.y * square_size == y) {
                 //if (matrix[hovered_tile.y][hovered_tile.x -1] == num_squares) {
-                fill(p)
-                rect(x, y, square_size, square_size);
-                fill(w)
+                //fill(p)
+                //rect(x, y, square_size, square_size);
+                image(tile_image2, x, y, tilesize, tilesize);
+                //  fill(w)
             } else {
                 //rect(x, y, square_size, square_size);
                 image(tile_image, x, y, tilesize, tilesize);
             }
-            fill(b);
+            /* fill(b);
             text(num_squares, x + square_size / 2 - 10, y + square_size / 2)
-            fill(w)
+            fill(w) */
             num_squares++
             draw_buildings(matrix, buildings_array, num_squares, user_info.user_id, square_size, tilesize, x, y,buildings_images)
             draw_troops(matrix, troop_array, num_squares, user_info.user_id, square_size, diameter, x, y, troop_images)

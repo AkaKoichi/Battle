@@ -5,7 +5,7 @@ let buttons = [];
 let troops_resources = [];
 let y;
 let x;
-let y_pop_buttons = 268
+let y_pop_buttons = 240
 
 class building {
     constructor(user_id, user_bld_id, bld_id, name, health, bld_x, bld_y) {
@@ -44,7 +44,7 @@ async function buildings_setup() {
         if (last_name == troops_resources[i].trp_name) {
             console.log('a')
         } else {
-            let temp_button = createButton('T');
+            let temp_button = createButton('Train');
             temp_button.position(1350, y_pop_buttons);
             temp_button.hide();
             buttons.push(temp_button);
@@ -82,7 +82,7 @@ async function buildings_setup() {
 
                     fill(15, 166, 55);
                     rect(450, 0, 688, 688);
-                    image(bulding_image, 465, 20, bulding_image.width / 1.5, bulding_image.height / 1.5);
+                    image(bulding_image, 465, 20, tilesize, tilesize);
                     fill(w);
                     fill(b);
                     text(buildings[i].bld_health, 535, 210)
