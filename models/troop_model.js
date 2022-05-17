@@ -51,7 +51,7 @@ module.exports.train = async function (user_id, troop_id, bld_id) {
   try {
     let sql = `select rsc_amount from resources_troops where trp_id = $1`
     let result = await pool.query(sql, [troop_id]);
-    troop_iron_cost =result.rows[0].rsc_amount
+    troop_iron_cost = result.rows[0].rsc_amount
     troop_food_cost = result.rows[1].rsc_amount
 
     sql = `select rsc_amount from user_resources where user_id = $1`
@@ -64,7 +64,7 @@ module.exports.train = async function (user_id, troop_id, bld_id) {
     return { status: 500, result: err };
   }
   if (
-    (user_iron- troop_iron_cost >= 0) &&
+    (user_iron - troop_iron_cost >= 0) &&
     (user_food - troop_food_cost >= 0)) {
     try {
       let sql = `select trp_movement,trp_health from troops where trp_id = $1`
@@ -119,6 +119,40 @@ module.exports.get_all_troops_resources = async function () {
     console.log(err);
     return { status: 500, result: err };
   }
+}
+
+module.exports.move_troop = async function (user_id, troop_id, direction, movement) {
+  if (movement > 0) {
+    try {
+
+      let sql = `select troop_x,troop_y from user_troops where user_trp_id = $1 `;
+      let result = await pool.query(sql, [troop_id]);
+      console.log('SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS' + result.rows[0].troop_x);
+
+      sql = `select * from user_troops where troop_x =$1 and troop_y = $2;`;
+      result1 = await pool.query(sql, [result.rows[0].troop_x, result.rows[0].troop_y + 1]);
+
+      if (result1.rows == 0) {
+
+        sql = `UPDATE user_troops SET troop_x = $3, troop_y = $4 , troop_current_movement =$5 WHERE user_id =$1 and user_trp_id =$2; `;
+        let result2 = await pool.query(sql, [user_id, troop_id, result.rows[0].troop_x, result.rows[0].troop_y + 1, movement - 1]);
+        let troops = result2.rows;
+        return { status: 200, result: troops };
+
+      } else return { status: 200 };
+
+
+    } catch (err) {
+      console.log(err);
+      return { status: 500, result: err };
+
+    }
+  } else return { status: 200 };
+  /* troop_array[i].y += 1;
+  troop_array[i].movement -= 1
+  await update_troops_id(user_id, troop_array[i].user_trp_id, troop_array[i].x, troop_array[i].y, troop_array[i].health, troop_array[i].movement); */
+
+
 }
 
 

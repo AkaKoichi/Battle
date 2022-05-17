@@ -104,4 +104,27 @@ async function get_troops_resources() {
         // Treat 500 errors here    
         console.log(err);
     }
-}    
+}   
+
+async function move_troop_id(user_id,troop_id,direction,movement) {
+    console.log('aaaaaaaaaaaaaaaaaaaaaa')
+    try {
+        const response = await fetch(`/api/troops/move/${troop_id}`,{
+            method:"PUT",
+            headers: {
+               "Content-Type": "application/json"
+             },
+           body: JSON.stringify({user_id,direction,movement})
+        });
+        if (response.status == 200) {
+           var troops = await response.json();
+           return {troops:troops,response:response};
+        } else {
+            // Treat errors like 404 here
+            console.log('aa'+ response);
+        }
+    } catch (err) {
+        // Treat 500 errors here    
+        console.log(err);
+    }
+}  

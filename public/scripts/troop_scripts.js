@@ -36,6 +36,7 @@ class troop {
         document.getElementById("troop").innerHTML = '';
         document.getElementById("movement").innerHTML = '';
         document.getElementById("attack").innerHTML = '';
+        document.getElementById("health").innerHTML = '';
     }
 
 }
@@ -54,7 +55,7 @@ function draw_troops(matrix, troop_array, num_squares, user_id, square_size, dia
         if (matrix[troop_array[i].x][troop_array[i].y] == num_squares) {
             if (troop_array[i].user_id == user_id) {
                 //circle(x + square_size / 2, y + square_size / 2, diameter);
-                image(trp_image, x , y  - square_size / 2, trp_image.width / 7, trp_image.height / 7);
+                image(trp_image, x, y - square_size / 2, trp_image.width / 7, trp_image.height / 7);
                 //image(trp_image,x+1 , y+1,10,10);
                 // ,(width/square_size)*2.65, (height/square_size)*2.6
 
@@ -64,7 +65,7 @@ function draw_troops(matrix, troop_array, num_squares, user_id, square_size, dia
                 //trp_image=give_img(troop_array[1].url)
 
                 //circle(x + square_size / 2, y + square_size / 2, diameter);
-                image(trp_image, x , y - square_size / 2, trp_image.width / 7, trp_image.height / 7);
+                image(trp_image, x, y - square_size / 2, trp_image.width / 7, trp_image.height / 7);
                 // image(trp_image,x+1 , y+1,10,10);
                 troop_array[i].square_x = x + square_size / 2
                 troop_array[i].square_y = y + square_size / 2
@@ -73,11 +74,12 @@ function draw_troops(matrix, troop_array, num_squares, user_id, square_size, dia
     }
 }
 
-async function key_troops(its_my_turn, troop_array, user_id) {
+async function key_troops(its_my_turn, troop_array, user_id, input_troop, buildings) {
     if (its_my_turn) {
         for (i = 0; i < troop_array.length; i++) {
             if (troop_array[i].user_id == user_id) {
                 if (troop_array[i].selected) {
+
                     if (troop_array[i].movement > 0) {
                         switch (key) {
                             case 'd':
@@ -85,16 +87,10 @@ async function key_troops(its_my_turn, troop_array, user_id) {
                                 troop_array[i].y += 1;
                                 troop_array[i].movement -= 1
                                 await update_troops_id(user_id, troop_array[i].user_trp_id, troop_array[i].x, troop_array[i].y, troop_array[i].health, troop_array[i].movement);
+                                /* let response = await move_troop_id(user_id, troop_array[i].user_trp_id, 'right', troop_array[i].movement)
+                                if (response != undefined) initialize_game()
+                                else alert('there cant be 2 troops in the same tile') */
                                 break;
-                            /*      for (j = 0; j < troop_array.length; j++) {
-                                     if (troop_array[i].x == troop_array[j].x && troop_array[i].y == troop_array[j].y - 1) {
- 
-                                         console.log('no can andar')
-                                         break
-                                     }
-                                     console.log('aaaaaaaaaaaa')
-                                 }
-                                 break */
                             case 'a':
                             case 'A':
                                 troop_array[i].y -= 1;
@@ -114,6 +110,7 @@ async function key_troops(its_my_turn, troop_array, user_id) {
                                 await update_troops_id(user_id, troop_array[i].user_trp_id, troop_array[i].x, troop_array[i].y, troop_array[i].health, troop_array[i].movement);
                                 break;
                         }
+                        document.getElementById("movement").innerHTML = troop_array[i].movement;
                     }
                     switch (key) {
                         case 'l':
@@ -131,8 +128,11 @@ async function key_troops(its_my_turn, troop_array, user_id) {
                         case 'I':
                             set_attacker(troop_array, user_id)
                             break;
+                        case 'o':
+                        case 'O':
+                            set_defender(troop_array, user_id)
+                            break;
                     }
-                    document.getElementById("movement").innerHTML = troop_array[i].movement;
                 }
             }
         }
@@ -141,13 +141,12 @@ async function key_troops(its_my_turn, troop_array, user_id) {
             case 'P':
                 make_attack(troop_array, user_id)
                 break;
-            case 'o':
-            case 'O':
-                set_defender(troop_array, user_id)
-                break;
+
         }
     }
+
 }
+
 
 function mouse_pressed_troops(troop_array) {
     for (let i = 0; i < troop_array.length; i++) {
@@ -264,6 +263,8 @@ async function train(user_id, troop_id, buildings) {
     for (let i = 0; i < buildings.length; i++) {
         if ((buildings[i].bld_name == 'Training Camp') &&
             (buildings[i].user_id == user_id)) {
+            /* (buildings[i].selected == true) */
+            console.log('qq')
             let bld_id = buildings[i].user_bld_id
             let result = await train_troop(user_id, troop_id, bld_id)
             if (result.inserted) {

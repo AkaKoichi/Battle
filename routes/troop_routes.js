@@ -2,6 +2,16 @@ var express = require('express');
 var router = express.Router();
 var troop_model = require("../models/troop_model");
 
+
+router.put('/move/:id', async function (req, res, next) {
+  let troop_id = req.params.id;
+  let user_id = req.body.user_id
+  let direction = req.body.direction;
+  let movement = req.body.movement;
+  let result = await troop_model.move_troop(user_id,troop_id,direction,movement);
+  res.status(result.status).send(result.result);
+});
+
 router.get('/resources', async function (req, res, next) {
   let result = await troop_model.get_all_troops_resources();
   res.status(result.status).send(result.result);

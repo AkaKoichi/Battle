@@ -12,7 +12,7 @@ let buildings = [];
 let tile_image;
 let tile_image2;
 
-let inpit_troop;
+let input_troop;
 let end_turn_button;
 let train_troop_button;
 let board_size = 16
@@ -142,7 +142,7 @@ async function draw() {
 }
 
 async function keyPressed() {
-    await key_troops(its_my_turn, troop_array, user_info.user_id)
+    await key_troops(its_my_turn, troop_array, user_info.user_id,input_troop,buildings)
     await key_buildings(its_my_turn, troop_array, user_info.user_id, resources)
 }
 
