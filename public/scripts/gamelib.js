@@ -37,7 +37,7 @@ window.onload = async () => {
         if (its_my_turn == false) initialize_game()
 
     }, 500);
-    await initialize_game()
+    
 
 
 
@@ -60,6 +60,7 @@ window.onload = async () => {
 }
 
 async function setup() {
+    initialize_game()
     tile_image= loadImage('./images/tile/tile.png')
     tile_image2= loadImage('./images/tile/tile2.png')
     console.log(tile_image)
@@ -85,8 +86,9 @@ async function setup() {
             matrix[x][y] = pos;
         }
     }
+    
 
-    buildings_setup()
+    buildings_setup(user_info.user_id,buildings)
 
     end_turn_button = createButton('End Turn');
     end_turn_button.position(500, 155);
@@ -149,7 +151,7 @@ async function keyPressed() {
 function mousePressed() {
     let y = (int)(mouseX / tilesize)
     let x = (int)(mouseY / tilesize)
-    mouse_pressed_troops(troop_array)
+    mouse_pressed_troops(troop_array/* ,tilesize */)
 
 
     mouse_pressed_buildings(buildings_array, x, y)

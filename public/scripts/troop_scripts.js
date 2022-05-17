@@ -52,27 +52,27 @@ function draw_troops(matrix, troop_array, num_squares, user_id, square_size, dia
     let g = color('gray');
     for (let i = 0; i < troop_array.length; i++) {
         trp_image = images[troop_array[i].trp_id]
-        if (matrix[troop_array[i].x][troop_array[i].y] == num_squares) {
-            if (troop_array[i].user_id == user_id) {
-                //circle(x + square_size / 2, y + square_size / 2, diameter);
-                image(trp_image, x, y - square_size / 2, trp_image.width / 7, trp_image.height / 7);
-                //image(trp_image,x+1 , y+1,10,10);
-                // ,(width/square_size)*2.65, (height/square_size)*2.6
+        //if (matrix[troop_array[i].x][troop_array[i].y] == num_squares) {
+        if (troop_array[i].user_id == user_id) {
+            //circle(x + square_size / 2, y + square_size / 2, diameter);
+            image(trp_image, troop_array[i].x * square_size, troop_array[i].y * square_size - square_size / 2, trp_image.width / 7, trp_image.height / 7);
+            //image(trp_image,x+1 , y+1,10,10);
+            // ,(width/square_size)*2.65, (height/square_size)*2.6
 
-                troop_array[i].square_x = x + square_size / 2
-                troop_array[i].square_y = y + square_size / 2
-            } else {
-                //trp_image=give_img(troop_array[1].url)
+            troop_array[i].square_x = x + square_size / 2
+            troop_array[i].square_y = y + square_size / 2
+        } else {
+            //trp_image=give_img(troop_array[1].url)
 
-                //circle(x + square_size / 2, y + square_size / 2, diameter);
-                image(trp_image, x, y - square_size / 2, trp_image.width / 7, trp_image.height / 7);
-                // image(trp_image,x+1 , y+1,10,10);
-                troop_array[i].square_x = x + square_size / 2
-                troop_array[i].square_y = y + square_size / 2
-            }
+            //circle(x + square_size / 2, y + square_size / 2, diameter);
+            image(trp_image, troop_array[i].x * square_size, troop_array[i].y * square_size - square_size / 2, trp_image.width / 7, trp_image.height / 7);
+            // image(trp_image,x+1 , y+1,10,10);
+            troop_array[i].square_x = x + square_size / 2
+            troop_array[i].square_y = y + square_size / 2
         }
     }
 }
+
 
 async function key_troops(its_my_turn, troop_array, user_id, input_troop, buildings) {
     if (its_my_turn) {
@@ -84,7 +84,7 @@ async function key_troops(its_my_turn, troop_array, user_id, input_troop, buildi
                         switch (key) {
                             case 'd':
                             case 'D':
-                                troop_array[i].y += 1;
+                                troop_array[i].x += 1;
                                 troop_array[i].movement -= 1
                                 await update_troops_id(user_id, troop_array[i].user_trp_id, troop_array[i].x, troop_array[i].y, troop_array[i].health, troop_array[i].movement);
                                 /* let response = await move_troop_id(user_id, troop_array[i].user_trp_id, 'right', troop_array[i].movement)
@@ -93,19 +93,19 @@ async function key_troops(its_my_turn, troop_array, user_id, input_troop, buildi
                                 break;
                             case 'a':
                             case 'A':
-                                troop_array[i].y -= 1;
+                                troop_array[i].x -= 1;
                                 troop_array[i].movement -= 1
                                 await update_troops_id(user_id, troop_array[i].user_trp_id, troop_array[i].x, troop_array[i].y, troop_array[i].health, troop_array[i].movement);
                                 break;
                             case 'w':
                             case 'W':
-                                troop_array[i].x -= 1;
+                                troop_array[i].y -= 1;
                                 troop_array[i].movement -= 1
                                 await update_troops_id(user_id, troop_array[i].user_trp_id, troop_array[i].x, troop_array[i].y, troop_array[i].health, troop_array[i].movement);
                                 break;
                             case 's':
                             case 'S':
-                                troop_array[i].x += 1;
+                                troop_array[i].y += 1;
                                 troop_array[i].movement -= 1
                                 await update_troops_id(user_id, troop_array[i].user_trp_id, troop_array[i].x, troop_array[i].y, troop_array[i].health, troop_array[i].movement);
                                 break;
@@ -149,21 +149,24 @@ async function key_troops(its_my_turn, troop_array, user_id, input_troop, buildi
 
 
 function mouse_pressed_troops(troop_array) {
+    let tile = mouse_over_tile()
+    console.log(tile)
     for (let i = 0; i < troop_array.length; i++) {
         troop_array[i].selected = false;
-
-        let distance = dist(mouseX, mouseY, troop_array[i].square_x, troop_array[i].square_y);
-        if (distance < radius) {
-            //troop_array[i].selected = true;
-
+        if (troop_array[i].x == tile.x && troop_array[i].y == tile.y) {
             troop_array[i].select()
             break
+        /* let distance = dist(mouseX, mouseY, troop_array[i].square_x, troop_array[i].square_y);
+        if (distance < radius) {
+            //troop_array[i].selected = true;
+ */   
         } else {
             //troop_array[i].selected = false;
             troop_array[i].unselect()
         }
     }
 }
+
 
 
 
@@ -260,7 +263,9 @@ function dice(min, max) {
 }
 
 async function train(user_id, troop_id, buildings) {
+    console.log(buildings)
     for (let i = 0; i < buildings.length; i++) {
+        console.log('qq')
         if ((buildings[i].bld_name == 'Training Camp') &&
             (buildings[i].user_id == user_id)) {
             /* (buildings[i].selected == true) */
