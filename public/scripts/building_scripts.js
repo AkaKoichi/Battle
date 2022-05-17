@@ -37,7 +37,7 @@ async function resources_for_troops() {
 
 }
 
-async function buildings_setup(user_id,buildings) {
+async function buildings_setup(/* user_id,buildings */) {
     let last_name;
     let troop = 0
     troops_resources = await get_troops_resources();
