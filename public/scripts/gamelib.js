@@ -2,6 +2,7 @@
 //no
 var user_info;
 let resources;
+
 var troop_images = {};
 var buildings_images = {}
 let troop_array = []
@@ -112,13 +113,6 @@ async function draw() {
     background("black");
     let square_size = tilesize; //width / board_size;
     let num_squares = 0;
-    let c = color(255, 204, 0);
-    let w = color('white');
-    let b = color('black');
-    let r = color('red');
-    let p = color('purple');
-    let bl = color('blue');
-    let g = color('gray');
     let hovered_tile = mouse_over_tile();
 
     for (let y = 0; y < height; y += square_size) {

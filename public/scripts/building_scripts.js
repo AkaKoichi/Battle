@@ -12,22 +12,25 @@ class building {
         this.user_id = user_id;
         this.user_bld_id = user_bld_id;
         this.bld_id = bld_id;
-        this.bld_x = bld_x;
-        this.bld_y = bld_y;
+        this.x = bld_x;
+        this.y = bld_y;
         this.bld_name = name;
-        this.bld_health = health;
+        this.health = health;
         this.selected = false;
+        this.defender = false;
     }
 
     select() {
         this.selected = true;
+        console.log(this.selected)
         document.getElementById("building").innerHTML = this.bld_name;
-
+        document.getElementById("bld_health").innerHTML = this.health;
     }
 
     unselect() {
         this.selected = false;
         document.getElementById("building").innerHTML = '';
+        document.getElementById("bld_health").innerHTML = '';
         for (let i = 0; i < buttons.length; i++)  buttons[i].hide()
     }
 
@@ -47,9 +50,9 @@ async function buildings_setup(/* user_id,buildings */) {
         } else {
             let temp_button = createButton('Train');
             temp_button.position(1350, y_pop_buttons);
-           /*  temp_button.mousePressed(async function () {
-                train(user_id, 1, buildings)
-            }); */
+            /*  temp_button.mousePressed(async function () {
+                 train(user_id, 1, buildings)
+             }); */
             temp_button.hide();
             buttons.push(temp_button);
             last_name = troops_resources[i].trp_name;
@@ -89,7 +92,7 @@ function draw_buildings(matrix, buildings_array, num_squares, user_id, square_si
                 image(bulding_image, 465, 20, tilesize, tilesize);
                 fill(w);
                 fill(b);
-                text(buildings[i].bld_health, 535, 210)
+                text(buildings[i].health, 535, 210)
                 fill(w);
                 let y_pop = 250;
                 for (let i = 0; i < troops_resources.length; i++) {
@@ -111,7 +114,7 @@ function draw_buildings(matrix, buildings_array, num_squares, user_id, square_si
         }
         else prepare_to_train = false;
 
-        if (matrix[buildings_array[i].bld_x][buildings_array[i].bld_y] == num_squares) {
+        if (matrix[buildings_array[i].x][buildings_array[i].y] == num_squares) {
             if (buildings_array[i].user_id == user_id) {
                 // fill(bl);
                 //rect(x, y, tilesize, tilesize);
@@ -177,7 +180,7 @@ async function build_building(troop_array, user_id, resources) {
 
 function mouse_pressed_buildings(building_array, x, y) {
     for (let i = 0; i < building_array.length; i++) {
-        if (x == building_array[i].bld_x && y == building_array[i].bld_y) {
+        if (x == building_array[i].x && y == building_array[i].y) {
             building_array[i].select();
 
             break
@@ -185,6 +188,19 @@ function mouse_pressed_buildings(building_array, x, y) {
             building_array[i].unselect()
         }
     }
+}
+
+function set_defender_building(buildings, user_id) {
+    for (let i = 0; i < buildings.length; i++) {
+        if (buildings[i].user_id != user_id) {
+            if (buildings[i].selected) {
+                buildings[i].defender = true;
+                break;
+            }
+        }
+    }
+
+
 }
 
 
