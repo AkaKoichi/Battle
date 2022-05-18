@@ -55,7 +55,7 @@ function draw_troops(matrix, troop_array, num_squares, user_id, square_size, dia
         //if (matrix[troop_array[i].x][troop_array[i].y] == num_squares) {
         if (troop_array[i].user_id == user_id) {
             //circle(x + square_size / 2, y + square_size / 2, diameter);
-            image(trp_image, troop_array[i].x * square_size, troop_array[i].y * square_size - square_size / 2, trp_image.width / 7, trp_image.height / 7);
+            image(trp_image, troop_array[i].x * square_size + (square_size-trp_image.width / 7)/2, troop_array[i].y * square_size - square_size / 2, trp_image.width / 7, trp_image.height / 7);
             //image(trp_image,x+1 , y+1,10,10);
             // ,(width/square_size)*2.65, (height/square_size)*2.6
 
@@ -65,7 +65,7 @@ function draw_troops(matrix, troop_array, num_squares, user_id, square_size, dia
             //trp_image=give_img(troop_array[1].url)
 
             //circle(x + square_size / 2, y + square_size / 2, diameter);
-            image(trp_image, troop_array[i].x * square_size, troop_array[i].y * square_size - square_size / 2, trp_image.width / 7, trp_image.height / 7);
+            image(trp_image, troop_array[i].x * square_size + (square_size-trp_image.width / 7)/2, troop_array[i].y * square_size - square_size / 2, trp_image.width / 7, trp_image.height / 7);
             // image(trp_image,x+1 , y+1,10,10);
             troop_array[i].square_x = x + square_size / 2
             troop_array[i].square_y = y + square_size / 2
@@ -136,11 +136,11 @@ async function key_troops(its_my_turn, troop_array, user_id, input_troop, buildi
         switch (key) {
             case 'p':
             case 'P':
-                make_attack(troop_array, user_id)
+                make_attack(troop_array, user_id,buildings)
                 break;
             case 'o':
             case 'O':
-                set_defender(troop_array, user_id)
+                set_defender(troop_array, user_id,buildings)
                 break;
 
         }
@@ -184,7 +184,7 @@ function set_attacker(troop_array, user_id) {
     }
 }
 
-function set_defender(troop_array, user_id) {
+function set_defender(troop_array, user_id,buildings) {
     for (let i = 0; i < troop_array.length; i++) {
         if (troop_array[i].user_id != user_id) {
             if (troop_array[i].selected) {
@@ -194,9 +194,21 @@ function set_defender(troop_array, user_id) {
             }
         }
     }
+    for (let i = 0; i < buildings.length; i++) {
+       console.log(buildings[i].selected)
+        if (buildings[i].user_id != user_id) {
+            
+            if (buildings[i].selected) {
+                console.log('aaa')
+                buildings[i].defender = true;
+                console.log('defender')
+                break;
+            }
+        }
+    }
 }
 
-async function make_attack(troop_array, user_id) {
+async function make_attack(troop_array, user_id,buildings) {
     var attacker = {};
     var defender = {};
     let attacker_index = null;
@@ -209,7 +221,6 @@ async function make_attack(troop_array, user_id) {
             if (troop_array[i].attacker) {
                 attacker = troop_array[i]
                 attacker_index = i
-
                 break;
             }
         }
@@ -218,6 +229,15 @@ async function make_attack(troop_array, user_id) {
         if (troop_array[i].user_id != user_id) {
             if (troop_array[i].defender) {
                 defender = troop_array[i]
+                defender_index = i
+                break;
+            }
+        }
+    }
+    for (let i = 0; i < buildings.length; i++) {
+        if (buildings[i].user_id != user_id) {
+            if (buildings[i].defender) {
+                defender = buildings[i]
                 defender_index = i
                 break;
             }
@@ -236,7 +256,7 @@ async function make_attack(troop_array, user_id) {
         alert('defender health after attack : ' + defender.health)
         troop_array[attacker_index].attacker = false;
         troop_array[defender_index].defender = false;
-        document.location.reload(true)
+        //document.location.reload(true)
     }
 }
 
