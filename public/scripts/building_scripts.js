@@ -7,6 +7,7 @@ let y;
 let x;
 let y_pop_buttons = 240
 
+
 class building {
     constructor(user_id, user_bld_id, bld_id, name, health, bld_x, bld_y) {
         this.user_id = user_id;
@@ -36,11 +37,15 @@ class building {
 
 }
 
+<<<<<<< HEAD
+async function buildings_setup(user_id, buildings) {
+=======
 async function resources_for_troops() {
 
 }
 
 async function buildings_setup(/* user_id,buildings */) {
+>>>>>>> 45252d2b2e4282e73b7926c7311eeec2cd5bf84a
     let last_name;
     let troop = 0
     troops_resources = await get_troops_resources();
@@ -79,6 +84,7 @@ function draw_buildings(matrix, buildings_array, num_squares, user_id, square_si
     let g = color('gray');
     for (let i = 0; i < buildings_array.length; i++) {
         bulding_image = images[buildings_array[i].bld_id]
+<<<<<<< HEAD
         if (prepare_to_train == false && buildings_array[i].selected == true && buildings_array[i].bld_name == 'Training Camp') {
 
             if (troops_resources == []) {
@@ -113,6 +119,8 @@ function draw_buildings(matrix, buildings_array, num_squares, user_id, square_si
 
         }
         else prepare_to_train = false;
+=======
+>>>>>>> 0e1f1f86a10aa5bb304f94bc462d78742697c8d7
 
         if (matrix[buildings_array[i].x][buildings_array[i].y] == num_squares) {
             if (buildings_array[i].user_id == user_id) {
@@ -190,6 +198,7 @@ function mouse_pressed_buildings(building_array, x, y) {
     }
 }
 
+<<<<<<< HEAD
 function set_defender_building(buildings, user_id) {
     for (let i = 0; i < buildings.length; i++) {
         if (buildings[i].user_id != user_id) {
@@ -203,4 +212,68 @@ function set_defender_building(buildings, user_id) {
 
 }
 
+=======
+function draw_pop_up_buildings(buildings_array, tilesize, images) {7
+    let w = color('white');
+    let b = color('black');
+    for (let i = 0; i < buildings_array.length; i++) {
+        bulding_image = images[buildings_array[i].bld_id]
+        if (prepare_to_train == false && buildings_array[i].selected == true && buildings_array[i].bld_name == 'Training Camp') {
+>>>>>>> 0e1f1f86a10aa5bb304f94bc462d78742697c8d7
 
+            if (troops_resources == []) {
+                return
+            } else {
+
+                let last_name;
+
+                fill(15, 166, 55);
+                rect(450, 0, 688, 688);
+                image(bulding_image, 465, 20, tilesize, tilesize);
+                fill(w);
+                fill(b);
+                text(buildings[i].bld_health, 535, 210)
+                fill(w);
+                let y_pop = 250;
+                for (let i = 0; i < troops_resources.length; i++) {
+                    if (last_name == troops_resources[i].trp_name) {
+                        text(troops_resources[i].rsc_amount, 620, y_pop - 15)
+                        for (let i = 0; i < buttons.length; i++)  buttons[i].show()
+                    } else {
+                        text(troops_resources[i].trp_name, 455, y_pop)
+                        text(troops_resources[i].rsc_amount, 575, y_pop)
+                        last_name = troops_resources[i].trp_name;
+                    }
+                    y_pop += 15
+
+                    prepare_to_train = true;
+                }
+
+            }
+
+        }
+        else if((prepare_to_train == false && buildings_array[i].selected == true) && (buildings_array[i].bld_name == 'tc1'||buildings_array[i].bld_name == 'tc2'||buildings_array[i].bld_name =='tc3' || buildings_array[i].bld_name =='tc4')){
+            console.log(buildings_array[i].selected)
+            console.log(buildings_array[i].bld_name)
+            fill(15, 166, 55);
+            rect(450, 0, 688, 688);
+            image(bulding_image, 465, 20, tilesize, tilesize);
+            fill(w);
+            fill(b);
+            text(buildings[i].bld_health, 535, 210)
+            fill(w);
+            prepare_to_train = true;
+        }
+        else if(prepare_to_train == false && buildings_array[i].selected == true && (buildings_array[i].bld_name == 'Field' || buildings_array[i].bld_name == 'Mine')){
+            fill(15, 166, 55);
+            rect(450, 0, 688, 688);
+            image(bulding_image, 465, 20, tilesize, tilesize);
+            fill(w);
+            fill(b);
+            text(buildings[i].bld_health, 535, 210)
+            fill(w);
+            prepare_to_train = true;
+        }
+        else prepare_to_train = false;
+    }
+}
