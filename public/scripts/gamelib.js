@@ -89,7 +89,7 @@ async function setup() {
     }
     
 
-    buildings_setup(/* user_info.user_id,buildings */)
+    buildings_setup( user_info.user_id,buildings )
 
     end_turn_button = createButton('End Turn');
     end_turn_button.position(500, 155);

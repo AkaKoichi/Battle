@@ -55,7 +55,7 @@ function draw_troops(matrix, troop_array, num_squares, user_id, square_size, dia
         //if (matrix[troop_array[i].x][troop_array[i].y] == num_squares) {
         if (troop_array[i].user_id == user_id) {
             //circle(x + square_size / 2, y + square_size / 2, diameter);
-            image(trp_image, troop_array[i].x * square_size, troop_array[i].y * square_size - square_size / 2, trp_image.width / 7, trp_image.height / 7);
+            image(trp_image, troop_array[i].x * square_size + (square_size-trp_image.width / 7)/2, troop_array[i].y * square_size - square_size / 2, trp_image.width / 7, trp_image.height / 7);
             //image(trp_image,x+1 , y+1,10,10);
             // ,(width/square_size)*2.65, (height/square_size)*2.6
 
@@ -65,7 +65,7 @@ function draw_troops(matrix, troop_array, num_squares, user_id, square_size, dia
             //trp_image=give_img(troop_array[1].url)
 
             //circle(x + square_size / 2, y + square_size / 2, diameter);
-            image(trp_image, troop_array[i].x * square_size, troop_array[i].y * square_size - square_size / 2, trp_image.width / 7, trp_image.height / 7);
+            image(trp_image, troop_array[i].x * square_size + (square_size-trp_image.width / 7)/2, troop_array[i].y * square_size - square_size / 2, trp_image.width / 7, trp_image.height / 7);
             // image(trp_image,x+1 , y+1,10,10);
             troop_array[i].square_x = x + square_size / 2
             troop_array[i].square_y = y + square_size / 2
