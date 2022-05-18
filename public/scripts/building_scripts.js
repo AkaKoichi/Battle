@@ -34,15 +34,7 @@ class building {
 
 }
 
-<<<<<<< HEAD
 async function buildings_setup(user_id, buildings) {
-=======
-async function resources_for_troops() {
-
-}
-
-async function buildings_setup(/* user_id,buildings */) {
->>>>>>> 45252d2b2e4282e73b7926c7311eeec2cd5bf84a
     let last_name;
     let troop = 0
     troops_resources = await get_troops_resources();
