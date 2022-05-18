@@ -128,10 +128,7 @@ async function key_troops(its_my_turn, troop_array, user_id, input_troop, buildi
                         case 'I':
                             set_attacker(troop_array, user_id)
                             break;
-                        case 'o':
-                        case 'O':
-                            set_defender(troop_array, user_id)
-                            break;
+
                     }
                 }
             }
@@ -140,6 +137,10 @@ async function key_troops(its_my_turn, troop_array, user_id, input_troop, buildi
             case 'p':
             case 'P':
                 make_attack(troop_array, user_id)
+                break;
+            case 'o':
+            case 'O':
+                set_defender(troop_array, user_id)
                 break;
 
         }
@@ -156,10 +157,10 @@ function mouse_pressed_troops(troop_array) {
         if (troop_array[i].x == tile.x && troop_array[i].y == tile.y) {
             troop_array[i].select()
             break
-        /* let distance = dist(mouseX, mouseY, troop_array[i].square_x, troop_array[i].square_y);
-        if (distance < radius) {
-            //troop_array[i].selected = true;
- */   
+            /* let distance = dist(mouseX, mouseY, troop_array[i].square_x, troop_array[i].square_y);
+            if (distance < radius) {
+                //troop_array[i].selected = true;
+     */
         } else {
             //troop_array[i].selected = false;
             troop_array[i].unselect()
