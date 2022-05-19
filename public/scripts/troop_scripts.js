@@ -1,15 +1,10 @@
 
-<<<<<<< HEAD
 
-=======
-<<<<<<< HEAD
-// test mf test testttttttt
 
-=======
+
 let troop_shown = false;
 let trp_image;
->>>>>>> 58729e7aaffe831c00b0dd15b9da2b1328c78557
->>>>>>> 00da2b2add477e68f2148fc7dd016c101e5ae7a4
+
 
 class troop {
     constructor(user_id, trp_id, user_trp_id, name, health, init_movement, movement, attack, range, max_amount, x, y, url) {
@@ -51,7 +46,7 @@ class troop {
 
 }
 
-function draw_troops(matrix, troop_array, num_squares, user_id, square_size, diameter, x, y, images,hurt_images) {
+function draw_troops(matrix, troop_array, num_squares, user_id, square_size, diameter, x, y, images, hurt_images) {
 
     let c = color(255, 204, 0);
     let w = color('white');
@@ -60,65 +55,57 @@ function draw_troops(matrix, troop_array, num_squares, user_id, square_size, dia
     let p = color('purple');
     let bl = color('blue');
     let g = color('gray');
-    
+
     for (let i = 0; i < troop_array.length; i++) {
         trp_image = images[troop_array[i].trp_id]
-<<<<<<< HEAD
-        if (troop_array[i].user_id == user_id) {
-            image(trp_image, troop_array[i].x * square_size + (square_size - trp_image.width / 7) / 2, troop_array[i].y * square_size - square_size / 2, trp_image.width / 7, trp_image.height / 7);
-        } else {
 
-            image(trp_image, troop_array[i].x * square_size + (square_size - trp_image.width / 7) / 2, troop_array[i].y * square_size - square_size / 2, trp_image.width / 7, trp_image.height / 7);
-        }
-    }
-}
-=======
         hurt_image = hurt_images[troop_array[i].trp_id]
         //if (matrix[troop_array[i].x][troop_array[i].y] == num_squares) {
         if (troop_array[i].user_id == user_id) {
-<<<<<<< HEAD
-            if (troop_array[i].hurt == true){
+
+            if (troop_array[i].hurt == true) {
                 console.log('aa')
-                image(hurt_image, troop_array[i].x * square_size + (square_size-trp_image.width / 7)/2, troop_array[i].y * square_size - square_size / 2, trp_image.width / 7, trp_image.height / 7);
-                troop_array[i].timer -- 
+                image(hurt_image, troop_array[i].x * square_size + (square_size - trp_image.width / 7) / 2, troop_array[i].y * square_size - square_size / 2, trp_image.width / 7, trp_image.height / 7);
+                troop_array[i].timer--
                 if (troop_array[i].timer == 0) {
                     console.log(troop_array[i].timer == 0)
                     troop_array[i].hurt = false
                 }
-            }else image(trp_image, troop_array[i].x * square_size + (square_size-trp_image.width / 7)/2, troop_array[i].y * square_size - square_size / 2, trp_image.width / 7, trp_image.height / 7);
-=======
+            } else image(trp_image, troop_array[i].x * square_size + (square_size - trp_image.width / 7) / 2, troop_array[i].y * square_size - square_size / 2, trp_image.width / 7, trp_image.height / 7);
+
             //circle(x + square_size / 2, y + square_size / 2, diameter);
             image(trp_image, troop_array[i].x * square_size + (square_size - trp_image.width / 7) / 2, troop_array[i].y * square_size - square_size / 2, trp_image.width / 7, trp_image.height / 7);
->>>>>>> 58729e7aaffe831c00b0dd15b9da2b1328c78557
+
             //image(trp_image,x+1 , y+1,10,10);
             // ,(width/square_size)2.65, (height/square_size)2.6
 
 
         } else {
 
-<<<<<<< HEAD
-            if (troop_array[i].hurt == true){
+
+            if (troop_array[i].hurt == true) {
                 console.log('aa')
-                image(hurt_image, troop_array[i].x * square_size + (square_size-trp_image.width / 7)/2, troop_array[i].y * square_size - square_size / 2, trp_image.width / 7, trp_image.height / 7);
-                troop_array[i].timer -- 
-                console.log(i,troop_array[i].hurt,troop_array[i].timer) 
+                image(hurt_image, troop_array[i].x * square_size + (square_size - trp_image.width / 7) / 2, troop_array[i].y * square_size - square_size / 2, trp_image.width / 7, trp_image.height / 7);
+                troop_array[i].timer--
+                console.log(i, troop_array[i].hurt, troop_array[i].timer)
                 if (troop_array[i].timer == 0) {
-                    console.log(troop_array[i].timer )
+                    console.log(troop_array[i].timer)
                     troop_array[i].hurt = false
                 }
             }
-            else image(trp_image, troop_array[i].x * square_size + (square_size-trp_image.width / 7)/2, troop_array[i].y * square_size - square_size / 2, trp_image.width / 7, trp_image.height / 7);
-=======
+            else image(trp_image, troop_array[i].x * square_size + (square_size - trp_image.width / 7) / 2, troop_array[i].y * square_size - square_size / 2, trp_image.width / 7, trp_image.height / 7);
+
             //circle(x + square_size / 2, y + square_size / 2, diameter);
             image(trp_image, troop_array[i].x * square_size + (square_size - trp_image.width / 7) / 2, troop_array[i].y * square_size - square_size / 2, trp_image.width / 7, trp_image.height / 7);
->>>>>>> 58729e7aaffe831c00b0dd15b9da2b1328c78557
+
             // image(trp_image,x+1 , y+1,10,10);
 
         }
+
     }
 }
 
->>>>>>> 00da2b2add477e68f2148fc7dd016c101e5ae7a4
+
 async function key_troops(its_my_turn, troop_array, user_id, input_troop, buildings) {
     if (its_my_turn) {
         for (i = 0; i < troop_array.length; i++) {
@@ -179,19 +166,19 @@ async function key_troops(its_my_turn, troop_array, user_id, input_troop, buildi
         switch (key) {
             case 'p':
             case 'P':
-<<<<<<< HEAD
+
                 make_attack(troop_array, user_id, buildings)
                 break;
             case 'o':
             case 'O':
                 set_defender(troop_array, user_id, buildings)
-=======
+
                 make_attack(troop_array, user_id)
                 break;
             case 'o':
             case 'O':
                 set_defender(troop_array, user_id)
->>>>>>> 00da2b2add477e68f2148fc7dd016c101e5ae7a4
+
                 break;
 
         }
@@ -230,11 +217,7 @@ function set_attacker(troop_array, user_id) {
     }
 }
 
-<<<<<<< HEAD
 function set_defender(troop_array, user_id, buildings) {
-=======
-function set_defender(troop_array, user_id) {
->>>>>>> 00da2b2add477e68f2148fc7dd016c101e5ae7a4
     for (let i = 0; i < troop_array.length; i++) {
         if (troop_array[i].user_id != user_id) {
             if (troop_array[i].selected) {
@@ -244,7 +227,6 @@ function set_defender(troop_array, user_id) {
             }
         }
     }
-<<<<<<< HEAD
     for (let i = 0; i < buildings.length; i++) {
         console.log(buildings[i].selected)
         if (buildings[i].user_id != user_id) {
@@ -260,18 +242,13 @@ function set_defender(troop_array, user_id) {
 }
 
 async function make_attack(troop_array, user_id, buildings) {
-=======
-}
-
-async function make_attack(troop_array, user_id) {
->>>>>>> 00da2b2add477e68f2148fc7dd016c101e5ae7a4
     var attacker = {};
     var defender = {};
     let attacker_index = null;
     let defender_index = null;
     let can_attack = false;
     let dice_dmg_multiplier = null;
-   
+
     for (let i = 0; i < troop_array.length; i++) {
         if (troop_array[i].user_id == user_id) {
             if (troop_array[i].attacker) {
@@ -294,9 +271,9 @@ async function make_attack(troop_array, user_id) {
     can_attack = get_dist_attack(attacker, defender)
     dice_dmg_multiplier = roll_dice(3, 6)
     if (can_attack && dice_dmg_multiplier >= 1) {
-        troop_array[defender_index].hurt= true
-        troop_array[defender_index].timer= 100
-        
+        troop_array[defender_index].hurt = true
+        troop_array[defender_index].timer = 100
+
         console.log('made attack')
         defender.health -= attacker.attack * dice_dmg_multiplier;
         if (defender.health <= 0) {
