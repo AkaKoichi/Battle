@@ -55,7 +55,7 @@ function draw_troops(matrix, troop_array, num_squares, user_id, square_size, dia
         //if (matrix[troop_array[i].x][troop_array[i].y] == num_squares) {
         if (troop_array[i].user_id == user_id) {
             //circle(x + square_size / 2, y + square_size / 2, diameter);
-            image(trp_image, troop_array[i].x * square_size + (square_size-trp_image.width / 7)/2, troop_array[i].y * square_size - square_size / 2, trp_image.width / 7, trp_image.height / 7);
+            image(trp_image, troop_array[i].x * square_size + (square_size - trp_image.width / 7) / 2, troop_array[i].y * square_size - square_size / 2, trp_image.width / 7, trp_image.height / 7);
             //image(trp_image,x+1 , y+1,10,10);
             // ,(width/square_size)2.65, (height/square_size)2.6
 
@@ -64,7 +64,7 @@ function draw_troops(matrix, troop_array, num_squares, user_id, square_size, dia
             //trp_image=give_img(troop_array[1].url)
 
             //circle(x + square_size / 2, y + square_size / 2, diameter);
-            image(trp_image, troop_array[i].x * square_size + (square_size-trp_image.width / 7)/2, troop_array[i].y * square_size - square_size / 2, trp_image.width / 7, trp_image.height / 7);
+            image(trp_image, troop_array[i].x * square_size + (square_size - trp_image.width / 7) / 2, troop_array[i].y * square_size - square_size / 2, trp_image.width / 7, trp_image.height / 7);
             // image(trp_image,x+1 , y+1,10,10);
 
         }
@@ -279,21 +279,22 @@ async function train(user_id, troop_id, buildings) {
     }
 }
 
-function draw_pop_up_troops(troop_array, tilesize, images) {7
+function draw_pop_up_troops(troop_array, tilesize, images) {
+    7
     let w = color('white');
     let b = color('black');
     for (let i = 0; i < troop_array.length; i++) {
         troop_image = images[troop_array[i].trp_id]
         if (troop_shown == false && troop_array[i].selected == true) {
-
-                fill(15, 166, 55);
-                rect(450, 0, 688, 688);
-                image(troop_image, 465, 20, tilesize, tilesize);
-                fill(w);
-                fill(b);
-                text(troops[i].trp_health, 535, 210)
-                fill(w);
-                troop_shown = true;
+            fill(170, 160, 85);
+            rect(450, 0, 688, 688);
+            noStroke()
+            image(troop_image, 465, 20, tilesize, tilesize);
+            fill(w);
+            fill(b);
+            text(troops[i].trp_health, 535, 210)
+            fill(w);
+            troop_shown = true;
 
         }
         else troop_shown = false;
