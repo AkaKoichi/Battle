@@ -36,6 +36,17 @@ class building {
     }
 
 }
+function mouse_pressed_buildings(building_array, x, y) {
+    for (let i = 0; i < building_array.length; i++) {
+        if (x == building_array[i].x && y == building_array[i].y) {
+            building_array[i].select();
+
+            break
+        } else {
+            building_array[i].unselect()
+        }
+    }
+}
 
 async function buildings_setup(user_id, buildings) {
     let last_name;
@@ -48,7 +59,7 @@ async function buildings_setup(user_id, buildings) {
             let temp_button = createButton('Train');
             temp_button.position(1350, y_pop_buttons);
             temp_button.mousePressed(async function () {
-                train(user_id, i / 2 + 1, buildings)
+                train(user_id, troops_resources[i].trp_id, buildings)
 
             });
             temp_button.hide();
@@ -77,40 +88,6 @@ function draw_buildings(matrix, buildings_array, num_squares, user_id, square_si
     let g = color('gray');
     for (let i = 0; i < buildings_array.length; i++) {
         bulding_image = images[buildings_array[i].bld_id]
-        if (prepare_to_train == false && buildings_array[i].selected == true && buildings_array[i].bld_name == 'Training Camp') {
-
-            if (troops_resources == []) {
-                return
-            } else {
-
-                let last_name;
-
-                fill(15, 166, 55);
-                rect(450, 0, 688, 688);
-                image(bulding_image, 465, 20, tilesize, tilesize);
-                fill(w);
-                fill(b);
-                text(buildings[i].health, 535, 210)
-                fill(w);
-                let y_pop = 250;
-                for (let i = 0; i < troops_resources.length; i++) {
-                    if (last_name == troops_resources[i].trp_name) {
-                        text(troops_resources[i].rsc_amount, 620, y_pop - 15)
-                        for (let i = 0; i < buttons.length; i++)  buttons[i].show()
-                    } else {
-                        text(troops_resources[i].trp_name, 455, y_pop)
-                        text(troops_resources[i].rsc_amount, 575, y_pop)
-                        last_name = troops_resources[i].trp_name;
-                    }
-                    y_pop += 15
-
-                    prepare_to_train = true;
-                }
-
-            }
-
-        }
-        else prepare_to_train = false;
 
         if (matrix[buildings_array[i].x][buildings_array[i].y] == num_squares) {
             if (buildings_array[i].user_id == user_id) {
@@ -176,17 +153,7 @@ async function build_building(troop_array, user_id, resources) {
     }
 }
 
-function mouse_pressed_buildings(building_array, x, y) {
-    for (let i = 0; i < building_array.length; i++) {
-        if (x == building_array[i].x && y == building_array[i].y) {
-            building_array[i].select();
 
-            break
-        } else {
-            building_array[i].unselect()
-        }
-    }
-}
 
 function set_defender_building(buildings, user_id) {
     for (let i = 0; i < buildings.length; i++) {
@@ -242,8 +209,6 @@ function draw_pop_up_buildings(buildings_array, tilesize, images) {
 
         }
         else if ((prepare_to_train == false && buildings_array[i].selected == true) && (buildings_array[i].bld_name == 'tc1' || buildings_array[i].bld_name == 'tc2' || buildings_array[i].bld_name == 'tc3' || buildings_array[i].bld_name == 'tc4')) {
-            console.log(buildings_array[i].selected)
-            console.log(buildings_array[i].bld_name)
             fill(15, 166, 55);
             rect(450, 0, 688, 688);
             image(bulding_image, 465, 20, tilesize, tilesize);

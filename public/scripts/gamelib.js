@@ -2,7 +2,7 @@
 //no
 var user_info;
 let resources;
-
+var troop_selected_i;
 var troop_images = {};
 var buildings_images = {}
 let troop_array = []
@@ -33,16 +33,6 @@ const diameter = radius * 2;
 window.onload = async () => {
     user_info = await get_user_info();
     resources = await get_resources_by_id(1, user_info.user_id);
-
-    setInterval(() => {
-        if (its_my_turn == false) initialize_game()
-
-    }, 500);
-    
-
-
-
-
     let bol = await check_current_playing()
     if (bol[0].current_user_playing == user_info.user_id) {
         its_my_turn = true;
@@ -54,10 +44,23 @@ window.onload = async () => {
         disable_button(end_turn_button)
 
     }
+    setInterval(() => {
+        if (its_my_turn == false) initialize_game()
+
+    }, 500);
+
+    
+
     document.getElementById("name").innerHTML = user_info.username;
     document.getElementById("id").innerHTML = user_info.user_id;
     document.getElementById("iron").innerHTML = resources[0].rsc_amount;
     document.getElementById("food").innerHTML = resources[1].rsc_amount;
+
+    
+    
+
+
+    
 }
 
 async function setup() {
@@ -89,7 +92,7 @@ async function setup() {
     }
     
 
-    buildings_setup( user_info.user_id,buildings )
+    
 
     end_turn_button = createButton('End Turn');
     end_turn_button.position(500, 155);
@@ -103,6 +106,7 @@ async function setup() {
     train_troop_button.mousePressed(async function () {
         train(user_info.user_id, input_troop.value(),buildings)
     });
+    buildings_setup( user_info.user_id,buildings )
 
 }
 
@@ -118,18 +122,10 @@ async function draw() {
     for (let y = 0; y < height; y += square_size) {
         for (let x = 0; x < width; x += square_size) {
             if (hovered_tile.x * square_size == x && hovered_tile.y * square_size == y) {
-                //if (matrix[hovered_tile.y][hovered_tile.x -1] == num_squares) {
-                //fill(p)
-                //rect(x, y, square_size, square_size);
                 image(tile_image2, x, y, tilesize, tilesize);
-                //  fill(w)
             } else {
-                //rect(x, y, square_size, square_size);
                 image(tile_image, x, y, tilesize, tilesize);
             }
-            /* fill(b);
-            text(num_squares, x + square_size / 2 - 10, y + square_size / 2)
-            fill(w) */
             num_squares++
             draw_buildings(matrix, buildings_array, num_squares, user_info.user_id, square_size, tilesize, x, y,buildings_images)
             draw_troops(matrix, troop_array, num_squares, user_info.user_id, square_size, diameter, x, y, troop_images)
