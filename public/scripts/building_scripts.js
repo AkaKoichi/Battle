@@ -183,9 +183,10 @@ function draw_pop_up_buildings(buildings_array, tilesize, images) {
 
                 let last_name;
 
-                fill(15, 166, 55);
+                fill(170, 160, 85);
                 rect(450, 0, 688, 688);
-                image(bulding_image, 465, 20, tilesize, tilesize);
+                noStroke()
+                image(bulding_image, 465, 20, bulding_image.width, bulding_image.height);
                 fill(w);
                 fill(b);
                 text(buildings[i].bld_health, 535, 210)
@@ -209,9 +210,16 @@ function draw_pop_up_buildings(buildings_array, tilesize, images) {
 
         }
         else if ((prepare_to_train == false && buildings_array[i].selected == true) && (buildings_array[i].bld_name == 'tc1' || buildings_array[i].bld_name == 'tc2' || buildings_array[i].bld_name == 'tc3' || buildings_array[i].bld_name == 'tc4')) {
+<<<<<<< HEAD
             fill(15, 166, 55);
+=======
+            console.log(buildings_array[i].selected)
+            console.log(buildings_array[i].bld_name)
+            fill(170, 160, 85);
+>>>>>>> 00da2b2add477e68f2148fc7dd016c101e5ae7a4
             rect(450, 0, 688, 688);
-            image(bulding_image, 465, 20, tilesize, tilesize);
+            noStroke()
+            image(bulding_image, 465, 20, bulding_image.width, bulding_image.height);
             fill(w);
             fill(b);
             text(buildings[i].bld_health, 535, 210)
@@ -219,9 +227,10 @@ function draw_pop_up_buildings(buildings_array, tilesize, images) {
             prepare_to_train = true;
         }
         else if (prepare_to_train == false && buildings_array[i].selected == true && (buildings_array[i].bld_name == 'Field' || buildings_array[i].bld_name == 'Mine')) {
-            fill(15, 166, 55);
+            fill(170, 160, 85);
             rect(450, 0, 688, 688);
-            image(bulding_image, 465, 20, tilesize, tilesize);
+            noStroke()
+            image(bulding_image, 465, 20, bulding_image.width, bulding_image.height);
             fill(w);
             fill(b);
             text(buildings[i].bld_health, 535, 210)
