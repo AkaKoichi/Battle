@@ -77,40 +77,6 @@ function draw_buildings(matrix, buildings_array, num_squares, user_id, square_si
     let g = color('gray');
     for (let i = 0; i < buildings_array.length; i++) {
         bulding_image = images[buildings_array[i].bld_id]
-        if (prepare_to_train == false && buildings_array[i].selected == true && buildings_array[i].bld_name == 'Training Camp') {
-
-            if (troops_resources == []) {
-                return
-            } else {
-
-                let last_name;
-
-                fill(15, 166, 55);
-                rect(450, 0, 688, 688);
-                image(bulding_image, 465, 20, tilesize, tilesize);
-                fill(w);
-                fill(b);
-                text(buildings[i].health, 535, 210)
-                fill(w);
-                let y_pop = 250;
-                for (let i = 0; i < troops_resources.length; i++) {
-                    if (last_name == troops_resources[i].trp_name) {
-                        text(troops_resources[i].rsc_amount, 620, y_pop - 15)
-                        for (let i = 0; i < buttons.length; i++)  buttons[i].show()
-                    } else {
-                        text(troops_resources[i].trp_name, 455, y_pop)
-                        text(troops_resources[i].rsc_amount, 575, y_pop)
-                        last_name = troops_resources[i].trp_name;
-                    }
-                    y_pop += 15
-
-                    prepare_to_train = true;
-                }
-
-            }
-
-        }
-        else prepare_to_train = false;
 
         if (matrix[buildings_array[i].x][buildings_array[i].y] == num_squares) {
             if (buildings_array[i].user_id == user_id) {
