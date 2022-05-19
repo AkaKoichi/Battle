@@ -134,6 +134,7 @@ async function draw() {
             draw_buildings(matrix, buildings_array, num_squares, user_info.user_id, square_size, tilesize, x, y,buildings_images)
             draw_troops(matrix, troop_array, num_squares, user_info.user_id, square_size, diameter, x, y, troop_images)
             draw_pop_up_buildings(buildings_array,square_size,buildings_images)
+            draw_pop_up_troops(troop_array,square_size,troop_images)
         }
     }
 }

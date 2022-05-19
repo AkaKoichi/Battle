@@ -1,5 +1,5 @@
 
-// test mf test testttttttt
+let troop_shown = false;
 let trp_image;
 
 class troop {
@@ -55,20 +55,18 @@ function draw_troops(matrix, troop_array, num_squares, user_id, square_size, dia
         //if (matrix[troop_array[i].x][troop_array[i].y] == num_squares) {
         if (troop_array[i].user_id == user_id) {
             //circle(x + square_size / 2, y + square_size / 2, diameter);
-            image(trp_image, troop_array[i].x * square_size, troop_array[i].y * square_size - square_size / 2, trp_image.width / 7, trp_image.height / 7);
+            image(trp_image, troop_array[i].x * square_size + (square_size-trp_image.width / 7)/2, troop_array[i].y * square_size - square_size / 2, trp_image.width / 7, trp_image.height / 7);
             //image(trp_image,x+1 , y+1,10,10);
-            // ,(width/square_size)*2.65, (height/square_size)*2.6
+            // ,(width/square_size)2.65, (height/square_size)2.6
 
-            troop_array[i].square_x = x + square_size / 2
-            troop_array[i].square_y = y + square_size / 2
-        } else {s
+
+        } else {
             //trp_image=give_img(troop_array[1].url)
 
             //circle(x + square_size / 2, y + square_size / 2, diameter);
-            image(trp_image, troop_array[i].x * square_size, troop_array[i].y * square_size - square_size / 2, trp_image.width / 7, trp_image.height / 7);
+            image(trp_image, troop_array[i].x * square_size + (square_size-trp_image.width / 7)/2, troop_array[i].y * square_size - square_size / 2, trp_image.width / 7, trp_image.height / 7);
             // image(trp_image,x+1 , y+1,10,10);
-            troop_array[i].square_x = x + square_size / 2
-            troop_array[i].square_y = y + square_size / 2
+
         }
     }
 }
@@ -285,40 +283,19 @@ function draw_pop_up_troops(troop_array, tilesize, images) {7
     let w = color('white');
     let b = color('black');
     for (let i = 0; i < troop_array.length; i++) {
-        troop_image = images[troop_array[i].bld_id]
-        if (prepare_to_train == false && troop_array[i].selected == true && troop_array[i].bld_name == 'Training Camp') {
-
-            if (troops_resources == []) {
-                return
-            } else {
-
-                let last_name;
+        troop_image = images[troop_array[i].trp_id]
+        if (troop_shown == false && troop_array[i].selected == true) {
 
                 fill(15, 166, 55);
                 rect(450, 0, 688, 688);
-                image(bulding_image, 465, 20, tilesize, tilesize);
+                image(troop_image, 465, 20, tilesize, tilesize);
                 fill(w);
                 fill(b);
-                text(buildings[i].bld_health, 535, 210)
+                text(troops[i].trp_health, 535, 210)
                 fill(w);
-                let y_pop = 250;
-                for (let i = 0; i < troops_resources.length; i++) {
-                    if (last_name == troops_resources[i].trp_name) {
-                        text(troops_resources[i].rsc_amount, 620, y_pop - 15)
-                        for (let i = 0; i < buttons.length; i++)  buttons[i].show()
-                    } else {
-                        text(troops_resources[i].trp_name, 455, y_pop)
-                        text(troops_resources[i].rsc_amount, 575, y_pop)
-                        last_name = troops_resources[i].trp_name;
-                    }
-                    y_pop += 15
-
-                    prepare_to_train = true;
-                }
-
-            }
+                troop_shown = true;
 
         }
-        else prepare_to_train = false;
+        else troop_shown = false;
     }
 }
