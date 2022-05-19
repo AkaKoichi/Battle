@@ -109,7 +109,7 @@ module.exports.delete_troop = async function (id) {
 
 module.exports.get_all_troops_resources = async function () {
   try {
-    let sql = `select trp_name,rsc_type,rsc_amount from resources_troops 
+    let sql = `select troops.trp_id,trp_name,rsc_type,rsc_amount from resources_troops 
     inner join troops on resources_troops.trp_id = troops.trp_id
     inner join resources on resources_troops.rsc_id = resources.rsc_id;`;
     let result = await pool.query(sql);

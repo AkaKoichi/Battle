@@ -1,6 +1,11 @@
 
+<<<<<<< HEAD
 // test mf test testttttttt
 
+=======
+let troop_shown = false;
+let trp_image;
+>>>>>>> 58729e7aaffe831c00b0dd15b9da2b1328c78557
 
 class troop {
     constructor(user_id, trp_id, user_trp_id, name, health, init_movement, movement, attack, range, max_amount, x, y, url) {
@@ -57,6 +62,7 @@ function draw_troops(matrix, troop_array, num_squares, user_id, square_size, dia
         hurt_image = hurt_images[troop_array[i].trp_id]
         //if (matrix[troop_array[i].x][troop_array[i].y] == num_squares) {
         if (troop_array[i].user_id == user_id) {
+<<<<<<< HEAD
             if (troop_array[i].hurt == true){
                 console.log('aa')
                 image(hurt_image, troop_array[i].x * square_size + (square_size-trp_image.width / 7)/2, troop_array[i].y * square_size - square_size / 2, trp_image.width / 7, trp_image.height / 7);
@@ -66,13 +72,17 @@ function draw_troops(matrix, troop_array, num_squares, user_id, square_size, dia
                     troop_array[i].hurt = false
                 }
             }else image(trp_image, troop_array[i].x * square_size + (square_size-trp_image.width / 7)/2, troop_array[i].y * square_size - square_size / 2, trp_image.width / 7, trp_image.height / 7);
+=======
+            //circle(x + square_size / 2, y + square_size / 2, diameter);
+            image(trp_image, troop_array[i].x * square_size + (square_size - trp_image.width / 7) / 2, troop_array[i].y * square_size - square_size / 2, trp_image.width / 7, trp_image.height / 7);
+>>>>>>> 58729e7aaffe831c00b0dd15b9da2b1328c78557
             //image(trp_image,x+1 , y+1,10,10);
-            // ,(width/square_size)*2.65, (height/square_size)*2.6
+            // ,(width/square_size)2.65, (height/square_size)2.6
 
-            troop_array[i].square_x = x + square_size / 2
-            troop_array[i].square_y = y + square_size / 2
+
         } else {
 
+<<<<<<< HEAD
             if (troop_array[i].hurt == true){
                 console.log('aa')
                 image(hurt_image, troop_array[i].x * square_size + (square_size-trp_image.width / 7)/2, troop_array[i].y * square_size - square_size / 2, trp_image.width / 7, trp_image.height / 7);
@@ -84,9 +94,12 @@ function draw_troops(matrix, troop_array, num_squares, user_id, square_size, dia
                 }
             }
             else image(trp_image, troop_array[i].x * square_size + (square_size-trp_image.width / 7)/2, troop_array[i].y * square_size - square_size / 2, trp_image.width / 7, trp_image.height / 7);
+=======
+            //circle(x + square_size / 2, y + square_size / 2, diameter);
+            image(trp_image, troop_array[i].x * square_size + (square_size - trp_image.width / 7) / 2, troop_array[i].y * square_size - square_size / 2, trp_image.width / 7, trp_image.height / 7);
+>>>>>>> 58729e7aaffe831c00b0dd15b9da2b1328c78557
             // image(trp_image,x+1 , y+1,10,10);
-            troop_array[i].square_x = x + square_size / 2
-            troop_array[i].square_y = y + square_size / 2
+
         }
     }
 }
@@ -153,11 +166,11 @@ async function key_troops(its_my_turn, troop_array, user_id, input_troop, buildi
         switch (key) {
             case 'p':
             case 'P':
-                make_attack(troop_array, user_id,buildings)
+                make_attack(troop_array, user_id)
                 break;
             case 'o':
             case 'O':
-                set_defender(troop_array, user_id,buildings)
+                set_defender(troop_array, user_id)
                 break;
 
         }
@@ -201,7 +214,7 @@ function set_attacker(troop_array, user_id) {
     }
 }
 
-function set_defender(troop_array, user_id,buildings) {
+function set_defender(troop_array, user_id) {
     for (let i = 0; i < troop_array.length; i++) {
         if (troop_array[i].user_id != user_id) {
             if (troop_array[i].selected) {
@@ -211,21 +224,9 @@ function set_defender(troop_array, user_id,buildings) {
             }
         }
     }
-    for (let i = 0; i < buildings.length; i++) {
-       console.log(buildings[i].selected)
-        if (buildings[i].user_id != user_id) {
-            
-            if (buildings[i].selected) {
-                console.log('aaa')
-                buildings[i].defender = true;
-                console.log('defender')
-                break;
-            }
-        }
-    }
 }
 
-async function make_attack(troop_array, user_id,buildings) {
+async function make_attack(troop_array, user_id) {
     var attacker = {};
     var defender = {};
     let attacker_index = null;
@@ -238,6 +239,7 @@ async function make_attack(troop_array, user_id,buildings) {
             if (troop_array[i].attacker) {
                 attacker = troop_array[i]
                 attacker_index = i
+
                 break;
             }
         }
@@ -246,15 +248,6 @@ async function make_attack(troop_array, user_id,buildings) {
         if (troop_array[i].user_id != user_id) {
             if (troop_array[i].defender) {
                 defender = troop_array[i]
-                defender_index = i
-                break;
-            }
-        }
-    }
-    for (let i = 0; i < buildings.length; i++) {
-        if (buildings[i].user_id != user_id) {
-            if (buildings[i].defender) {
-                defender = buildings[i]
                 defender_index = i
                 break;
             }
@@ -276,7 +269,7 @@ async function make_attack(troop_array, user_id,buildings) {
         alert('defender health after attack : ' + defender.health)
         troop_array[attacker_index].attacker = false;
         troop_array[defender_index].defender = false;
-        //document.location.reload(true)
+        document.location.reload(true)
     }
 }
 
@@ -320,44 +313,25 @@ async function train(user_id, troop_id, buildings) {
         }
     }
 }
-function draw_pop_up_troops(troop_array, tilesize, images) {7
+
+function draw_pop_up_troops(troop_array, tilesize, images) {
+    7
     let w = color('white');
     let b = color('black');
-    for (let i = 0; i < buildings_array.length; i++) {
-        bulding_image = images[buildings_array[i].bld_id]
-        if (prepare_to_train == false && troop_array[i].selected == true && troop_array[i].bld_name == 'Training Camp') {
-
-            if (troops_resources == []) {
-                return
-            } else {
-
-                let last_name;
-
-                fill(15, 166, 55);
-                rect(450, 0, 688, 688);
-                image(bulding_image, 465, 20, tilesize, tilesize);
-                fill(w);
-                fill(b);
-                text(buildings[i].bld_health, 535, 210)
-                fill(w);
-                let y_pop = 250;
-                for (let i = 0; i < troops_resources.length; i++) {
-                    if (last_name == troops_resources[i].trp_name) {
-                        text(troops_resources[i].rsc_amount, 620, y_pop - 15)
-                        for (let i = 0; i < buttons.length; i++)  buttons[i].show()
-                    } else {
-                        text(troops_resources[i].trp_name, 455, y_pop)
-                        text(troops_resources[i].rsc_amount, 575, y_pop)
-                        last_name = troops_resources[i].trp_name;
-                    }
-                    y_pop += 15
-
-                    prepare_to_train = true;
-                }
-
-            }
+    for (let i = 0; i < troop_array.length; i++) {
+        troop_image = images[troop_array[i].trp_id]
+        if (troop_shown == false && troop_array[i].selected == true) {
+            fill(170, 160, 85);
+            rect(450, 0, 688, 688);
+            noStroke()
+            image(troop_image, 465, 20, tilesize, tilesize);
+            fill(w);
+            fill(b);
+            text(troops[i].trp_health, 535, 210)
+            fill(w);
+            troop_shown = true;
 
         }
-        else prepare_to_train = false;
+        else troop_shown = false;
     }
 }
