@@ -4,6 +4,7 @@ var user_info;
 let resources;
 
 var troop_images = {};
+var hurt_troop_images = {};
 var buildings_images = {}
 let troop_array = []
 let troops = [];
@@ -70,6 +71,11 @@ async function setup() {
         if (troop.trp_url)
             troop_images[troop.trp_id] = await loadImage(troop.trp_url);
     }
+   
+    for (let troop of troop_info) {
+        if (troop.hurt_url)
+            hurt_troop_images[troop.trp_id] = await loadImage(troop.hurt_url);
+    }
     let buildings_info = await get_buildings();
     for (let building of buildings_info) {
         if (building.bld_url)
@@ -132,11 +138,13 @@ async function draw() {
             fill(w) */
             num_squares++
             draw_buildings(matrix, buildings_array, num_squares, user_info.user_id, square_size, tilesize, x, y,buildings_images)
-            draw_troops(matrix, troop_array, num_squares, user_info.user_id, square_size, diameter, x, y, troop_images)
+            draw_troops(matrix, troop_array, num_squares, user_info.user_id, square_size, diameter, x, y, troop_images,hurt_troop_images)
             draw_pop_up_buildings(buildings_array,square_size,buildings_images)
         }
     }
 }
+
+
 
 async function keyPressed() {
     await key_troops(its_my_turn, troop_array, user_info.user_id,input_troop,buildings)
