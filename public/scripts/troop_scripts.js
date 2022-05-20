@@ -59,7 +59,7 @@ function draw_troops(matrix, troop_array, num_squares, user_id, square_size, dia
     for (let i = 0; i < troop_array.length; i++) {
         trp_image = images[troop_array[i].trp_id]
 
-        hurt_image = hurt_images[troop_array[i].trp_id]
+        //hurt_image = hurt_images[troop_array[i].trp_id]
         //if (matrix[troop_array[i].x][troop_array[i].y] == num_squares) {
         if (troop_array[i].user_id == user_id) {
 
