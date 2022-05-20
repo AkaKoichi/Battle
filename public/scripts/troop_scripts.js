@@ -3,7 +3,7 @@
 
 
 let troop_shown = false;
-let trp_image;
+let clicks = 0;
 
 
 class troop {
@@ -189,17 +189,46 @@ async function key_troops(its_my_turn, troop_array, user_id, input_troop, buildi
 
 function mouse_pressed_troops(troop_array) {
     let tile = mouse_over_tile()
-    console.log(tile)
+
+
     for (let i = 0; i < troop_array.length; i++) {
+        let can_move = get_dist_move(troop_array[i], tile)
+        if (tile.x >= 0 && tile.x <= 15) {
+            console.log('START')
+            console.log(can_move_troop)
+            console.log('-----')
+            console.log(troop_selected_i)
+            console.log('-----')
+            console.log(i)
+            console.log('-----')
+            console.log(can_move)
+            console.log('-----')
+            console.log(clicks)
+            console.log('-----')
+
+            if ((can_move_troop == true) && (troop_selected_i == i) && (can_move) && (clicks > 0)) {
+                console.log('aaa')
+                troop_array[i].x = tile.x
+                troop_array[i].y = tile.y
+                can_move_troop = false
+                troop_selected_i = 0
+                clicks = 0
+            }
+        }
         if (troop_array[i].x == tile.x && troop_array[i].y == tile.y) {
             troop_array[i].select()
             troop_selected_i = i
+            console.log(troop_selected_i)
+            clicks = 1
+            console.log('ww')
             break
         } else {
             troop_array[i].unselect()
         }
     }
+    
 }
+
 
 
 
@@ -290,6 +319,12 @@ function get_dist_attack(attacker, defender) {
     distX = Math.abs(attacker.x - defender.x)
     distY = Math.abs(attacker.y - defender.y)
     return distX <= attacker.range && distY <= attacker.range;
+}
+
+function get_dist_move(troop, tile) {
+    distX = Math.abs(troop.x - tile.x)
+    distY = Math.abs(troop.y - tile.y)
+    return distX <= troop.movement && distY <= troop.movement;
 }
 
 
