@@ -44,7 +44,6 @@ window.onload = async () => {
         disable_button(end_turn_button)
 
     }
-<<<<<<< HEAD
     setInterval(() => {
         if (its_my_turn == false) initialize_game()
 
@@ -62,12 +61,6 @@ window.onload = async () => {
 
 
 
-=======
-    // document.getElementById("name").innerHTML = user_info.username;
-    // document.getElementById("id").innerHTML = user_info.user_id;
-    // document.getElementById("iron").innerHTML = resources[0].rsc_amount;
-    // document.getElementById("food").innerHTML = resources[1].rsc_amount;
->>>>>>> 2b8ad2894a9fe7d9125c68f3e25dc1a63b8d4ae4
 }
 
 async function setup() {
@@ -102,12 +95,8 @@ async function setup() {
             matrix[x][y] = pos;
         }
     }
-<<<<<<< HEAD
 
 
-=======
-    
->>>>>>> 2b8ad2894a9fe7d9125c68f3e25dc1a63b8d4ae4
 
     buildings_setup( user_info.user_id,buildings )
 
@@ -150,16 +139,8 @@ async function draw() {
                 image(tile_image, x, y, tilesize, tilesize);
             }
             num_squares++
-<<<<<<< HEAD
             draw_buildings(matrix, buildings_array, num_squares, user_info.user_id, square_size, tilesize, x, y, buildings_images)
 
-=======
-            draw_buildings(matrix, buildings_array, num_squares, user_info.user_id, square_size, tilesize, x, y,buildings_images)
-            draw_troops(matrix, troop_array, num_squares, user_info.user_id, square_size, diameter, x, y, troop_images)
-
-                draw_pop_up_buildings(buildings_array,square_size,buildings_images)
-                draw_pop_up_troops(troop_array,square_size,troop_images)
->>>>>>> 2b8ad2894a9fe7d9125c68f3e25dc1a63b8d4ae4
         }
         
         draw_troops(matrix, troop_array, num_squares, user_info.user_id, square_size, diameter, x, y, troop_images, hurt_troop_images)
