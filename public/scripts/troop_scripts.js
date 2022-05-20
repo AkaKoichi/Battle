@@ -141,19 +141,19 @@ async function key_troops(its_my_turn, troop_array, user_id, input_troop, buildi
                                 await update_troops_id(user_id, troop_array[i].user_trp_id, troop_array[i].x, troop_array[i].y, troop_array[i].health, troop_array[i].movement);
                                 break;
                         }
-                        document.getElementById("movement").innerHTML = troop_array[i].movement;
+                        /* document.getElementById("movement").innerHTML = troop_array[i].movement; */
                     }
                     switch (key) {
                         case 'l':
                         case 'L':
                             troop_array[i].movement = troop_array[i].init_movement;
-                            document.getElementById("movement").innerHTML = troop_array[i].movement;
+                            /* document.getElementById("movement").innerHTML = troop_array[i].movement; */
                             break;
 
                         case 'k':
                         case 'K':
                             troop_array[i].movement = 500;
-                            document.getElementById("movement").innerHTML = troop_array[i].movement;
+                            /* document.getElementById("movement").innerHTML = troop_array[i].movement; */
                             break;
                         case 'i':
                         case 'I':
