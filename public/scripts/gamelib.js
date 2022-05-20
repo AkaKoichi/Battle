@@ -51,10 +51,10 @@ window.onload = async () => {
 
 
 
-    document.getElementById("name").innerHTML = user_info.username;
-    document.getElementById("id").innerHTML = user_info.user_id;
-    document.getElementById("iron").innerHTML = resources[0].rsc_amount;
-    document.getElementById("food").innerHTML = resources[1].rsc_amount;
+    // document.getElementById("name").innerHTML = user_info.username;
+    // document.getElementById("id").innerHTML = user_info.user_id;
+    // document.getElementById("iron").innerHTML = resources[0].rsc_amount;
+    // document.getElementById("food").innerHTML = resources[1].rsc_amount;
 
 
 
