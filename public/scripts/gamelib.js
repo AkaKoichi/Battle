@@ -51,17 +51,10 @@ window.onload = async () => {
 
 
 
-<<<<<<< HEAD
     /* document.getElementById("name").innerHTML = user_info.username;
     document.getElementById("id").innerHTML = user_info.user_id;
     document.getElementById("iron").innerHTML = resources[0].rsc_amount;
     document.getElementById("food").innerHTML = resources[1].rsc_amount; */
-=======
-    // document.getElementById("name").innerHTML = user_info.username;
-    // document.getElementById("id").innerHTML = user_info.user_id;
-    // document.getElementById("iron").innerHTML = resources[0].rsc_amount;
-    // document.getElementById("food").innerHTML = resources[1].rsc_amount;
->>>>>>> c67c5fcb3b47516d9e456189cae3c537d797ebf2
 
 
 
@@ -91,7 +84,7 @@ async function setup() {
             buildings_images[building.bld_id] = await loadImage(building.bld_url);
     }
     let cnv = createCanvas(windowWidth, windowHeight);
-    cnv.position(windowWidth / 3, windowHeight / 3);
+    cnv.position(windowWidth / 3, 0);
     //tilesize = width / board_size;
 
     let pos = 0;
@@ -108,19 +101,10 @@ async function setup() {
     buildings_setup(user_info.user_id, buildings)
 
     end_turn_button = createButton('End Turn');
-    end_turn_button.position(500, 155);
-    end_turn_button.mousePressed(end_turn);
-
-    input_troop = createInput();
-    input_troop.position(500, 220);
-
-    train_troop_button = createButton('train troop');
-    train_troop_button.position(500, 245);
-    train_troop_button.mousePressed(async function () {
-        train(user_info.user_id, input_troop.value(), buildings)
-    });
+    end_turn_button.position(300, 155);
+    end_turn_button.mousePressed(end_turn); 
     move_button = createButton('Move');
-    move_button.position(500, 350);
+    move_button.position(300, 350);
     move_button.mousePressed(async function () {
         can_move_troop = true;
     });
