@@ -8,6 +8,7 @@ let troop_array = []
 let troops = [];
 let buildings_array = [];
 let buildings = [];
+var can_move_troop = false;
 
 let tile_image;
 let tile_image2;
@@ -48,18 +49,18 @@ window.onload = async () => {
 
     }, 500);
 
-    
+
 
     document.getElementById("name").innerHTML = user_info.username;
     document.getElementById("id").innerHTML = user_info.user_id;
     document.getElementById("iron").innerHTML = resources[0].rsc_amount;
     document.getElementById("food").innerHTML = resources[1].rsc_amount;
 
-    
-    
 
 
-    
+
+
+
 }
 
 async function setup() {
@@ -72,7 +73,7 @@ async function setup() {
         if (troop.trp_url)
             troop_images[troop.trp_id] = await loadImage(troop.trp_url);
     }
-   
+
     for (let troop of troop_info) {
         if (troop.hurt_url)
             hurt_troop_images[troop.trp_id] = await loadImage(troop.hurt_url);
@@ -95,7 +96,7 @@ async function setup() {
         }
     }
 
-    
+
 
     end_turn_button = createButton('End Turn');
     end_turn_button.position(500, 155);
@@ -109,7 +110,13 @@ async function setup() {
     train_troop_button.mousePressed(async function () {
         train(user_info.user_id, input_troop.value(), buildings)
     });
-    buildings_setup( user_info.user_id,buildings )
+    move_button = createButton('Move');
+    move_button.position(500, 350);
+    move_button.mousePressed(async function () {
+        can_move_troop = true;
+    });
+
+    buildings_setup(user_info.user_id, buildings)
 
 }
 
@@ -130,10 +137,12 @@ async function draw() {
                 image(tile_image, x, y, tilesize, tilesize);
             }
             num_squares++
-            draw_buildings(matrix, buildings_array, num_squares, user_info.user_id, square_size, tilesize, x, y,buildings_images)
-            draw_troops(matrix, troop_array, num_squares, user_info.user_id, square_size, diameter, x, y, troop_images,hurt_troop_images)
-            draw_pop_up_buildings(buildings_array,square_size,buildings_images)
+            draw_buildings(matrix, buildings_array, num_squares, user_info.user_id, square_size, tilesize, x, y, buildings_images)
+
         }
+        
+        draw_troops(matrix, troop_array, num_squares, user_info.user_id, square_size, diameter, x, y, troop_images, hurt_troop_images)
+        draw_pop_up_buildings(buildings_array, square_size, buildings_images)
     }
 }
 
@@ -147,7 +156,7 @@ async function keyPressed() {
 function mousePressed() {
     let y = (int)(mouseX / tilesize)
     let x = (int)(mouseY / tilesize)
-    mouse_pressed_troops(troop_array/* ,tilesize */)
+    mouse_pressed_troops(troop_array)
 
 
     mouse_pressed_buildings(buildings_array, x, y)
