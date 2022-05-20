@@ -30,18 +30,18 @@ class troop {
     }
     select() {
         this.selected = true;
-        document.getElementById("troop").innerHTML = this.name;
-        document.getElementById("movement").innerHTML = this.movement;
-        document.getElementById("health").innerHTML = this.health;
-        document.getElementById("attack").innerHTML = this.attack;
+        // document.getElementById("troop").innerHTML = this.name;
+        // document.getElementById("movement").innerHTML = this.movement;
+        // document.getElementById("health").innerHTML = this.health;
+        // document.getElementById("attack").innerHTML = this.attack;
     }
 
     unselect() {
         this.selected = false;
-        document.getElementById("troop").innerHTML = '';
-        document.getElementById("movement").innerHTML = '';
-        document.getElementById("attack").innerHTML = '';
-        document.getElementById("health").innerHTML = '';
+        // document.getElementById("troop").innerHTML = '';
+        // document.getElementById("movement").innerHTML = '';
+        // document.getElementById("attack").innerHTML = '';
+        // document.getElementById("health").innerHTML = '';
     }
 
 }
@@ -59,7 +59,7 @@ function draw_troops(matrix, troop_array, num_squares, user_id, square_size, dia
     for (let i = 0; i < troop_array.length; i++) {
         trp_image = images[troop_array[i].trp_id]
 
-        hurt_image = hurt_images[troop_array[i].trp_id]
+        //hurt_image = hurt_images[troop_array[i].trp_id]
         //if (matrix[troop_array[i].x][troop_array[i].y] == num_squares) {
         if (troop_array[i].user_id == user_id) {
 

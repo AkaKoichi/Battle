@@ -24,14 +24,14 @@ class building {
     select() {
         this.selected = true;
         console.log(this.selected)
-        document.getElementById("building").innerHTML = this.bld_name;
-        document.getElementById("bld_health").innerHTML = this.health;
+        // document.getElementById("building").innerHTML = this.bld_name;
+        // document.getElementById("bld_health").innerHTML = this.health;
     }
 
     unselect() {
         this.selected = false;
-        document.getElementById("building").innerHTML = '';
-        document.getElementById("bld_health").innerHTML = '';
+        // document.getElementById("building").innerHTML = '';
+        // document.getElementById("bld_health").innerHTML = '';
         for (let i = 0; i < buttons.length; i++)  buttons[i].hide()
     }
 
@@ -213,7 +213,7 @@ function draw_pop_up_buildings(buildings_array, tilesize, images) {
             fill(15, 166, 55);
             rect(450, 0, 688, 688);
             noStroke()
-            image(bulding_image, 465, 20, bulding_image.width, bulding_image.height);
+            image(bulding_image, 465, 20,  bulding_image.width, bulding_image.height);
             fill(w);
             fill(b);
             text(buildings[i].bld_health, 535, 210)
@@ -224,7 +224,7 @@ function draw_pop_up_buildings(buildings_array, tilesize, images) {
             fill(170, 160, 85);
             rect(450, 0, 688, 688);
             noStroke()
-            image(bulding_image, 465, 20, bulding_image.width, bulding_image.height);
+            image(bulding_image, 465, 20,  bulding_image.width, bulding_image.height);
             fill(w);
             fill(b);
             text(buildings[i].bld_health, 535, 210)
