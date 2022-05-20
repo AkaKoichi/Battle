@@ -36,6 +36,17 @@ class building {
     }
 
 }
+function mouse_pressed_buildings(building_array, x, y) {
+    for (let i = 0; i < building_array.length; i++) {
+        if (x == building_array[i].x && y == building_array[i].y) {
+            building_array[i].select();
+
+            break
+        } else {
+            building_array[i].unselect()
+        }
+    }
+}
 
 async function buildings_setup(user_id, buildings) {
     let last_name;
@@ -48,7 +59,7 @@ async function buildings_setup(user_id, buildings) {
             let temp_button = createButton('Train');
             temp_button.position(1350, y_pop_buttons);
             temp_button.mousePressed(async function () {
-                train(user_id, i / 2 + 1, buildings)
+                train(user_id, troops_resources[i].trp_id, buildings)
 
             });
             temp_button.hide();
@@ -142,17 +153,7 @@ async function build_building(troop_array, user_id, resources) {
     }
 }
 
-function mouse_pressed_buildings(building_array, x, y) {
-    for (let i = 0; i < building_array.length; i++) {
-        if (x == building_array[i].x && y == building_array[i].y) {
-            building_array[i].select();
 
-            break
-        } else {
-            building_array[i].unselect()
-        }
-    }
-}
 
 function set_defender_building(buildings, user_id) {
     for (let i = 0; i < buildings.length; i++) {
@@ -209,9 +210,7 @@ function draw_pop_up_buildings(buildings_array, tilesize, images) {
 
         }
         else if ((prepare_to_train == false && buildings_array[i].selected == true) && (buildings_array[i].bld_name == 'tc1' || buildings_array[i].bld_name == 'tc2' || buildings_array[i].bld_name == 'tc3' || buildings_array[i].bld_name == 'tc4')) {
-            console.log(buildings_array[i].selected)
-            console.log(buildings_array[i].bld_name)
-            fill(170, 160, 85);
+            fill(15, 166, 55);
             rect(450, 0, 688, 688);
             noStroke()
             image(bulding_image, 465, 20,  bulding_image.width, bulding_image.height);
