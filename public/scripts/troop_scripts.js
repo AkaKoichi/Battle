@@ -25,18 +25,18 @@ class troop {
     }
     select() {
         this.selected = true;
-        document.getElementById("troop").innerHTML = this.name;
-        document.getElementById("movement").innerHTML = this.movement;
-        document.getElementById("health").innerHTML = this.health;
-        document.getElementById("attack").innerHTML = this.attack;
+        // document.getElementById("troop").innerHTML = this.name;
+        // document.getElementById("movement").innerHTML = this.movement;
+        // document.getElementById("health").innerHTML = this.health;
+        // document.getElementById("attack").innerHTML = this.attack;
     }
 
     unselect() {
         this.selected = false;
-        document.getElementById("troop").innerHTML = '';
-        document.getElementById("movement").innerHTML = '';
-        document.getElementById("attack").innerHTML = '';
-        document.getElementById("health").innerHTML = '';
+        // document.getElementById("troop").innerHTML = '';
+        // document.getElementById("movement").innerHTML = '';
+        // document.getElementById("attack").innerHTML = '';
+        // document.getElementById("health").innerHTML = '';
     }
 
 }

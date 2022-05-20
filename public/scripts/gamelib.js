@@ -37,7 +37,7 @@ window.onload = async () => {
         if (its_my_turn == false) initialize_game()
 
     }, 500);
-
+    
 
 
 
@@ -53,16 +53,16 @@ window.onload = async () => {
         disable_button(end_turn_button)
 
     }
-    document.getElementById("name").innerHTML = user_info.username;
-    document.getElementById("id").innerHTML = user_info.user_id;
-    document.getElementById("iron").innerHTML = resources[0].rsc_amount;
-    document.getElementById("food").innerHTML = resources[1].rsc_amount;
+    // document.getElementById("name").innerHTML = user_info.username;
+    // document.getElementById("id").innerHTML = user_info.user_id;
+    // document.getElementById("iron").innerHTML = resources[0].rsc_amount;
+    // document.getElementById("food").innerHTML = resources[1].rsc_amount;
 }
 
 async function setup() {
     initialize_game()
-    tile_image = loadImage('./images/tile/tile.png')
-    tile_image2 = loadImage('./images/tile/tile2.png')
+    tile_image= loadImage('./images/tile/tile.png')
+    tile_image2= loadImage('./images/tile/tile2.png')
     console.log(tile_image)
     let troop_info = await get_troops();
     for (let troop of troop_info) {
@@ -72,10 +72,10 @@ async function setup() {
     let buildings_info = await get_buildings();
     for (let building of buildings_info) {
         if (building.bld_url)
-            buildings_images[building.bld_id] = await loadImage(building.bld_url);
+        buildings_images[building.bld_id] = await loadImage(building.bld_url);
     }
-    let cnv = createCanvas(board_size * tilesize, board_size * tilesize);
-    cnv.position(700, 0);
+    let cnv = createCanvas(windowWidth,windowHeight);
+    cnv.position(windowWidth/3, windowHeight/3);
     //tilesize = width / board_size;
 
     let pos = 0;
@@ -86,9 +86,9 @@ async function setup() {
             matrix[x][y] = pos;
         }
     }
+    
 
-
-    buildings_setup(user_info.user_id, buildings)
+    buildings_setup( user_info.user_id,buildings )
 
     end_turn_button = createButton('End Turn');
     end_turn_button.position(500, 155);
@@ -100,7 +100,7 @@ async function setup() {
     train_troop_button = createButton('train troop');
     train_troop_button.position(500, 245);
     train_troop_button.mousePressed(async function () {
-        train(user_info.user_id, input_troop.value(), buildings)
+        train(user_info.user_id, input_troop.value(),buildings)
     });
 
 }
@@ -114,8 +114,8 @@ async function draw() {
     let num_squares = 0;
     let hovered_tile = mouse_over_tile();
 
-    for (let y = 0; y < height; y += square_size) {
-        for (let x = 0; x < width; x += square_size) {
+    for (let y = 0; y < square_size*board_size; y += square_size) {
+        for (let x = 0; x < square_size*board_size; x += square_size) {
             if (hovered_tile.x * square_size == x && hovered_tile.y * square_size == y) {
                 //if (matrix[hovered_tile.y][hovered_tile.x -1] == num_squares) {
                 //fill(p)
@@ -130,14 +130,14 @@ async function draw() {
             text(num_squares, x + square_size / 2 - 10, y + square_size / 2)
             fill(w) */
             num_squares++
-            draw_buildings(matrix, buildings_array, num_squares, user_info.user_id, square_size, tilesize, x, y, buildings_images)
-            draw_troops(matrix, troop_array, num_squares, user_info.user_id, square_size, diameter, x, y, troop_images)
-            if (pop_up_on == false) {
-                draw_pop_up_buildings(buildings_array, square_size, buildings_images)
-                draw_pop_up_troops(troop_array, square_size, troop_images)
+            draw_buildings(matrix, buildings_array, num_squares, user_info.user_id, square_size, tilesize, x, y,buildings_images)
+            //draw_troops(matrix, troop_array, num_squares, user_info.user_id, square_size, diameter, x, y, troop_images)
+            if(pop_up_on == false){
+                draw_pop_up_buildings(buildings_array,square_size,buildings_images)
+                draw_pop_up_troops(troop_array,square_size,troop_images)
                 pop_up_on = true
             }
-            else {
+            else if (pop_up_on = true){
                 pop_up_on = false
             }
         }
@@ -145,7 +145,7 @@ async function draw() {
 }
 
 async function keyPressed() {
-    await key_troops(its_my_turn, troop_array, user_info.user_id, input_troop, buildings)
+    await key_troops(its_my_turn, troop_array, user_info.user_id,input_troop,buildings)
     await key_buildings(its_my_turn, troop_array, user_info.user_id, resources)
 }
 
@@ -239,7 +239,7 @@ function mouse_over_tile() {
 }
 
 async function initialize_game() {
-
+    
     buildings = await get_buildings_by_id(1);
     troops = await get_troops_by_id(1);
     troop_array = []
