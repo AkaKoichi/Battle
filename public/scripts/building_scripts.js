@@ -54,7 +54,7 @@ async function buildings_setup(user_id, buildings) {
     troops_resources = await get_troops_resources();
     for (let i = 0; i < troops_resources.length; i++) {
         if (last_name == troops_resources[i].trp_name) {
-            console.log('a')
+            
         } else {
             let temp_button = createButton('Train');
             temp_button.position(1350, y_pop_buttons);
@@ -68,13 +68,6 @@ async function buildings_setup(user_id, buildings) {
 
         }
         y_pop_buttons += 15
-        /*   for (let i = 0; i < troops_resources.length; i++) {
-              let temp_button = createButton('T');
-              temp_button.position(1320, y_pop_buttons);
-              temp_button.hide();
-              buttons.push(temp_button);
-              y_pop_buttons += 15
-          } */
     }
 }
 

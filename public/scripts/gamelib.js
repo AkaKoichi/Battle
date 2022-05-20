@@ -1,21 +1,26 @@
 var user_info;
 let resources;
 var troop_selected_i;
+
 var troop_images = {};
 var hurt_troop_images = {};
 var buildings_images = {}
+let tile_image;
+let tile_image2;
+
 let troop_array = []
 let troops = [];
 let buildings_array = [];
 let buildings = [];
 var can_move_troop = false;
+var can_attack_troop = false;
 
-let tile_image;
-let tile_image2;
 
-let input_troop;
+
 let end_turn_button;
-let train_troop_button;
+let move_button;
+let attack_button;
+
 let board_size = 16
 let tilesize = 47 //700 / board_size;
 let matrix = [];
@@ -36,38 +41,31 @@ window.onload = async () => {
     let bol = await check_current_playing()
     if (bol[0].current_user_playing == user_info.user_id) {
         its_my_turn = true;
-        enable_button(train_troop_button)
         enable_button(end_turn_button)
+        enable_button(move_button)
+        enable_button(attack_button)
     } else {
         its_my_turn = false;
-        disable_button(train_troop_button)
         disable_button(end_turn_button)
+        disable_button(move_button)
+        disable_button(attack_button)
+
 
     }
     setInterval(() => {
         if (its_my_turn == false) initialize_game()
 
     }, 500);
-
-
-
     /* document.getElementById("name").innerHTML = user_info.username;
     document.getElementById("id").innerHTML = user_info.user_id;
     document.getElementById("iron").innerHTML = resources[0].rsc_amount;
     document.getElementById("food").innerHTML = resources[1].rsc_amount; */
-
-
-
-
-
-
 }
 
 async function setup() {
     initialize_game()
     tile_image = loadImage('./images/tile/tile.png')
     tile_image2 = loadImage('./images/tile/tile2.png')
-    console.log(tile_image)
     let troop_info = await get_troops();
     for (let troop of troop_info) {
         if (troop.trp_url)
@@ -95,18 +93,19 @@ async function setup() {
             matrix[x][y] = pos;
         }
     }
-
-
-
-    buildings_setup(user_info.user_id, buildings)
-
     end_turn_button = createButton('End Turn');
-    end_turn_button.position(300, 155);
+    end_turn_button.position(100, 155);
     end_turn_button.mousePressed(end_turn); 
+
     move_button = createButton('Move');
-    move_button.position(300, 350);
+    move_button.position(100, 350);
     move_button.mousePressed(async function () {
         can_move_troop = true;
+    });
+    attack_button = createButton('Attack');
+    attack_button.position(150, 350);
+    attack_button.mousePressed(async function () {
+        can_attack_troop = true;
     });
 
     buildings_setup(user_info.user_id, buildings)
@@ -114,6 +113,7 @@ async function setup() {
 }
 
 async function draw() {
+    
     if (user_info == undefined)
         return;
 
@@ -136,25 +136,25 @@ async function draw() {
 
         draw_troops(matrix, troop_array, num_squares, user_info.user_id, square_size, diameter, x, y, troop_images, hurt_troop_images)
         draw_pop_up_buildings(buildings_array, square_size, buildings_images)
+        fill(color('white'))
+        text('user id : '+user_info.user_id,800,200)
+        fill(color('black'))
     }
 }
 
 
 
 async function keyPressed() {
-    await key_troops(its_my_turn, troop_array, user_info.user_id, input_troop, buildings)
+    await key_troops(its_my_turn, troop_array, user_info.user_id, buildings)
     await key_buildings(its_my_turn, troop_array, user_info.user_id, resources)
 }
 
-function mousePressed() {
+async function mousePressed() {
+    let tile = mouse_over_tile()
     let y = (int)(mouseX / tilesize)
     let x = (int)(mouseY / tilesize)
-    mouse_pressed_troops(troop_array)
-
-
+    mouse_pressed_troops(user_info.user_id,troop_array,buildings)
     mouse_pressed_buildings(buildings_array, x, y)
-
-
 }
 
 async function check_current_playing() {
@@ -184,9 +184,7 @@ async function end_turn() {
             troop_array[i].health, troop_array[i].movement);
     }
     let bol = await check_current_playing()
-    console.log(bol)
     if (bol[0].current_user_playing == user_info.user_id) {
-        console.log('end_turn')
         if (user_info.user_id == 2) {
             await update_current_playing(1, 1)
 
@@ -204,14 +202,14 @@ async function end_turn() {
 async function your_turn() {
     its_my_turn = true;
     end_turn_button.removeAttribute('disabled')
-    train_troop_button.removeAttribute('disabled')
+    move_button.removeAttribute('disabled')
+    
 }
 
 function opponent_turn() {
-    console.log('o')
     its_my_turn = false;
     end_turn_button.attribute('disabled', '');
-    train_troop_button.attribute('disabled', '');
+    move_button.attribute('disabled', '');
 }
 
 function toggle_button(button) {
@@ -274,6 +272,20 @@ async function initialize_game() {
         buildings_array.push(
             temp_building,
         );
+    }
+    let bol = await check_current_playing()
+    if (bol[0].current_user_playing == user_info.user_id) {
+        its_my_turn = true;
+        enable_button(end_turn_button)
+        enable_button(move_button)
+        enable_button(attack_button)
+    } else {
+        its_my_turn = false;
+        disable_button(end_turn_button)
+        disable_button(move_button)
+        disable_button(attack_button)
+
+
     }
 
 }
