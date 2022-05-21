@@ -22,7 +22,7 @@ let move_button;
 let attack_button;
 
 let board_size = 16
-let tilesize = 47 //700 / board_size;
+let tilesize = 44   //700 / board_size;
 let matrix = [];
 
 let its_my_turn;
@@ -82,7 +82,7 @@ async function setup() {
             buildings_images[building.bld_id] = await loadImage(building.bld_url);
     }
     let cnv = createCanvas(windowWidth, windowHeight);
-    cnv.position(windowWidth / 3, 0);
+    cnv.position(0, 50);
     //tilesize = width / board_size;
 
     let pos = 0;
@@ -94,16 +94,16 @@ async function setup() {
         }
     }
     end_turn_button = createButton('End Turn');
-    end_turn_button.position(100, 155);
+    end_turn_button.position(800, 155);
     end_turn_button.mousePressed(end_turn); 
 
     move_button = createButton('Move');
-    move_button.position(100, 350);
+    move_button.position(800, 350);
     move_button.mousePressed(async function () {
         can_move_troop = true;
     });
     attack_button = createButton('Attack');
-    attack_button.position(150, 350);
+    attack_button.position(850, 350);
     attack_button.mousePressed(async function () {
         can_attack_troop = true;
     });
@@ -151,6 +151,7 @@ async function keyPressed() {
 
 async function mousePressed() {
     let tile = mouse_over_tile()
+    console.log(tile)
     let y = (int)(mouseX / tilesize)
     let x = (int)(mouseY / tilesize)
     mouse_pressed_troops(user_info.user_id,troop_array,buildings)

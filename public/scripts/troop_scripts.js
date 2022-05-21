@@ -4,7 +4,7 @@
 
 let troop_shown = false;
 let clicks = 0;
-let attack = 0;
+var attack = 0;
 
 
 class troop {
