@@ -310,14 +310,27 @@ async function make_attack(troop_array, user_id, buildings) {
             }
         }
     }
+    for (let i = 0; i < buildings.length; i++) {
+        if (buildings[i].user_id != user_id) {
+            if (buildings[i].defender) {
+                defender = buildings[i]
+                defender_index = i
+                break;
+            }
+        }
+    }
     can_attack = get_dist_attack(attacker, defender)
     dice_dmg_multiplier = roll_dice(3, 6)
+    console.log(can_attack)
     if (can_attack && dice_dmg_multiplier >= 1) {
-        troop_array[defender_index].hurt = true
-        troop_array[defender_index].timer = 100
+        console.log('rrrrr')
+        //troop_array[defender_index].hurt = true
+        //troop_array[defender_index].timer = 100
 
         console.log('made attack')
+        console.log(defender.health)
         defender.health -= attacker.attack * dice_dmg_multiplier;
+        console.log(defender.health)
         if (defender.health <= 0) {
             await delete_troops_id(troop_array[defender_index].user_trp_id)
         }
@@ -325,12 +338,16 @@ async function make_attack(troop_array, user_id, buildings) {
         alert('defender health after attack : ' + defender.health)
         troop_array[attacker_index].attacker = false;
         troop_array[defender_index].defender = false;
+        buildings[defender_index].defender = false;
         document.location.reload(true)
     }
 }
 function get_dist_attack(attacker, defender) {
     distX = Math.abs(attacker.x - defender.x)
     distY = Math.abs(attacker.y - defender.y)
+    console.log(attacker.x )
+    console.log(defender.x )
+    
     return distX <= attacker.range && distY <= attacker.range;
 }
 

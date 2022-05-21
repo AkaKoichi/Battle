@@ -155,7 +155,7 @@ async function mousePressed() {
     let y = (int)(mouseX / tilesize)
     let x = (int)(mouseY / tilesize)
     mouse_pressed_troops(user_info.user_id,troop_array,buildings)
-    mouse_pressed_buildings(buildings_array, x, y)
+    mouse_pressed_buildings(buildings_array, x, y,troop_array,user_info.user_id)
 }
 
 async function check_current_playing() {
