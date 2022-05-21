@@ -1,21 +1,26 @@
 var user_info;
 let resources;
-let pop_up_on = false;
+var troop_selected_i;
 
 var troop_images = {};
 var hurt_troop_images = {};
 var buildings_images = {}
+let tile_image;
+let tile_image2;
+
 let troop_array = []
 let troops = [];
 let buildings_array = [];
 let buildings = [];
+var can_move_troop = false;
+var can_attack_troop = false;
 
-let tile_image;
-let tile_image2;
 
-let input_troop;
+
 let end_turn_button;
-let train_troop_button;
+let move_button;
+let attack_button;
+
 let board_size = 16
 let tilesize = 47 //700 / board_size;
 let matrix = [];
@@ -33,44 +38,40 @@ const diameter = radius * 2;
 window.onload = async () => {
     user_info = await get_user_info();
     resources = await get_resources_by_id(1, user_info.user_id);
+    let bol = await check_current_playing()
+    if (bol[0].current_user_playing == user_info.user_id) {
+        its_my_turn = true;
+        enable_button(end_turn_button)
+        enable_button(move_button)
+        enable_button(attack_button)
+    } else {
+        its_my_turn = false;
+        disable_button(end_turn_button)
+        disable_button(move_button)
+        disable_button(attack_button)
 
+
+    }
     setInterval(() => {
         if (its_my_turn == false) initialize_game()
 
     }, 500);
-
-
-
-
-
-    let bol = await check_current_playing()
-    if (bol[0].current_user_playing == user_info.user_id) {
-        its_my_turn = true;
-        enable_button(train_troop_button)
-        enable_button(end_turn_button)
-    } else {
-        its_my_turn = false;
-        disable_button(train_troop_button)
-        disable_button(end_turn_button)
-
-    }
-    document.getElementById("name").innerHTML = user_info.username;
+    /* document.getElementById("name").innerHTML = user_info.username;
     document.getElementById("id").innerHTML = user_info.user_id;
     document.getElementById("iron").innerHTML = resources[0].rsc_amount;
-    document.getElementById("food").innerHTML = resources[1].rsc_amount;
+    document.getElementById("food").innerHTML = resources[1].rsc_amount; */
 }
 
 async function setup() {
     initialize_game()
     tile_image = loadImage('./images/tile/tile.png')
     tile_image2 = loadImage('./images/tile/tile2.png')
-    console.log(tile_image)
     let troop_info = await get_troops();
     for (let troop of troop_info) {
         if (troop.trp_url)
             troop_images[troop.trp_id] = await loadImage(troop.trp_url);
     }
-   
+
     for (let troop of troop_info) {
         if (troop.hurt_url)
             hurt_troop_images[troop.trp_id] = await loadImage(troop.hurt_url);
@@ -80,8 +81,8 @@ async function setup() {
         if (building.bld_url)
             buildings_images[building.bld_id] = await loadImage(building.bld_url);
     }
-    let cnv = createCanvas(board_size * tilesize, board_size * tilesize);
-    cnv.position(700, 0);
+    let cnv = createCanvas(windowWidth, windowHeight);
+    cnv.position(windowWidth / 3, 0);
     //tilesize = width / board_size;
 
     let pos = 0;
@@ -92,26 +93,27 @@ async function setup() {
             matrix[x][y] = pos;
         }
     }
+    end_turn_button = createButton('End Turn');
+    end_turn_button.position(100, 155);
+    end_turn_button.mousePressed(end_turn); 
 
+    move_button = createButton('Move');
+    move_button.position(100, 350);
+    move_button.mousePressed(async function () {
+        can_move_troop = true;
+    });
+    attack_button = createButton('Attack');
+    attack_button.position(150, 350);
+    attack_button.mousePressed(async function () {
+        can_attack_troop = true;
+    });
 
     buildings_setup(user_info.user_id, buildings)
-
-    end_turn_button = createButton('End Turn');
-    end_turn_button.position(500, 155);
-    end_turn_button.mousePressed(end_turn);
-
-    input_troop = createInput();
-    input_troop.position(500, 220);
-
-    train_troop_button = createButton('train troop');
-    train_troop_button.position(500, 245);
-    train_troop_button.mousePressed(async function () {
-        train(user_info.user_id, input_troop.value(), buildings)
-    });
 
 }
 
 async function draw() {
+    
     if (user_info == undefined)
         return;
 
@@ -120,58 +122,39 @@ async function draw() {
     let num_squares = 0;
     let hovered_tile = mouse_over_tile();
 
-    for (let y = 0; y < height; y += square_size) {
-        for (let x = 0; x < width; x += square_size) {
+    for (let y = 0; y < square_size * board_size; y += square_size) {
+        for (let x = 0; x < square_size * board_size; x += square_size) {
             if (hovered_tile.x * square_size == x && hovered_tile.y * square_size == y) {
-                //if (matrix[hovered_tile.y][hovered_tile.x -1] == num_squares) {
-                //fill(p)
-                //rect(x, y, square_size, square_size);
                 image(tile_image2, x, y, tilesize, tilesize);
-                //  fill(w)
             } else {
-                //rect(x, y, square_size, square_size);
                 image(tile_image, x, y, tilesize, tilesize);
             }
-            /* fill(b);
-            text(num_squares, x + square_size / 2 - 10, y + square_size / 2)
-            fill(w) */
             num_squares++
-<<<<<<< HEAD
-            draw_buildings(matrix, buildings_array, num_squares, user_info.user_id, square_size, tilesize, x, y,buildings_images)
-            draw_troops(matrix, troop_array, num_squares, user_info.user_id, square_size, diameter, x, y, troop_images,hurt_troop_images)
-            draw_pop_up_buildings(buildings_array,square_size,buildings_images)
-=======
             draw_buildings(matrix, buildings_array, num_squares, user_info.user_id, square_size, tilesize, x, y, buildings_images)
-            draw_troops(matrix, troop_array, num_squares, user_info.user_id, square_size, diameter, x, y, troop_images)
-            if (pop_up_on == false) {
-                draw_pop_up_buildings(buildings_array, square_size, buildings_images)
-                draw_pop_up_troops(troop_array, square_size, troop_images)
-                pop_up_on = true
-            }
-            else {
-                pop_up_on = false
-            }
->>>>>>> 58729e7aaffe831c00b0dd15b9da2b1328c78557
+
         }
+
+        draw_troops(matrix, troop_array, num_squares, user_info.user_id, square_size, diameter, x, y, troop_images, hurt_troop_images)
+        draw_pop_up_buildings(buildings_array, square_size, buildings_images)
+        fill(color('white'))
+        text('user id : '+user_info.user_id,800,200)
+        fill(color('black'))
     }
 }
 
 
 
 async function keyPressed() {
-    await key_troops(its_my_turn, troop_array, user_info.user_id, input_troop, buildings)
+    await key_troops(its_my_turn, troop_array, user_info.user_id, buildings)
     await key_buildings(its_my_turn, troop_array, user_info.user_id, resources)
 }
 
-function mousePressed() {
+async function mousePressed() {
+    let tile = mouse_over_tile()
     let y = (int)(mouseX / tilesize)
     let x = (int)(mouseY / tilesize)
-    mouse_pressed_troops(troop_array/* ,tilesize */)
-
-
+    mouse_pressed_troops(user_info.user_id,troop_array,buildings)
     mouse_pressed_buildings(buildings_array, x, y)
-
-
 }
 
 async function check_current_playing() {
@@ -201,9 +184,7 @@ async function end_turn() {
             troop_array[i].health, troop_array[i].movement);
     }
     let bol = await check_current_playing()
-    console.log(bol)
     if (bol[0].current_user_playing == user_info.user_id) {
-        console.log('end_turn')
         if (user_info.user_id == 2) {
             await update_current_playing(1, 1)
 
@@ -221,14 +202,14 @@ async function end_turn() {
 async function your_turn() {
     its_my_turn = true;
     end_turn_button.removeAttribute('disabled')
-    train_troop_button.removeAttribute('disabled')
+    move_button.removeAttribute('disabled')
+    
 }
 
 function opponent_turn() {
-    console.log('o')
     its_my_turn = false;
     end_turn_button.attribute('disabled', '');
-    train_troop_button.attribute('disabled', '');
+    move_button.attribute('disabled', '');
 }
 
 function toggle_button(button) {
@@ -291,6 +272,20 @@ async function initialize_game() {
         buildings_array.push(
             temp_building,
         );
+    }
+    let bol = await check_current_playing()
+    if (bol[0].current_user_playing == user_info.user_id) {
+        its_my_turn = true;
+        enable_button(end_turn_button)
+        enable_button(move_button)
+        enable_button(attack_button)
+    } else {
+        its_my_turn = false;
+        disable_button(end_turn_button)
+        disable_button(move_button)
+        disable_button(attack_button)
+
+
     }
 
 }
