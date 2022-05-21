@@ -1,23 +1,14 @@
 
-<<<<<<< HEAD
+
 
 // test mf test testttttttt
 
 
 let troop_shown = false;
 let trp_image;
-=======
-
-
-
-let troop_shown = false;
 let clicks = 0;
-<<<<<<< HEAD
 var attack = 0;
-=======
-let attack = 0;
->>>>>>> 39307cf9c2c78972a680fbf1a46544c358073377
->>>>>>> 86d2d420cfe133e5f35cee80af45ab1085c841d7
+
 
 
 class troop {
@@ -73,15 +64,11 @@ function draw_troops(matrix, troop_array, num_squares, user_id, square_size, dia
     for (let i = 0; i < troop_array.length; i++) {
         trp_image = images[troop_array[i].trp_id]
 
-        //hurt_image = hurt_images[troop_array[i].trp_id]
+        hurt_image = hurt_images[troop_array[i].trp_id]
         //if (matrix[troop_array[i].x][troop_array[i].y] == num_squares) {
         if (troop_array[i].user_id == user_id) {
 
-<<<<<<< HEAD
             if (troop_array[i].hurt == true){
-=======
-            if (troop_array[i].hurt == true) {
->>>>>>> 39307cf9c2c78972a680fbf1a46544c358073377
                 console.log('aa')
                 image(hurt_image, troop_array[i].x * square_size + (square_size - trp_image.width / 7) / 2, troop_array[i].y * square_size - square_size / 2, trp_image.width / 7, trp_image.height / 7);
                 troop_array[i].timer--
@@ -89,30 +76,18 @@ function draw_troops(matrix, troop_array, num_squares, user_id, square_size, dia
                     console.log(troop_array[i].timer == 0)
                     troop_array[i].hurt = false
                 }
-<<<<<<< HEAD
             }else image(trp_image, troop_array[i].x * square_size + (square_size-trp_image.width / 7)/2, troop_array[i].y * square_size - square_size / 2, trp_image.width / 7, trp_image.height / 7);
 
-            //circle(x + square_size / 2, y + square_size / 2, diameter);
+            
             image(trp_image, troop_array[i].x * square_size + (square_size - trp_image.width / 7) / 2, troop_array[i].y * square_size - square_size / 2, trp_image.width / 7, trp_image.height / 7);
 
-            //image(trp_image,x+1 , y+1,10,10);
-            // ,(width/square_size)2.65, (height/square_size)2.6
-=======
-            } else image(trp_image, troop_array[i].x * square_size + (square_size - trp_image.width / 7) / 2, troop_array[i].y * square_size - square_size / 2, trp_image.width / 7, trp_image.height / 7);
-
-
-            //tirei image(trp_image, troop_array[i].x * square_size + (square_size - trp_image.width / 7) / 2, troop_array[i].y * square_size - square_size / 2, trp_image.width / 7, trp_image.height / 7);x\
->>>>>>> 39307cf9c2c78972a680fbf1a46544c358073377
+            
 
 
         } else {
 
 
-<<<<<<< HEAD
             if (troop_array[i].hurt == true){
-=======
-            if (troop_array[i].hurt == true) {
->>>>>>> 39307cf9c2c78972a680fbf1a46544c358073377
                 console.log('aa')
                 image(hurt_image, troop_array[i].x * square_size + (square_size - trp_image.width / 7) / 2, troop_array[i].y * square_size - square_size / 2, trp_image.width / 7, trp_image.height / 7);
 
@@ -123,23 +98,12 @@ function draw_troops(matrix, troop_array, num_squares, user_id, square_size, dia
                     troop_array[i].hurt = false
                 }
             }
-<<<<<<< HEAD
             else image(trp_image, troop_array[i].x * square_size + (square_size-trp_image.width / 7)/2, troop_array[i].y * square_size - square_size / 2, trp_image.width / 7, trp_image.height / 7);
 
             //circle(x + square_size / 2, y + square_size / 2, diameter);
             image(trp_image, troop_array[i].x * square_size + (square_size - trp_image.width / 7) / 2, troop_array[i].y * square_size - square_size / 2, trp_image.width / 7, trp_image.height / 7);
 
             // image(trp_image,x+1 , y+1,10,10);
-=======
-            else {
-
-                image(trp_image, troop_array[i].x * square_size + (square_size - trp_image.width / 7) / 2, troop_array[i].y * square_size - square_size / 2, trp_image.width / 7, trp_image.height / 7);
-
-
-                //image(trp_image, troop_array[i].x * square_size + (square_size - trp_image.width / 7) / 2, troop_array[i].y * square_size - square_size / 2, trp_image.width / 7, trp_image.height / 7);
-
-            }
->>>>>>> 39307cf9c2c78972a680fbf1a46544c358073377
 
         }
 
