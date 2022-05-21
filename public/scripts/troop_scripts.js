@@ -1,11 +1,11 @@
 
-<<<<<<< HEAD
+
 // test mf test testttttttt
 
-=======
+
 let troop_shown = false;
 let trp_image;
->>>>>>> 58729e7aaffe831c00b0dd15b9da2b1328c78557
+
 
 class troop {
     constructor(user_id, trp_id, user_trp_id, name, health, init_movement, movement, attack, range, max_amount, x, y, url) {
@@ -62,7 +62,7 @@ function draw_troops(matrix, troop_array, num_squares, user_id, square_size, dia
         hurt_image = hurt_images[troop_array[i].trp_id]
         //if (matrix[troop_array[i].x][troop_array[i].y] == num_squares) {
         if (troop_array[i].user_id == user_id) {
-<<<<<<< HEAD
+
             if (troop_array[i].hurt == true){
                 console.log('aa')
                 image(hurt_image, troop_array[i].x * square_size + (square_size-trp_image.width / 7)/2, troop_array[i].y * square_size - square_size / 2, trp_image.width / 7, trp_image.height / 7);
@@ -72,17 +72,17 @@ function draw_troops(matrix, troop_array, num_squares, user_id, square_size, dia
                     troop_array[i].hurt = false
                 }
             }else image(trp_image, troop_array[i].x * square_size + (square_size-trp_image.width / 7)/2, troop_array[i].y * square_size - square_size / 2, trp_image.width / 7, trp_image.height / 7);
-=======
+
             //circle(x + square_size / 2, y + square_size / 2, diameter);
             image(trp_image, troop_array[i].x * square_size + (square_size - trp_image.width / 7) / 2, troop_array[i].y * square_size - square_size / 2, trp_image.width / 7, trp_image.height / 7);
->>>>>>> 58729e7aaffe831c00b0dd15b9da2b1328c78557
+
             //image(trp_image,x+1 , y+1,10,10);
             // ,(width/square_size)2.65, (height/square_size)2.6
 
 
         } else {
 
-<<<<<<< HEAD
+
             if (troop_array[i].hurt == true){
                 console.log('aa')
                 image(hurt_image, troop_array[i].x * square_size + (square_size-trp_image.width / 7)/2, troop_array[i].y * square_size - square_size / 2, trp_image.width / 7, trp_image.height / 7);
@@ -94,10 +94,10 @@ function draw_troops(matrix, troop_array, num_squares, user_id, square_size, dia
                 }
             }
             else image(trp_image, troop_array[i].x * square_size + (square_size-trp_image.width / 7)/2, troop_array[i].y * square_size - square_size / 2, trp_image.width / 7, trp_image.height / 7);
-=======
+
             //circle(x + square_size / 2, y + square_size / 2, diameter);
             image(trp_image, troop_array[i].x * square_size + (square_size - trp_image.width / 7) / 2, troop_array[i].y * square_size - square_size / 2, trp_image.width / 7, trp_image.height / 7);
->>>>>>> 58729e7aaffe831c00b0dd15b9da2b1328c78557
+
             // image(trp_image,x+1 , y+1,10,10);
 
         }
