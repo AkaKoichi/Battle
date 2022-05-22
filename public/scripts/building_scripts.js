@@ -23,7 +23,6 @@ class building {
 
     select() {
         this.selected = true;
-        console.log(this.selected)
         // document.getElementById("building").innerHTML = this.bld_name;
         // document.getElementById("bld_health").innerHTML = this.health;
     }
