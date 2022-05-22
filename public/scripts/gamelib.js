@@ -1,3 +1,5 @@
+
+
 var user_info;
 let resources;
 var troop_selected_i;
@@ -12,6 +14,7 @@ let troop_array = []
 let troops = [];
 let buildings_array = [];
 let buildings = [];
+let resources_places = [];
 var can_move_troop = false;
 var can_attack_troop = false;
 
@@ -82,6 +85,7 @@ async function setup() {
             buildings_images[building.bld_id] = await loadImage(building.bld_url);
     }
     let cnv = createCanvas(windowWidth, windowHeight);
+
     cnv.position(0, 50);
     //tilesize = width / board_size;
 
@@ -93,9 +97,14 @@ async function setup() {
             matrix[x][y] = pos;
         }
     }
+    for (let i = 0; i < 4; i++) {
+        let coordinate_iron = { x: Math.floor(Math.random() * (board_size - 1 - 1 + 1) + 1), y: Math.floor(Math.random() * (board_size - 1 - 1 + 1) + 1) }
+        resources_places.push(coordinate_iron)
+        console.log(resources_places)
+    }
     end_turn_button = createButton('End Turn');
     end_turn_button.position(800, 155);
-    end_turn_button.mousePressed(end_turn); 
+    end_turn_button.mousePressed(end_turn);
 
     move_button = createButton('Move');
     move_button.position(800, 350);
@@ -113,7 +122,7 @@ async function setup() {
 }
 
 async function draw() {
-    
+
     if (user_info == undefined)
         return;
 
@@ -131,14 +140,21 @@ async function draw() {
             }
             num_squares++
             draw_buildings(matrix, buildings_array, num_squares, user_info.user_id, square_size, tilesize, x, y, buildings_images)
+            for (let i = 0; i < resources_places.length; i++) {
+                if (resources_places[i].x * square_size == x && resources_places[i].y * square_size == y) {
+                    text('resource', x, y+square_size/2)
+                }
+            }
 
         }
 
         draw_troops(matrix, troop_array, num_squares, user_info.user_id, square_size, diameter, x, y, troop_images, hurt_troop_images)
         draw_pop_up_buildings(buildings_array, square_size, buildings_images)
         fill(color('white'))
-        text('user id : '+user_info.user_id,800,200)
+        text('user id : ' + user_info.user_id, 800, 200)
         fill(color('black'))
+
+
     }
 }
 
@@ -154,8 +170,8 @@ async function mousePressed() {
     console.log(tile)
     let y = (int)(mouseX / tilesize)
     let x = (int)(mouseY / tilesize)
-    mouse_pressed_troops(user_info.user_id,troop_array,buildings)
-    mouse_pressed_buildings(buildings_array, x, y,troop_array,user_info.user_id)
+    mouse_pressed_troops(user_info.user_id, troop_array, buildings)
+    mouse_pressed_buildings(buildings_array, x, y, troop_array, user_info.user_id)
 }
 
 async function check_current_playing() {
@@ -204,7 +220,7 @@ async function your_turn() {
     its_my_turn = true;
     end_turn_button.removeAttribute('disabled')
     move_button.removeAttribute('disabled')
-    
+
 }
 
 function opponent_turn() {

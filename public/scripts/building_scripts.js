@@ -45,7 +45,6 @@ function mouse_pressed_buildings(building_array, x, y, troop_array,user_id) {
                 (building_array[i].x == tile.x && building_array[i].y == tile.y) &&
                 (building_array[i].user_id != user_id) &&
                 (attack > 0)) {
-                console.log('aaaaaaaaaaaaaaaaaaaaa')
                 building_array[i].select()
                 set_defender(troop_array, user_id, building_array)
                 make_attack(troop_array, user_id, building_array)
@@ -53,8 +52,8 @@ function mouse_pressed_buildings(building_array, x, y, troop_array,user_id) {
                 attack = 0;
                 break
             }
-            if (x == building_array[i].x && y == building_array[i].y) {
-                // building_array[i].select();
+            if (y == building_array[i].x && x == building_array[i].y) {
+                building_array[i].select();
 
                 break
             } else {
