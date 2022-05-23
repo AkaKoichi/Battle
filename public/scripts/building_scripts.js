@@ -35,7 +35,7 @@ class building {
     }
 
 }
-function mouse_pressed_buildings(building_array, x, y, troop_array,user_id) {
+function mouse_pressed_buildings(building_array, x, y, troop_array, user_id) {
     let tile = mouse_over_tile()
 
     for (let i = 0; i < building_array.length; i++) {
@@ -148,10 +148,26 @@ async function build_building(troop_array, user_id, resources) {
         if (troop_array[i].user_id == user_id) {
             if (troop_array[i].selected) {
                 if ((resources[0].rsc_amount - building_iron_cost >= 0) && (resources[1].rsc_amount - building_food_cost >= 0)) {
+                    for (let j = 0; j < resources_places.length; j++) {
+
+                        if (troop_array[i].x == resources_places[j].x && troop_array[i].y == resources_places[j].y) {
+                            if (resources_places[j].resource == 'iron') {
+                                await build(user_id, 3, troop_array[i].x, troop_array[i].y, 5)
+                                await update_resources_id(user_id, resources[0].rsc_amount - building_iron_cost, 1)
+                                await update_resources_id(user_id, resources[1].rsc_amount - building_food_cost, 2)
+
+                            }else if(resources_places[j].resource == 'food'){
+                                await build(user_id, 4, troop_array[i].x, troop_array[i].y, 5)
+                                await update_resources_id(user_id, resources[0].rsc_amount - building_iron_cost, 1)
+                                await update_resources_id(user_id, resources[1].rsc_amount - building_food_cost, 2)
+                            }else{
+                                await build(user_id, 2, troop_array[i].x, troop_array[i].y, 5)
+                                await update_resources_id(user_id, resources[0].rsc_amount - building_iron_cost, 1)
+                                await update_resources_id(user_id, resources[1].rsc_amount - building_food_cost, 2)
+                            }
+                        }
+                    }
                     alert("Building Successfully Built");
-                    await build(user_id, 2, troop_array[i].x, troop_array[i].y, 5)
-                    await update_resources_id(user_id, resources[0].rsc_amount - building_iron_cost, 1)
-                    await update_resources_id(user_id, resources[1].rsc_amount - building_food_cost, 2)
                     document.location.reload(true)
                     break
                 }
@@ -212,9 +228,7 @@ function draw_pop_up_buildings(buildings_array, tilesize, images) {
 
                     prepare_to_train = true;
                 }
-
             }
-
         }
         else if ((prepare_to_train == false && buildings_array[i].selected == true) && (buildings_array[i].bld_name == 'tc1' || buildings_array[i].bld_name == 'tc2' || buildings_array[i].bld_name == 'tc3' || buildings_array[i].bld_name == 'tc4')) {
             fill(15, 166, 55);

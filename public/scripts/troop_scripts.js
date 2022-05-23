@@ -152,6 +152,9 @@ async function mouse_pressed_troops(user_id, troop_array, buildings) {
                 troop_selected_i = 0
                 clicks = 0
                 await update_troops_id(user_id, troop_array[i].user_trp_id, troop_array[i].x, troop_array[i].y, troop_array[i].health, troop_array[i].movement);
+                /* let response = await move_troop_id(user_id, troop_array[i].user_trp_id, 'right', troop_array[i].movement)
+                if (response != undefined) initialize_game()
+                else alert('there cant be 2 troops in the same tile') */
                 break
             }
         }
@@ -332,6 +335,7 @@ async function train(user_id, troop_id, buildings) {
         }
     }
 }
+
 
 function draw_pop_up_troops(troop_array, tilesize, images) {
     7

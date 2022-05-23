@@ -14,7 +14,8 @@ let troop_array = []
 let troops = [];
 let buildings_array = [];
 let buildings = [];
-let resources_places = [];
+var resources_places = [];
+
 var can_move_troop = false;
 var can_attack_troop = false;
 
@@ -98,10 +99,15 @@ async function setup() {
         }
     }
     for (let i = 0; i < 4; i++) {
-        let coordinate_iron = { x: Math.floor(Math.random() * (board_size - 1 - 1 + 1) + 1), y: Math.floor(Math.random() * (board_size - 1 - 1 + 1) + 1) }
-        resources_places.push(coordinate_iron)
-        console.log(resources_places)
+        let coordinate
+        if (i < 2) {
+            coordinate = { x: Math.floor(Math.random() * (board_size - 2) + 1), y: Math.floor(Math.random() * (board_size - 1 + 1) + 1), resource: 'iron' }
+        }else{
+            coordinate = { x: Math.floor(Math.random() * (board_size - 2) + 1), y: Math.floor(Math.random() * (board_size - 1 + 1) + 1), resource: 'food' }
+        }
+        resources_places.push(coordinate)
     }
+
     end_turn_button = createButton('End Turn');
     end_turn_button.position(800, 155);
     end_turn_button.mousePressed(end_turn);
@@ -142,7 +148,12 @@ async function draw() {
             draw_buildings(matrix, buildings_array, num_squares, user_info.user_id, square_size, tilesize, x, y, buildings_images)
             for (let i = 0; i < resources_places.length; i++) {
                 if (resources_places[i].x * square_size == x && resources_places[i].y * square_size == y) {
-                    text('resource', x, y+square_size/2)
+                    if (resources_places[i].resource == 'iron'){
+                        text('iron', x, y + square_size / 2)
+                    }else{
+                        text('food', x, y + square_size / 2)
+                    }
+                    
                 }
             }
 
@@ -154,13 +165,8 @@ async function draw() {
         fill(color('white'))
         text('user id : ' + user_info.user_id, 800, 200)
         fill(color('black'))
-
-
     }
 }
-
-
-
 async function keyPressed() {
     await key_troops(its_my_turn, troop_array, user_info.user_id, buildings)
     await key_buildings(its_my_turn, troop_array, user_info.user_id, resources)
