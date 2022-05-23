@@ -125,8 +125,6 @@ async function draw() {
 
     if (user_info == undefined)
         return;
-
-    background("black");
     let square_size = tilesize; //width / board_size;
     let num_squares = 0;
     let hovered_tile = mouse_over_tile();
@@ -142,17 +140,18 @@ async function draw() {
             draw_buildings(matrix, buildings_array, num_squares, user_info.user_id, square_size, tilesize, x, y, buildings_images)
             for (let i = 0; i < resources_places.length; i++) {
                 if (resources_places[i].x * square_size == x && resources_places[i].y * square_size == y) {
-                    text('resource', x, y+square_size/2)
+                    text('resource', x, y + square_size / 2)
                 }
             }
-
         }
 
         draw_troops(matrix, troop_array, num_squares, user_info.user_id, square_size, diameter, x, y, troop_images, hurt_troop_images)
         draw_pop_up_buildings(buildings_array, square_size, buildings_images)
+        draw_pop_up_troops(troop_array, square_size, troop_images)
         fill(color('white'))
         text('user id : ' + user_info.user_id, 800, 200)
         fill(color('black'))
+
 
 
     }

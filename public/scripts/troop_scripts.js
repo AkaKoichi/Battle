@@ -334,7 +334,6 @@ async function train(user_id, troop_id, buildings) {
 }
 
 function draw_pop_up_troops(troop_array, tilesize, images) {
-    7
     let w = color('white');
     let b = color('black');
     for (let i = 0; i < troop_array.length; i++) {
