@@ -5,7 +5,7 @@ let buttons = [];
 let troops_resources = [];
 let y;
 let x;
-let y_pop_buttons = 240
+let y_pop_buttons = 0
 
 
 class building {
@@ -67,7 +67,7 @@ async function buildings_setup(user_id, buildings) {
 
         } else {
             let temp_button = createButton('Train');
-            temp_button.position(1350, y_pop_buttons);
+            temp_button.position(windowWidth/1.14, windowHeight/1.96 + y_pop_buttons);
             temp_button.mousePressed(async function () {
                 train(user_id, troops_resources[i].trp_id, buildings)
 
@@ -203,22 +203,26 @@ function draw_pop_up_buildings(buildings_array, tilesize, images) {
                 let last_name;
 
                 fill(170, 160, 85);
+<<<<<<< HEAD
                 console.log('train')
                 rect(450, 0, 688, 688);
+=======
+                rect(windowWidth/1.5, 0, 501, windowHeight);
+>>>>>>> a4cd9821495c212021a663245d50056b9a066d67
                 noStroke()
-                image(bulding_image, 465, 20, bulding_image.width, bulding_image.height);
+                image(bulding_image,windowWidth/1.4, windowHeight/20, bulding_image.width, bulding_image.height);
                 fill(w);
                 fill(b);
-                text(buildings[i].bld_health, 535, 210)
+                text(buildings[i].bld_health, windowWidth/1.4,  windowHeight/2.5)
                 fill(w);
                 let y_pop = 250;
                 for (let i = 0; i < troops_resources.length; i++) {
                     if (last_name == troops_resources[i].trp_name) {
-                        text(troops_resources[i].rsc_amount, 620, y_pop - 15)
+                        text(troops_resources[i].rsc_amount, windowWidth/1.2, windowHeight/4.65 + y_pop - 15)
                         for (let i = 0; i < buttons.length; i++)  buttons[i].show()
                     } else {
-                        text(troops_resources[i].trp_name, 455, y_pop)
-                        text(troops_resources[i].rsc_amount, 575, y_pop)
+                        text(troops_resources[i].trp_name, windowWidth/1.45, windowHeight/4.65 + y_pop)
+                        text(troops_resources[i].rsc_amount, windowWidth/1.3, windowHeight/4.65 + y_pop)
                         last_name = troops_resources[i].trp_name;
                     }
                     y_pop += 15
@@ -230,29 +234,34 @@ function draw_pop_up_buildings(buildings_array, tilesize, images) {
         else if ((prepare_to_train == false && buildings_array[i].selected == true) && (buildings_array[i].bld_name == 'tc1' || buildings_array[i].bld_name == 'tc2' || buildings_array[i].bld_name == 'tc3' || buildings_array[i].bld_name == 'tc4')) {
             console.log('tc')
             fill(170, 160, 85);
-            rect(450, 0, 688, 688);
+            rect(windowWidth/1.5, 0, 501, windowHeight);
             noStroke()
-            image(bulding_image, 465, 20, bulding_image.width, bulding_image.height);
+            image(bulding_image,  windowWidth/1.4, windowHeight/20, bulding_image.width, bulding_image.height);
             fill(w);
             fill(b);
-            text(buildings[i].bld_health, 535, 210)
+            text(buildings[i].bld_health, windowWidth/1.4,  windowHeight/2)
             fill(w);
             prepare_to_train = true;
         }
         else if (prepare_to_train == false && buildings_array[i].selected == true && (buildings_array[i].bld_name == 'Field' || buildings_array[i].bld_name == 'Mine')) {
             console.log('r')
             fill(170, 160, 85);
-            rect(450, 0, 688, 688);
+            rect(windowWidth/1.5, 0, 501, windowHeight);
             noStroke()
-            image(bulding_image, 465, 20, bulding_image.width, bulding_image.height);
+            image(bulding_image, windowWidth/1.4, windowHeight/20, bulding_image.width, bulding_image.height);
             fill(w);
             fill(b);
-            text(buildings[i].bld_health, 535, 210)
+            text(buildings[i].bld_health, windowWidth/1.4,  windowHeight/2.8)
             fill(w);
             prepare_to_train = true;
         }
+<<<<<<< HEAD
         else {
             prepare_to_train = false;
+=======
+        else if  (buildings_array[i].selected == false) {
+            prepare_to_train = false
+>>>>>>> a4cd9821495c212021a663245d50056b9a066d67
         }
     }
 }
