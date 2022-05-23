@@ -102,7 +102,7 @@ async function setup() {
         let coordinate
         if (i < 2) {
             coordinate = { x: Math.floor(Math.random() * (board_size - 2) + 1), y: Math.floor(Math.random() * (board_size - 1 + 1) + 1), resource: 'iron' }
-        }else{
+        } else {
             coordinate = { x: Math.floor(Math.random() * (board_size - 2) + 1), y: Math.floor(Math.random() * (board_size - 1 + 1) + 1), resource: 'food' }
         }
         resources_places.push(coordinate)
@@ -146,12 +146,12 @@ async function draw() {
             draw_buildings(matrix, buildings_array, num_squares, user_info.user_id, square_size, tilesize, x, y, buildings_images)
             for (let i = 0; i < resources_places.length; i++) {
                 if (resources_places[i].x * square_size == x && resources_places[i].y * square_size == y) {
-                    if (resources_places[i].resource == 'iron'){
+                    if (resources_places[i].resource == 'iron') {
                         text('iron', x, y + square_size / 2)
-                    }else{
+                    } else {
                         text('food', x, y + square_size / 2)
                     }
-                    
+
                 }
             }
         }
