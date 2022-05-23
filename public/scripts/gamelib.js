@@ -67,6 +67,7 @@ window.onload = async () => {
 
 async function setup() {
     initialize_game()
+    //textFont(TRACK)
     tile_image = loadImage('./images/tile/tile.png')
     tile_image2 = loadImage('./images/tile/tile2.png')
     let troop_info = await get_troops();

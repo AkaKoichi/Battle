@@ -340,12 +340,12 @@ function draw_pop_up_troops(troop_array, tilesize, images) {
         troop_image = images[troop_array[i].trp_id]
         if (troop_shown == false && troop_array[i].selected == true) {
             fill(170, 160, 85);
-            rect(450, 0, 688, 688);
+            rect(windowWidth / 1.5, 0, 501, windowHeight);
             noStroke()
-            image(troop_image, 465, 20, tilesize, tilesize);
+            image(troop_image, windowWidth/1.4, windowHeight/20, troop_image.width, troop_image.height);
             fill(w);
             fill(b);
-            text(troops[i].trp_health, 535, 210)
+            text(troops[i].trp_health,  windowWidth/1.4,  windowHeight/1.7)
             fill(w);
             troop_shown = true;
 
