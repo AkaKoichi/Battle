@@ -78,7 +78,7 @@ module.exports.train = async function (user_id, troop_id, bld_id) {
       let y = result_b.rows[0].bld_y;
 
       sql = `Insert into user_troops (user_id,troop_id,troop_x,troop_y,troop_current_health,troop_current_movement)values ($1,$2,$3,$4,$5,$6) `;
-      result = await pool.query(sql, [user_id, troop_id, y, x, troop_current_health, troop_movement]);
+      result = await pool.query(sql, [user_id, troop_id, x, y, troop_current_health, troop_movement]);
       console.log(result)
       let troops = result.rows;
       await update_resources(user_id, user_iron - troop_iron_cost, 1)

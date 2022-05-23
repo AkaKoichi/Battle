@@ -78,12 +78,6 @@ function draw_troops(matrix, troop_array, num_squares, user_id, square_size, dia
                 }
             } else image(trp_image, troop_array[i].x * square_size + (square_size - trp_image.width / 7) / 2, troop_array[i].y * square_size - square_size / 2, trp_image.width / 7, trp_image.height / 7);
 
-
-            image(trp_image, troop_array[i].x * square_size + (square_size - trp_image.width / 7) / 2, troop_array[i].y * square_size - square_size / 2, trp_image.width / 7, trp_image.height / 7);
-
-
-
-
         } else {
 
 
@@ -100,10 +94,6 @@ function draw_troops(matrix, troop_array, num_squares, user_id, square_size, dia
             }
             else image(trp_image, troop_array[i].x * square_size + (square_size - trp_image.width / 7) / 2, troop_array[i].y * square_size - square_size / 2, trp_image.width / 7, trp_image.height / 7);
 
-            //circle(x + square_size / 2, y + square_size / 2, diameter);
-            image(trp_image, troop_array[i].x * square_size + (square_size - trp_image.width / 7) / 2, troop_array[i].y * square_size - square_size / 2, trp_image.width / 7, trp_image.height / 7);
-
-            // image(trp_image,x+1 , y+1,10,10);
 
         }
 
@@ -152,6 +142,9 @@ async function mouse_pressed_troops(user_id, troop_array, buildings) {
                 troop_selected_i = 0
                 clicks = 0
                 await update_troops_id(user_id, troop_array[i].user_trp_id, troop_array[i].x, troop_array[i].y, troop_array[i].health, troop_array[i].movement);
+                /* let response = await move_troop_id(user_id, troop_array[i].user_trp_id, 'right', troop_array[i].movement)
+                if (response != undefined) initialize_game()
+                else alert('there cant be 2 troops in the same tile') */
                 break
             }
         }
@@ -161,7 +154,7 @@ async function mouse_pressed_troops(user_id, troop_array, buildings) {
             (attack > 0)) {
             troop_array[i].select()
             set_defender(troop_array, user_id, buildings)
-            make_attack(troop_array, user_id)
+            make_attack(troop_array, user_id, buildings)
             can_attack_troop = false;
             attack = 0;
             break
@@ -230,6 +223,7 @@ async function make_attack(troop_array, user_id, buildings) {
     var defender = {};
     let attacker_index = null;
     let defender_index = null;
+    let building_defender_index = null;
     let can_attack = false;
     let dice_dmg_multiplier = null;
 
@@ -251,24 +245,25 @@ async function make_attack(troop_array, user_id, buildings) {
             }
         }
     }
+
     for (let i = 0; i < buildings.length; i++) {
         if (buildings[i].user_id != user_id) {
             if (buildings[i].defender) {
                 defender = buildings[i]
-                defender_index = i
+                building_defender_index = i
                 break;
             }
         }
     }
+
+
+
+
     can_attack = get_dist_attack(attacker, defender)
     dice_dmg_multiplier = roll_dice(3, 6)
-    console.log(can_attack)
     if (can_attack && dice_dmg_multiplier >= 1) {
-        console.log('rrrrr')
-        //troop_array[defender_index].hurt = true
-        //troop_array[defender_index].timer = 100
-
-        console.log('made attack')
+        troop_array[defender_index].hurt = true
+        troop_array[defender_index].timer = 1000
         console.log(defender.health)
         defender.health -= attacker.attack * dice_dmg_multiplier;
         console.log(defender.health)
@@ -277,10 +272,11 @@ async function make_attack(troop_array, user_id, buildings) {
         }
         await update_troops_id(defender.user_id, defender.user_trp_id, defender.x, defender.y, defender.health);
         alert('defender health after attack : ' + defender.health)
+        document.location.reload(true)
         troop_array[attacker_index].attacker = false;
         troop_array[defender_index].defender = false;
-        buildings[defender_index].defender = false;
-        document.location.reload(true)
+        buildings[building_defender_index].defender = false;
+        
     }
 }
 function get_dist_attack(attacker, defender) {
@@ -332,6 +328,7 @@ async function train(user_id, troop_id, buildings) {
         }
     }
 }
+
 
 function draw_pop_up_troops(troop_array, tilesize, images) {
     let w = color('white');
