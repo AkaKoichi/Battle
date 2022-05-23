@@ -146,16 +146,12 @@ async function draw() {
             draw_buildings(matrix, buildings_array, num_squares, user_info.user_id, square_size, tilesize, x, y, buildings_images)
             for (let i = 0; i < resources_places.length; i++) {
                 if (resources_places[i].x * square_size == x && resources_places[i].y * square_size == y) {
-<<<<<<< HEAD
                     if (resources_places[i].resource == 'iron'){
                         text('iron', x, y + square_size / 2)
                     }else{
                         text('food', x, y + square_size / 2)
                     }
                     
-=======
-                    text('resource', x, y + square_size / 2)
->>>>>>> 289ab5207a2a92e386621ee0d370da50d9ba5786
                 }
             }
         }
@@ -166,12 +162,6 @@ async function draw() {
         fill(color('white'))
         text('user id : ' + user_info.user_id, 800, 200)
         fill(color('black'))
-<<<<<<< HEAD
-=======
-
-
-
->>>>>>> 289ab5207a2a92e386621ee0d370da50d9ba5786
     }
 }
 async function keyPressed() {
