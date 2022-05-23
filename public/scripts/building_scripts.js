@@ -23,14 +23,10 @@ class building {
 
     select() {
         this.selected = true;
-        // document.getElementById("building").innerHTML = this.bld_name;
-        // document.getElementById("bld_health").innerHTML = this.health;
     }
 
     unselect() {
         this.selected = false;
-        // document.getElementById("building").innerHTML = '';
-        // document.getElementById("bld_health").innerHTML = '';
         for (let i = 0; i < buttons.length; i++)  buttons[i].hide()
     }
 
@@ -156,11 +152,11 @@ async function build_building(troop_array, user_id, resources) {
                                 await update_resources_id(user_id, resources[0].rsc_amount - building_iron_cost, 1)
                                 await update_resources_id(user_id, resources[1].rsc_amount - building_food_cost, 2)
 
-                            }else if(resources_places[j].resource == 'food'){
+                            } else if (resources_places[j].resource == 'food') {
                                 await build(user_id, 4, troop_array[i].x, troop_array[i].y, 5)
                                 await update_resources_id(user_id, resources[0].rsc_amount - building_iron_cost, 1)
                                 await update_resources_id(user_id, resources[1].rsc_amount - building_food_cost, 2)
-                            }else{
+                            } else {
                                 await build(user_id, 2, troop_array[i].x, troop_array[i].y, 5)
                                 await update_resources_id(user_id, resources[0].rsc_amount - building_iron_cost, 1)
                                 await update_resources_id(user_id, resources[1].rsc_amount - building_food_cost, 2)
@@ -207,6 +203,7 @@ function draw_pop_up_buildings(buildings_array, tilesize, images) {
                 let last_name;
 
                 fill(170, 160, 85);
+                console.log('train')
                 rect(450, 0, 688, 688);
                 noStroke()
                 image(bulding_image, 465, 20, bulding_image.width, bulding_image.height);
@@ -231,6 +228,7 @@ function draw_pop_up_buildings(buildings_array, tilesize, images) {
             }
         }
         else if ((prepare_to_train == false && buildings_array[i].selected == true) && (buildings_array[i].bld_name == 'tc1' || buildings_array[i].bld_name == 'tc2' || buildings_array[i].bld_name == 'tc3' || buildings_array[i].bld_name == 'tc4')) {
+            console.log('tc')
             fill(170, 160, 85);
             rect(450, 0, 688, 688);
             noStroke()
@@ -242,6 +240,7 @@ function draw_pop_up_buildings(buildings_array, tilesize, images) {
             prepare_to_train = true;
         }
         else if (prepare_to_train == false && buildings_array[i].selected == true && (buildings_array[i].bld_name == 'Field' || buildings_array[i].bld_name == 'Mine')) {
+            console.log('r')
             fill(170, 160, 85);
             rect(450, 0, 688, 688);
             noStroke()
@@ -252,6 +251,8 @@ function draw_pop_up_buildings(buildings_array, tilesize, images) {
             fill(w);
             prepare_to_train = true;
         }
-        else prepare_to_train = false;
+        else {
+            prepare_to_train = false;
+        }
     }
 }

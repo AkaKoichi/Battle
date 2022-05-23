@@ -159,7 +159,7 @@ async function draw() {
 
         draw_troops(matrix, troop_array, num_squares, user_info.user_id, square_size, diameter, x, y, troop_images, hurt_troop_images)
         draw_pop_up_buildings(buildings_array, square_size, buildings_images)
-        draw_pop_up_troops(troop_array, tilesize, troop_images)
+        draw_pop_up_troops(troop_array, tilesize, troop_images) 
         fill(color('white'))
         text('user id : ' + user_info.user_id, 800, 200)
         fill(color('black'))
