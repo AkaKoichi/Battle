@@ -89,6 +89,7 @@ async function setup() {
 
     cnv.position(0, 50);
     //tilesize = width / board_size;
+    // 380 (marwan)
 
     let pos = 0;
     for (let x = 0; x < board_size; x++) {
