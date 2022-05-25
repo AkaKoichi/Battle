@@ -60,7 +60,7 @@ function mouse_pressed_buildings(building_array, x, y, troop_array, user_id) {
 
 async function buildings_setup(user_id, buildings) {
     let last_name;
-    let troop = 0
+
     troops_resources = await get_troops_resources();
     for (let i = 0; i < troops_resources.length; i++) {
         if (last_name == troops_resources[i].trp_name) {
@@ -82,35 +82,19 @@ async function buildings_setup(user_id, buildings) {
 }
 
 function draw_buildings(matrix, buildings_array, num_squares, user_id, square_size, tilesize, x, y, images) {
-    let c = color(255, 204, 0);
-    let w = color('white');
-    let b = color('black');
-    let r = color('red');
-    let p = color('purple');
-    let bl = color('blue');
-    let g = color('gray');
+
+
     for (let i = 0; i < buildings_array.length; i++) {
+        if (buildings_array == 'unedefined') return
         bulding_image = images[buildings_array[i].bld_id]
 
         if (matrix[buildings_array[i].y][buildings_array[i].x] == num_squares) {
             if (buildings_array[i].user_id == user_id) {
-                // fill(bl);
-                //rect(x, y, tilesize, tilesize);
                 image(bulding_image, x, y, tilesize, tilesize);
-                //fill(b);
-                //text(buildings_array[i].bld_name, x + square_size / 2 - 10, y + square_size / 2);
-                // fill(w);
-
             } else {
-
-                //fill(r);
-                // rect(x, y, tilesize, tilesize);
                 image(bulding_image, x, y, tilesize, tilesize);
-                // fill(b);
-                //text(buildings_array[i].bld_name, x + square_size / 2 - 10, y + square_size / 2);
-                //fill(w);
-            }
 
+            }
         }
     }
 }
@@ -151,25 +135,33 @@ async function build_building(troop_array, user_id, resources) {
                                 await build(user_id, 3, troop_array[i].x, troop_array[i].y, 5)
                                 await update_resources_id(user_id, resources[0].rsc_amount - building_iron_cost, 1)
                                 await update_resources_id(user_id, resources[1].rsc_amount - building_food_cost, 2)
+                                alert("Building Successfully Built");
+                                initialize_game()
+                                break
 
                             } else if (resources_places[j].resource == 'food') {
                                 await build(user_id, 4, troop_array[i].x, troop_array[i].y, 5)
                                 await update_resources_id(user_id, resources[0].rsc_amount - building_iron_cost, 1)
                                 await update_resources_id(user_id, resources[1].rsc_amount - building_food_cost, 2)
-                            } else {
-                                await build(user_id, 2, troop_array[i].x, troop_array[i].y, 5)
-                                await update_resources_id(user_id, resources[0].rsc_amount - building_iron_cost, 1)
-                                await update_resources_id(user_id, resources[1].rsc_amount - building_food_cost, 2)
+                                alert("Building Successfully Built");
+                                initialize_game()
+                                break
                             }
+                        } else {
+                            await build(user_id, 2, troop_array[i].x, troop_array[i].y, 5)
+                            await update_resources_id(user_id, resources[0].rsc_amount - building_iron_cost, 1)
+                            await update_resources_id(user_id, resources[1].rsc_amount - building_food_cost, 2)
+                            alert("Building Successfully Built");
+                            initialize_game()
+                            break
                         }
                     }
-                    alert("Building Successfully Built");
-                    document.location.reload(true)
+                    
                     break
                 }
             }
         }
-    }   
+    }
 }
 
 
@@ -183,13 +175,10 @@ function set_defender_building(buildings, user_id) {
             }
         }
     }
-
-
 }
 
 
 function draw_pop_up_buildings(buildings_array, tilesize, images) {
-    7
     let w = color('white');
     let b = color('black');
     for (let i = 0; i < buildings_array.length; i++) {
@@ -203,8 +192,7 @@ function draw_pop_up_buildings(buildings_array, tilesize, images) {
                 let last_name;
 
                 fill(170, 160, 85);
-                console.log('train')
-                rect(450, 0, 688, 688);
+                rect(windowWidth / 1.5, 0, 501, windowHeight);
                 noStroke()
                 image(bulding_image, windowWidth / 1.4, windowHeight / 20, bulding_image.width, bulding_image.height);
                 fill(w);
@@ -228,7 +216,6 @@ function draw_pop_up_buildings(buildings_array, tilesize, images) {
             }
         }
         else if ((prepare_to_train == false && buildings_array[i].selected == true) && (buildings_array[i].bld_name == 'tc1' || buildings_array[i].bld_name == 'tc2' || buildings_array[i].bld_name == 'tc3' || buildings_array[i].bld_name == 'tc4')) {
-            console.log('tc')
             fill(170, 160, 85);
             rect(windowWidth / 1.5, 0, 501, windowHeight);
             noStroke()
@@ -240,7 +227,6 @@ function draw_pop_up_buildings(buildings_array, tilesize, images) {
             prepare_to_train = true;
         }
         else if (prepare_to_train == false && buildings_array[i].selected == true && (buildings_array[i].bld_name == 'Field' || buildings_array[i].bld_name == 'Mine')) {
-            console.log('r')
             fill(170, 160, 85);
             rect(windowWidth / 1.5, 0, 501, windowHeight);
             noStroke()
@@ -251,8 +237,8 @@ function draw_pop_up_buildings(buildings_array, tilesize, images) {
             fill(w);
             prepare_to_train = true;
         }
-        else {
-            prepare_to_train = false;
+        else if (buildings_array[i].selected == false) {
+            prepare_to_train = false
         }
     }
-}
+} 7

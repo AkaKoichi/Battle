@@ -41,8 +41,8 @@ const diameter = radius * 2;
 
 window.onload = async () => {
     user_info = await get_user_info();
-    resources = await get_resources_by_id(1, user_info.user_id);
-    let bol = await check_current_playing()
+    resources = await get_resources_by_id(4, user_info.user_id);
+    let bol = await check_current_playing_by_game(4)
     if (bol[0].current_user_playing == user_info.user_id) {
         its_my_turn = true;
         enable_button(end_turn_button)
@@ -73,13 +73,13 @@ async function setup() {
     tile_image2 = loadImage('./images/tile/tile2.png')
     let troop_info = await get_troops();
     for (let troop of troop_info) {
-        if (troop.trp_url)
-            troop_images[troop.trp_id] = await loadImage(troop.trp_url);
+        if (troop.trp_normal_url)
+            troop_images[troop.trp_id] = await loadImage(troop.trp_normal_url);
     }
 
     for (let troop of troop_info) {
-        if (troop.hurt_url)
-            hurt_troop_images[troop.trp_id] = await loadImage(troop.hurt_url);
+        if (troop.trp_hurt_url)
+            hurt_troop_images[troop.trp_id] = await loadImage(troop.trp_hurt_url);
     }
     let buildings_info = await get_buildings();
     for (let building of buildings_info) {
@@ -180,11 +180,6 @@ async function mousePressed() {
     mouse_pressed_buildings(buildings_array, x, y, troop_array, user_info.user_id)
 }
 
-async function check_current_playing() {
-    let current_playing = await check_current_playing_by_game(1)
-    return current_playing;
-}
-
 async function end_turn() {
     let resources_per_turn = 2
 
@@ -206,20 +201,19 @@ async function end_turn() {
             troop_array[i].x, troop_array[i].y,
             troop_array[i].health, troop_array[i].movement);
     }
-    let bol = await check_current_playing()
+    let bol = await  check_current_playing_by_game(4)
     if (bol[0].current_user_playing == user_info.user_id) {
-        if (user_info.user_id == 2) {
-            await update_current_playing(1, 1)
+        if (user_info.user_id == 2) {//opponent id
+            await update_current_playing(4, 1)
 
         } else {
-            await update_current_playing(1, 2);
+            await update_current_playing(4, 2);
         }
         opponent_turn()
     } else {
-        await update_current_playing(1, user_info.user_id);
+        await update_current_playing(4, user_info.user_id);
         your_turn()
     }
-    document.location.reload(true)
 }
 
 async function your_turn() {
@@ -257,9 +251,10 @@ function mouse_over_tile() {
 }
 
 async function initialize_game() {
+    if (user_info == 'unedefined') return
 
-    buildings = await get_buildings_by_id(1);
-    troops = await get_troops_by_id(1);
+    buildings = await get_buildings_by_id(4);
+    troops = await get_troops_by_id(4);
     troop_array = []
     buildings_array = []
     for (let i = 0; i < troops.length; i++) {
@@ -296,7 +291,7 @@ async function initialize_game() {
             temp_building,
         );
     }
-    let bol = await check_current_playing()
+    let bol = await await check_current_playing_by_game(4)
     if (bol[0].current_user_playing == user_info.user_id) {
         its_my_turn = true;
         enable_button(end_turn_button)

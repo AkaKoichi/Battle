@@ -17,9 +17,9 @@ module.exports.get_all_troops = async function () {
 module.exports.get_troops_id = async function (game_id) {
   try {
     let sql = `
-    Select game.game_id,user_id,user_trp_id,trp_id,troop_id, troop_x,troop_y,trp_name,trp_health,trp_movement,trp_attack,trp_range,trp_max_amount,troop_current_health,troop_current_movement,trp_url,hurt_url 
+    Select game.game_id,user_id,user_trp_id,trp_id,troop_id, troop_x,troop_y,trp_name,trp_health,trp_movement,trp_attack,trp_range,trp_max_amount,troop_current_health,troop_current_movement,trp_normal_url,trp_hurt_url 
     from user_troops,troops,player_game,game  
-    where troops.trp_id = user_troops.troop_id and (user_troops.user_id = player_game.user_player1 or user_troops.user_id = player_game.user_player2) and player_game.game_id = game.game_id and game.game_id = $1 ; `;
+    where troops.trp_id = user_troops.troop_id and (user_troops.user_id = user_player) and player_game.game_id = game.game_id and game.game_id = $1 ; `;
     let result = await pool.query(sql, [game_id]);
     let troops = result.rows;
     return { status: 200, result: troops };
@@ -109,9 +109,15 @@ module.exports.delete_troop = async function (id) {
 
 module.exports.get_all_troops_resources = async function () {
   try {
-    let sql = `select troops.trp_id,trp_name,rsc_type,rsc_amount from resources_troops 
-    inner join troops on resources_troops.trp_id = troops.trp_id
-    inner join resources on resources_troops.rsc_id = resources.rsc_id;`;
+    let sql = `
+    select troops.trp_id,trp_name,rsc_type,rsc_amount 
+    from resources_troops,player_game,troops,resources
+    where resources_troops.rsc_id = resources.rsc_id 
+    and resources_troops.trp_id = troops.trp_id 
+    and player_game.player_fac_id = troops.trp_fac_id
+    and player_game.player_fac_id = 1 
+    and player_game.user_player = 1
+    ;`;
     let result = await pool.query(sql);
     let troops = result.rows;
     return { status: 200, result: troops };
