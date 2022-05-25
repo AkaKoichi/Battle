@@ -9,6 +9,8 @@ var hurt_troop_images = {};
 var buildings_images = {}
 let tile_image;
 let tile_image2;
+let farm_image;
+let mine_image;
 
 let troop_array = []
 let troops = [];
@@ -71,6 +73,8 @@ async function setup() {
     //textFont(TRACK)
     tile_image = loadImage('./images/tile/tile.png')
     tile_image2 = loadImage('./images/tile/tile2.png')
+    farm_image = loadImage('./images/tile/farm_start.png')
+    mine_image = loadImage('./images/tile/mine_start.png')
     let troop_info = await get_troops();
     for (let troop of troop_info) {
         if (troop.trp_normal_url)
@@ -149,9 +153,11 @@ async function draw() {
             for (let i = 0; i < resources_places.length; i++) {
                 if (resources_places[i].x * square_size == x && resources_places[i].y * square_size == y) {
                     if (resources_places[i].resource == 'iron') {
-                        text('iron', x, y + square_size / 2)
+                       
+                        image(mine_image, x+4 ,y ,tilesize *0.8,tilesize*0.8)
                     } else {
-                        text('food', x, y + square_size / 2)
+                       
+                        image(farm_image,x+4,y,tilesize *0.8,tilesize*0.8)
                     }
 
                 }
@@ -291,7 +297,7 @@ async function initialize_game() {
             temp_building,
         );
     }
-    let bol = await await check_current_playing_by_game(4)
+    let bol =  await check_current_playing_by_game(4)
     if (bol[0].current_user_playing == user_info.user_id) {
         its_my_turn = true;
         enable_button(end_turn_button)
