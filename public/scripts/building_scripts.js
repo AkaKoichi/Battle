@@ -129,17 +129,9 @@ async function build_building(troop_array, user_id, resources) {
             if (troop_array[i].selected) {
                 if ((resources[0].rsc_amount - building_iron_cost >= 0) && (resources[1].rsc_amount - building_food_cost >= 0)) {
                     for (let j = 0; j < resources_places.length; j++) {
-
                         if (troop_array[i].x == resources_places[j].x && troop_array[i].y == resources_places[j].y) {
+                            console.log(resources_places[j].resource)
                             if (resources_places[j].resource == 'iron') {
-                                await build(user_id, 3, troop_array[i].x, troop_array[i].y, 5)
-                                await update_resources_id(user_id, resources[0].rsc_amount - building_iron_cost, 1)
-                                await update_resources_id(user_id, resources[1].rsc_amount - building_food_cost, 2)
-                                alert("Building Successfully Built");
-                                initialize_game()
-                                break
-
-                            } else if (resources_places[j].resource == 'food') {
                                 await build(user_id, 4, troop_array[i].x, troop_array[i].y, 5)
                                 await update_resources_id(user_id, resources[0].rsc_amount - building_iron_cost, 1)
                                 await update_resources_id(user_id, resources[1].rsc_amount - building_food_cost, 2)
@@ -147,16 +139,24 @@ async function build_building(troop_array, user_id, resources) {
                                 initialize_game()
                                 break
                             }
-                        } else {
-                            await build(user_id, 2, troop_array[i].x, troop_array[i].y, 5)
+
+                            if (resources_places[j].resource == 'food') {
+                                console.log('fff')
+                                await build(user_id, 5, troop_array[i].x, troop_array[i].y, 5)
+                                await update_resources_id(user_id, resources[0].rsc_amount - building_iron_cost, 1)
+                                await update_resources_id(user_id, resources[1].rsc_amount - building_food_cost, 2)
+                                alert("Building Successfully Built");
+                                initialize_game()
+                                break
+                            }
+                        } /* else {
+                            await build(user_id, 3, troop_array[i].x, troop_array[i].y, 5)
                             await update_resources_id(user_id, resources[0].rsc_amount - building_iron_cost, 1)
                             await update_resources_id(user_id, resources[1].rsc_amount - building_food_cost, 2)
                             alert("Building Successfully Built");
-                            initialize_game()
-                            break
-                        }
+                            initialize_game();   
+                        } */
                     }
-                    
                     break
                 }
             }

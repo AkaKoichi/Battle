@@ -298,7 +298,6 @@ function get_dist_move(troop, tile) {
 
 function roll_dice(min, sides) {
     dice_number = dice(1, sides);
-    //document.getElementById("dice").innerHTML = dice_number;
     if (dice_number == sides) {
         return 2
     } else if (dice_number >= min) {
@@ -307,9 +306,9 @@ function roll_dice(min, sides) {
     return 0
 }
 
-function dice(min, max) {
-    return Math.floor(Math.random() * (max - min + 1) + min);
-}
+    function dice(min, max) {
+        return Math.floor(Math.random() * (max - min + 1) + min);
+    }
 
 async function train(user_id, troop_id, buildings) {
     console.log(buildings)

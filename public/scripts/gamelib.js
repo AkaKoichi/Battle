@@ -67,6 +67,15 @@ window.onload = async () => {
 }
 
 async function setup() {
+    for (let i = 0; i < 4; i++) {
+        let coordinate
+        if (i < 2) {
+            coordinate = { x: Math.floor(Math.random() * (board_size - 2) + 1), y: Math.floor(Math.random() * (board_size - 1 + 1) + 1), resource: 'iron' }
+        } else {
+            coordinate = { x: Math.floor(Math.random() * (board_size - 2) + 1), y: Math.floor(Math.random() * (board_size - 1 + 1) + 1), resource: 'food' }
+        }
+        resources_places.push(coordinate)
+    }
     initialize_game()
     //textFont(TRACK)
     tile_image = loadImage('./images/tile/tile.png')
@@ -100,15 +109,7 @@ async function setup() {
             matrix[x][y] = pos;
         }
     }
-    for (let i = 0; i < 4; i++) {
-        let coordinate
-        if (i < 2) {
-            coordinate = { x: Math.floor(Math.random() * (board_size - 2) + 1), y: Math.floor(Math.random() * (board_size - 1 + 1) + 1), resource: 'iron' }
-        } else {
-            coordinate = { x: Math.floor(Math.random() * (board_size - 2) + 1), y: Math.floor(Math.random() * (board_size - 1 + 1) + 1), resource: 'food' }
-        }
-        resources_places.push(coordinate)
-    }
+   
 
     end_turn_button = createButton('End Turn');
     end_turn_button.position(800, 155);
@@ -253,6 +254,8 @@ function mouse_over_tile() {
 async function initialize_game() {
     if (user_info == 'unedefined') return
 
+    
+
     buildings = await get_buildings_by_id(4);
     troops = await get_troops_by_id(4);
     troop_array = []
@@ -291,7 +294,7 @@ async function initialize_game() {
             temp_building,
         );
     }
-    let bol = await await check_current_playing_by_game(4)
+    let bol = await check_current_playing_by_game(4)
     if (bol[0].current_user_playing == user_info.user_id) {
         its_my_turn = true;
         enable_button(end_turn_button)
