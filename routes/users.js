@@ -3,7 +3,21 @@ var router = express.Router();
 var uModel = require("../models/user_model");
 var auth = require("../models/authentication")
 
+router.get('/game/:id', async function (req, res, next) {
+    let id = req.params.id;
+    console.log("Get game with id " + id)
+    let result = await uModel.get_game_id_by_user(id);
+    res.status(result.status).send(result.result);
+});
 
+
+router.get('/oponent/:id/:game_id', async function (req, res, next) {
+    let id = req.params.id;
+    let game_id = req.params.game_id
+    console.log("Get game with id " + id)
+    let result = await uModel.get_opponent_id_by_game(id,game_id);
+    res.status(result.status).send(result.result);
+});
 
 router.put('/update_current/:id', async function (req, res, next) {
     console.log('entrou route')

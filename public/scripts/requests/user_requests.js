@@ -129,5 +129,37 @@ async function update_current_playing(id,user_id) {
         // Treat 500 errors here    
         console.log(err);
     }
-} 
+}
+
+async function get_oponent_id(id,game_id) {
+    try {
+        const response = await fetch(`/api/users/oponent/${id}/${game_id}`);
+        if (response.status == 200) {
+           var user = await response.json();
+           return user;
+        } else {
+            // Treat errors like 404 here
+            console.log(response);
+        }
+    } catch (err) {
+        // Treat 500 errors here    
+        console.log(err);
+    }
+}
+
+async function get_game_id(id) {
+    try {
+        const response = await fetch(`/api/users/game/${id}`);
+        if (response.status == 200) {
+           var user = await response.json();
+           return user;
+        } else {
+            // Treat errors like 404 here
+            console.log(response);
+        }
+    } catch (err) {
+        // Treat 500 errors here    
+        console.log(err);
+    }
+}
 

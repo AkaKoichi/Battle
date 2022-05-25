@@ -58,10 +58,10 @@ function mouse_pressed_buildings(building_array, x, y, troop_array, user_id) {
     }
 }
 
-async function buildings_setup(user_id, buildings) {
+async function buildings_setup(user_id, buildings,fac_id) {
     let last_name;
 
-    troops_resources = await get_troops_resources();
+    troops_resources = await get_troops_resources(fac_id);
     for (let i = 0; i < troops_resources.length; i++) {
         if (last_name == troops_resources[i].trp_name) {
 
@@ -124,6 +124,8 @@ async function build_building(troop_array, user_id, resources) {
     let building_iron_cost = 4;
     let building_food_cost = 4;
 
+    let built = false;
+
     for (let i = 0; i < troop_array.length; i++) {
         if (troop_array[i].user_id == user_id) {
             if (troop_array[i].selected) {
@@ -137,6 +139,7 @@ async function build_building(troop_array, user_id, resources) {
                                 await update_resources_id(user_id, resources[1].rsc_amount - building_food_cost, 2)
                                 alert("Building Successfully Built");
                                 initialize_game()
+                                built = true;
                                 break
                             }
 
@@ -147,17 +150,20 @@ async function build_building(troop_array, user_id, resources) {
                                 await update_resources_id(user_id, resources[1].rsc_amount - building_food_cost, 2)
                                 alert("Building Successfully Built");
                                 initialize_game()
+                                built = true;
                                 break
                             }
-                        } /* else {
-                            await build(user_id, 3, troop_array[i].x, troop_array[i].y, 5)
-                            await update_resources_id(user_id, resources[0].rsc_amount - building_iron_cost, 1)
-                            await update_resources_id(user_id, resources[1].rsc_amount - building_food_cost, 2)
-                            alert("Building Successfully Built");
-                            initialize_game();   
-                        } */
+                        } 
                     }
-                    break
+                    if (!built)
+                    {
+                        await build(user_id, 3, troop_array[i].x, troop_array[i].y, 5)
+                        await update_resources_id(user_id, resources[0].rsc_amount - building_iron_cost, 1)
+                        await update_resources_id(user_id, resources[1].rsc_amount - building_food_cost, 2)
+                        alert("Building Successfully Built");
+                        initialize_game();   
+                        break;
+                    }
                 }
             }
         }
@@ -241,4 +247,4 @@ function draw_pop_up_buildings(buildings_array, tilesize, images) {
             prepare_to_train = false
         }
     }
-} 7
+} 

@@ -107,7 +107,7 @@ module.exports.delete_troop = async function (id) {
   }
 }
 
-module.exports.get_all_troops_resources = async function () {
+module.exports.get_all_troops_resources = async function (id) {
   try {
     let sql = `
     select troops.trp_id,trp_name,rsc_type,rsc_amount 
@@ -115,11 +115,13 @@ module.exports.get_all_troops_resources = async function () {
     where resources_troops.rsc_id = resources.rsc_id 
     and resources_troops.trp_id = troops.trp_id 
     and player_game.player_fac_id = troops.trp_fac_id
-    and player_game.player_fac_id = 1 
-    and player_game.user_player = 1
+    and player_game.player_fac_id = $1 
+    and player_game.user_player = $1
     ;`;
-    let result = await pool.query(sql);
+    let result = await pool.query(sql,[id]);
+    console.log(result)
     let troops = result.rows;
+    console.log(troops)
     return { status: 200, result: troops };
   } catch (err) {
     console.log(err);
