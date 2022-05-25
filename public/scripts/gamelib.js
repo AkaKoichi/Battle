@@ -300,11 +300,7 @@ async function initialize_game() {
             temp_building,
         );
     }
-<<<<<<< HEAD
     let bol = await check_current_playing_by_game(4)
-=======
-    let bol =  await check_current_playing_by_game(4)
->>>>>>> e3cbbc8ab6ef5ba487042a1c32f37a53b0ad2ad0
     if (bol[0].current_user_playing == user_info.user_id) {
         its_my_turn = true;
         enable_button(end_turn_button)
