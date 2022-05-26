@@ -193,7 +193,6 @@ function set_defender_building(buildings, user_id) {
 
 
 function draw_pop_up_buildings(buildings_array, tilesize, images) {
-    7
     let w = color('white');
     let b = color('black');
     for (let i = 0; i < buildings_array.length; i++) {
