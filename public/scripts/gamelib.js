@@ -186,6 +186,7 @@ async function draw() {
         image(food_amount_img,770,600,food_amount_img.width * 0.5 , food_amount_img.height * 0.5)
         text(resources[0].rsc_amount,935,660)
         text(resources[1].rsc_amount,805,660)
+        draw_mouse(mouseX, mouseY)
     }
 }
 async function keyPressed() {
@@ -328,3 +329,7 @@ async function initialize_game() {
     }
 
 }
+function draw_mouse(mouseX,mouseY){
+    cursor ('https://i.ibb.co/bRR4gZH/Vector-2.png',mouseX,mouseY)
+}
+function end_game ()
