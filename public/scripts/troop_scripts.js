@@ -271,7 +271,7 @@ async function make_attack(troop_array, user_id, buildings) {
         }
         await update_troops_id(defender.user_id, defender.user_trp_id, defender.x, defender.y, defender.health);
         alert('defender health after attack : ' + defender.health)
-        document.location.reload(true)
+        initialize_game()
         troop_array[attacker_index].attacker = false;
         troop_array[defender_index].defender = false;
         buildings[building_defender_index].defender = false;
@@ -321,7 +321,7 @@ async function train(user_id, troop_id, buildings) {
             let result = await train_troop(user_id, troop_id, bld_id)
             if (result.inserted) {
                 alert('troop successfully trained')
-                document.location.reload(true)
+                initialize_game()
             }
         }
     }
@@ -343,10 +343,10 @@ function draw_pop_up_troops(troop_array, tilesize, images) {
             text('Health :'+troop_array[i].health, windowWidth / 1.4, windowHeight / 20 + troop_image.height+70)
             text('movement :'+troop_array[i].movement, windowWidth / 1.4, windowHeight / 20 + troop_image.height+90)
             text('Attack :'+troop_array[i].attack, windowWidth / 1.4, windowHeight / 20 + troop_image.height+110)
-            text('ID :'+troop_array[i].user_id, windowWidth / 1.4, windowHeight / 20 + troop_image.height+130)
+            text('user_ID :'+troop_array[i].user_id, windowWidth / 1.4, windowHeight / 20 + troop_image.height+130)
             fill(w);
             fill(b);
-            text(troops[i].trp_health, windowWidth / 1.4, windowHeight / 1.7)
+            //text(troops[i].trp_health, windowWidth / 1.4, windowHeight / 1.7)
             fill(w);
             troop_shown = true;
 
