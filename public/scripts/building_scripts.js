@@ -203,7 +203,8 @@ function draw_pop_up_buildings(buildings_array, tilesize, images) {
                 image(bulding_image, windowWidth / 1.4, windowHeight / 20, bulding_image.width, bulding_image.height);
                 fill(w);
                 fill(b);
-                text(buildings[i].bld_health, windowWidth / 1.4, windowHeight / 2.5)
+                text(buildings[i].bld_name, windowWidth/1.4,windowHeight/2.5)
+                text(buildings[i].bld_health, windowWidth / 1.4, windowHeight / 2.3)
                 fill(w);
                 let y_pop = 250;
                 for (let i = 0; i < troops_resources.length; i++) {
@@ -228,18 +229,32 @@ function draw_pop_up_buildings(buildings_array, tilesize, images) {
             image(bulding_image, windowWidth / 1.4, windowHeight / 20, bulding_image.width, bulding_image.height);
             fill(w);
             fill(b);
-            text(buildings[i].bld_health, windowWidth / 1.4, windowHeight / 2)
+            text(buildings[i].bld_name, windowWidth/1.4,windowHeight/2)
+            text(buildings[i].bld_health, windowWidth / 1.4, windowHeight / 1.8)
             fill(w);
             prepare_to_train = true;
         }
-        else if (prepare_to_train == false && buildings_array[i].selected == true && (buildings_array[i].bld_name == 'Field' || buildings_array[i].bld_name == 'Mine')) {
+        else if (prepare_to_train == false && buildings_array[i].selected == true && buildings_array[i].bld_name == 'Field' ) {
             fill(170, 160, 85);
             rect(windowWidth / 1.5, 0, 501, windowHeight);
             noStroke()
             image(bulding_image, windowWidth / 1.4, windowHeight / 20, bulding_image.width, bulding_image.height);
             fill(w);
             fill(b);
-            text(buildings[i].bld_health, windowWidth / 1.4, windowHeight / 2.8)
+            text(buildings[i].bld_name, windowWidth/1.3,windowHeight/2.3)
+            text(buildings[i].bld_health, windowWidth / 1.4, windowHeight / 2)
+            fill(w);
+            prepare_to_train = true;
+        }
+        else if (prepare_to_train == false && buildings_array[i].selected == true && buildings_array[i].bld_name == 'Mine') {
+            fill(170, 160, 85);
+            rect(windowWidth / 1.5, 0, 501, windowHeight);
+            noStroke()
+            image(bulding_image, windowWidth / 1.4, windowHeight / 20, bulding_image.width, bulding_image.height);
+            fill(w);
+            fill(b);
+            text(buildings[i].bld_name, windowWidth/1.3,windowHeight/2.8)
+            text(buildings[i].bld_health, windowWidth / 1.4, windowHeight / 2.5)
             fill(w);
             prepare_to_train = true;
         }
