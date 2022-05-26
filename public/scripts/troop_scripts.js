@@ -35,12 +35,12 @@ class troop {
     }
     select() {
         this.selected = true;
-    
+
     }
 
     unselect() {
         this.selected = false;
-       
+
     }
 
 }
@@ -135,11 +135,14 @@ async function mouse_pressed_troops(user_id, troop_array, buildings) {
                 can_move_troop = false
                 troop_selected_i = 0
                 clicks = 0
+                console.log('weewewe')
                 await update_troops_id(user_id, troop_array[i].user_trp_id, troop_array[i].x, troop_array[i].y, troop_array[i].health, troop_array[i].movement);
                 /* let response = await move_troop_id(user_id, troop_array[i].user_trp_id, 'right', troop_array[i].movement)
                 if (response != undefined) initialize_game()
                 else alert('there cant be 2 troops in the same tile') */
                 break
+            } else {
+                troop_array[i].unselect()
             }
         }
         if ((can_attack_troop) &&
@@ -157,6 +160,7 @@ async function mouse_pressed_troops(user_id, troop_array, buildings) {
         if ((can_attack_troop) &&
             (troop_array[i].x == tile.x && troop_array[i].y == tile.y) &&
             (troop_array[i].user_id == user_id)) {
+
             troop_array[i].select()
             set_attacker(troop_array, user_id)
             troop_selected_i = i
@@ -164,6 +168,7 @@ async function mouse_pressed_troops(user_id, troop_array, buildings) {
             break
 
         } else if (troop_array[i].x == tile.x && troop_array[i].y == tile.y) {
+            console.log('trtrtr')
             troop_array[i].select()
             troop_selected_i = i
             clicks = 1
@@ -270,7 +275,7 @@ async function make_attack(troop_array, user_id, buildings) {
         troop_array[attacker_index].attacker = false;
         troop_array[defender_index].defender = false;
         buildings[building_defender_index].defender = false;
-        
+
     }
 }
 function get_dist_attack(attacker, defender) {
@@ -300,9 +305,9 @@ function roll_dice(min, sides) {
     return 0
 }
 
-    function dice(min, max) {
-        return Math.floor(Math.random() * (max - min + 1) + min);
-    }
+function dice(min, max) {
+    return Math.floor(Math.random() * (max - min + 1) + min);
+}
 
 async function train(user_id, troop_id, buildings) {
     console.log(buildings)
@@ -332,10 +337,16 @@ function draw_pop_up_troops(troop_array, tilesize, images) {
             fill(170, 160, 85);
             rect(windowWidth / 1.5, 0, 501, windowHeight);
             noStroke()
-            image(troop_image, windowWidth/1.4, windowHeight/20, troop_image.width, troop_image.height);
+            image(troop_image, windowWidth / 1.4, windowHeight / 20, troop_image.width, troop_image.height);
+            fill(b)
+            text('Name :'+troop_array[i].name, windowWidth / 1.4, windowHeight / 20 + troop_image.height+50)
+            text('Health :'+troop_array[i].health, windowWidth / 1.4, windowHeight / 20 + troop_image.height+70)
+            text('movement :'+troop_array[i].movement, windowWidth / 1.4, windowHeight / 20 + troop_image.height+90)
+            text('Attack :'+troop_array[i].attack, windowWidth / 1.4, windowHeight / 20 + troop_image.height+110)
+            text('ID :'+troop_array[i].user_id, windowWidth / 1.4, windowHeight / 20 + troop_image.height+130)
             fill(w);
             fill(b);
-            text(troops[i].trp_health,  windowWidth/1.4,  windowHeight/1.7)
+            text(troops[i].trp_health, windowWidth / 1.4, windowHeight / 1.7)
             fill(w);
             troop_shown = true;
 
