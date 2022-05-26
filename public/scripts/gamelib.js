@@ -31,8 +31,8 @@ let end_turn_button;
 let move_button;
 let attack_button;
 
-let board_size = 16
-let tilesize = 44  //700 / board_size;
+let board_size = 16;
+let tilesize = 44;  //700 / board_size;
 let matrix = [];
 
 let its_my_turn;
