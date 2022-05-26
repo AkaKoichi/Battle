@@ -332,4 +332,4 @@ async function initialize_game() {
 function draw_mouse(mouseX,mouseY){
     cursor ('https://i.ibb.co/bRR4gZH/Vector-2.png',mouseX,mouseY)
 }
-function end_game ()
+
