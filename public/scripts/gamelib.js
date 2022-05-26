@@ -15,6 +15,8 @@ let tile_image;
 let tile_image2;
 let farm_image;
 let mine_image;
+let iron_amount_img;
+let food_amount_img;
 
 let troop_array = []
 let troops = [];
@@ -24,7 +26,6 @@ var resources_places = [];
 
 var can_move_troop = false;
 var can_attack_troop = false;
-
 
 
 let end_turn_button;
@@ -87,6 +88,8 @@ async function setup() {
     tile_image2 = loadImage('./images/tile/tile2.png')
     farm_image = loadImage('./images/tile/farm_start.png')
     mine_image = loadImage('./images/tile/mine_start.png')
+    iron_amount_img = loadImage('./images/iron.png')
+    food_amount_img = loadImage('./images/food.png')
     let troop_info = await get_troops();
     for (let troop of troop_info) {
         if (troop.trp_normal_url)
@@ -179,6 +182,10 @@ async function draw() {
         fill(color('white'))
         text('user id : ' + user_info.user_id, 800, 200)
         fill(color('black'))
+        image(iron_amount_img,800,700,iron_amount_img.width * 0.5 , iron_amount_img.height * 0.5)
+        image(food_amount_img,800,600,food_amount_img.width * 0.5 , food_amount_img.height * 0.5)
+        text(resources[0].rsc_amount,825,750)
+        text(resources[1].rsc_amount,835,660)
     }
 }
 async function keyPressed() {
