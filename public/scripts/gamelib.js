@@ -182,10 +182,10 @@ async function draw() {
         fill(color('white'))
         text('user id : ' + user_info.user_id, 800, 200)
         fill(color('black'))
-        image(iron_amount_img,800,700,iron_amount_img.width * 0.5 , iron_amount_img.height * 0.5)
-        image(food_amount_img,800,600,food_amount_img.width * 0.5 , food_amount_img.height * 0.5)
-        text(resources[0].rsc_amount,825,750)
-        text(resources[1].rsc_amount,835,660)
+        image(iron_amount_img,920,600,iron_amount_img.width * 0.5 , iron_amount_img.height * 0.5)
+        image(food_amount_img,770,600,food_amount_img.width * 0.5 , food_amount_img.height * 0.5)
+        text(resources[0].rsc_amount,935,660)
+        text(resources[1].rsc_amount,805,660)
     }
 }
 async function keyPressed() {
