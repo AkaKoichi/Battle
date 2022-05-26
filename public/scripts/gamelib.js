@@ -1,14 +1,20 @@
 
 
 var user_info;
+var oponent_info;
+var game_info;
 let resources;
 var troop_selected_i;
+
+let game_initialized = false;
 
 var troop_images = {};
 var hurt_troop_images = {};
 var buildings_images = {}
 let tile_image;
 let tile_image2;
+let farm_image;
+let mine_image;
 
 let troop_array = []
 let troops = [];
@@ -41,8 +47,11 @@ const diameter = radius * 2;
 
 window.onload = async () => {
     user_info = await get_user_info();
-    resources = await get_resources_by_id(1, user_info.user_id);
-    let bol = await check_current_playing()
+    game_info = await get_game_id(user_info.user_id)
+    oponent_info = await get_oponent_id(user_info.user_id, game_info.game_id);
+    console.log(oponent_info)
+    resources = await get_resources_by_id(game_info.game_id, user_info.user_id);
+    let bol = await check_current_playing_by_game(game_info.game_id)
     if (bol[0].current_user_playing == user_info.user_id) {
         its_my_turn = true;
         enable_button(end_turn_button)
@@ -53,33 +62,40 @@ window.onload = async () => {
         disable_button(end_turn_button)
         disable_button(move_button)
         disable_button(attack_button)
-
-
     }
     setInterval(() => {
         if (its_my_turn == false) initialize_game()
 
     }, 500);
-    /* document.getElementById("name").innerHTML = user_info.username;
-    document.getElementById("id").innerHTML = user_info.user_id;
-    document.getElementById("iron").innerHTML = resources[0].rsc_amount;
-    document.getElementById("food").innerHTML = resources[1].rsc_amount; */
+
 }
 
 async function setup() {
+
+    for (let i = 0; i < 4; i++) {
+        let coordinate
+        if (i < 2) {
+            coordinate = { x: Math.floor(Math.random() * (board_size - 2) + 1), y: Math.floor(Math.random() * (board_size - 1 + 1) + 1), resource: 'iron' }
+        } else {
+            coordinate = { x: Math.floor(Math.random() * (board_size - 2) + 1), y: Math.floor(Math.random() * (board_size - 1 + 1) + 1), resource: 'food' }
+        }
+        resources_places.push(coordinate)
+    }
     initialize_game()
     //textFont(TRACK)
     tile_image = loadImage('./images/tile/tile.png')
     tile_image2 = loadImage('./images/tile/tile2.png')
+    farm_image = loadImage('./images/tile/farm_start.png')
+    mine_image = loadImage('./images/tile/mine_start.png')
     let troop_info = await get_troops();
     for (let troop of troop_info) {
-        if (troop.trp_url)
-            troop_images[troop.trp_id] = await loadImage(troop.trp_url);
+        if (troop.trp_normal_url)
+            troop_images[troop.trp_id] = await loadImage(troop.trp_normal_url);
     }
 
     for (let troop of troop_info) {
-        if (troop.hurt_url)
-            hurt_troop_images[troop.trp_id] = await loadImage(troop.hurt_url);
+        if (troop.trp_hurt_url)
+            hurt_troop_images[troop.trp_id] = await loadImage(troop.trp_hurt_url);
     }
     let buildings_info = await get_buildings();
     for (let building of buildings_info) {
@@ -88,7 +104,7 @@ async function setup() {
     }
     let cnv = createCanvas(windowWidth, windowHeight);
 
-    cnv.position(0, 50);
+    cnv.position(150, 50);
     //tilesize = width / board_size;
     // 380 (marwan)
 
@@ -100,37 +116,33 @@ async function setup() {
             matrix[x][y] = pos;
         }
     }
-    for (let i = 0; i < 4; i++) {
-        let coordinate
-        if (i < 2) {
-            coordinate = { x: Math.floor(Math.random() * (board_size - 2) + 1), y: Math.floor(Math.random() * (board_size - 1 + 1) + 1), resource: 'iron' }
-        } else {
-            coordinate = { x: Math.floor(Math.random() * (board_size - 2) + 1), y: Math.floor(Math.random() * (board_size - 1 + 1) + 1), resource: 'food' }
-        }
-        resources_places.push(coordinate)
-    }
+
 
     end_turn_button = createButton('End Turn');
-    end_turn_button.position(800, 155);
+    end_turn_button.position(30, 150);
     end_turn_button.mousePressed(end_turn);
 
     move_button = createButton('Move');
-    move_button.position(800, 350);
+    move_button.position(30, 175);
     move_button.mousePressed(async function () {
         can_move_troop = true;
     });
     attack_button = createButton('Attack');
-    attack_button.position(850, 350);
+    attack_button.position(30, 200);
     attack_button.mousePressed(async function () {
         can_attack_troop = true;
     });
 
-    buildings_setup(user_info.user_id, buildings)
+    buildings_setup(user_info.user_id, buildings, user_info.player_fac_id)
 
 }
 
 async function draw() {
-
+    if (game_info != undefined && game_initialized == false) {
+        initialize_game()
+        game_initialized = true;
+    }
+    clear();
     if (user_info == undefined)
         return;
     let square_size = tilesize; //width / board_size;
@@ -145,17 +157,20 @@ async function draw() {
                 image(tile_image, x, y, tilesize, tilesize);
             }
             num_squares++
-            draw_buildings(matrix, buildings_array, num_squares, user_info.user_id, square_size, tilesize, x, y, buildings_images)
+
             for (let i = 0; i < resources_places.length; i++) {
                 if (resources_places[i].x * square_size == x && resources_places[i].y * square_size == y) {
                     if (resources_places[i].resource == 'iron') {
-                        text('iron', x, y + square_size / 2)
+
+                        image(mine_image, x + 4, y, tilesize * 0.8, tilesize * 0.8)
                     } else {
-                        text('food', x, y + square_size / 2)
+
+                        image(farm_image, x + 4, y, tilesize * 0.8, tilesize * 0.8)
                     }
 
                 }
             }
+            draw_buildings(matrix, buildings_array, num_squares, user_info.user_id, square_size, tilesize, x, y, buildings_images)
         }
 
         draw_troops(matrix, troop_array, num_squares, user_info.user_id, square_size, diameter, x, y, troop_images, hurt_troop_images)
@@ -180,11 +195,6 @@ async function mousePressed() {
     mouse_pressed_buildings(buildings_array, x, y, troop_array, user_info.user_id)
 }
 
-async function check_current_playing() {
-    let current_playing = await check_current_playing_by_game(1)
-    return current_playing;
-}
-
 async function end_turn() {
     let resources_per_turn = 2
 
@@ -206,20 +216,19 @@ async function end_turn() {
             troop_array[i].x, troop_array[i].y,
             troop_array[i].health, troop_array[i].movement);
     }
-    let bol = await check_current_playing()
+    let bol = await check_current_playing_by_game(game_info.game_id)
     if (bol[0].current_user_playing == user_info.user_id) {
-        if (user_info.user_id == 2) {
-            await update_current_playing(1, 1)
+        if (user_info.user_id == oponent_info.user_player) {//opponent id
+            await update_current_playing(game_info.game_id, user_info.user_id)
 
         } else {
-            await update_current_playing(1, 2);
+            await update_current_playing(game_info.game_id, oponent_info.user_player);
         }
         opponent_turn()
     } else {
-        await update_current_playing(1, user_info.user_id);
+        await update_current_playing(game_info.game_id, user_info.user_id);
         your_turn()
     }
-    document.location.reload(true)
 }
 
 async function your_turn() {
@@ -258,8 +267,8 @@ function mouse_over_tile() {
 
 async function initialize_game() {
 
-    buildings = await get_buildings_by_id(1);
-    troops = await get_troops_by_id(1);
+    buildings = await get_buildings_by_id(game_info.game_id);
+    troops = await get_troops_by_id(game_info.game_id);
     troop_array = []
     buildings_array = []
     for (let i = 0; i < troops.length; i++) {
@@ -296,7 +305,7 @@ async function initialize_game() {
             temp_building,
         );
     }
-    let bol = await check_current_playing()
+    let bol = await check_current_playing_by_game(game_info.game_id)
     if (bol[0].current_user_playing == user_info.user_id) {
         its_my_turn = true;
         enable_button(end_turn_button)

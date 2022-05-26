@@ -90,9 +90,9 @@ async function delete_troops_id(id) {
     }
 }  
 
-async function get_troops_resources() {
+async function get_troops_resources(id) {
     try {
-        const response = await fetch(`/api/troops/resources`);
+        const response = await fetch(`/api/troops/resources/${id}`);
         if (response.status == 200) {
            var troops = await response.json();
            return troops;
@@ -107,7 +107,6 @@ async function get_troops_resources() {
 }   
 
 async function move_troop_id(user_id,troop_id,direction,movement) {
-    console.log('aaaaaaaaaaaaaaaaaaaaaa')
     try {
         const response = await fetch(`/api/troops/move/${troop_id}`,{
             method:"PUT",

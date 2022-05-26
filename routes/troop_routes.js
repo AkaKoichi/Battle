@@ -12,8 +12,9 @@ router.put('/move/:id', async function (req, res, next) {
   res.status(result.status).send(result.result);
 });
 
-router.get('/resources', async function (req, res, next) {
-  let result = await troop_model.get_all_troops_resources();
+router.get('/resources/:id', async function (req, res, next) {
+  let id = req.params.id;
+  let result = await troop_model.get_all_troops_resources(id);
   res.status(result.status).send(result.result);
 });
 
