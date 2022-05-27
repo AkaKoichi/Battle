@@ -18,6 +18,7 @@ let farm_image;
 let mine_image;
 let iron_amount_img;
 let food_amount_img;
+let win_img;
 
 let troop_array = []
 let troops = [];
@@ -337,4 +338,17 @@ async function initialize_game() {
 
     }
 
+}
+
+
+function endGame (){
+    for (let i = 0; i < building_array.length; i++) {
+        if (building_array[i].health == 0){
+            if (buildings_array[i].user_id == user_id)
+            win_img = loadImage('./images/food.png')
+        } else {
+            win_img = loadImage('./images/food.png')
+        }
+        
+    }
 }
