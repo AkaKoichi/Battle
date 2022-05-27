@@ -17,6 +17,7 @@ let farm_image;
 let mine_image;
 let iron_amount_img;
 let food_amount_img;
+let win_img;
 
 let troop_array = []
 let troops = [];
@@ -186,7 +187,6 @@ async function draw() {
         image(food_amount_img,770,600,food_amount_img.width * 0.5 , food_amount_img.height * 0.5)
         text(resources[0].rsc_amount,935,660)
         text(resources[1].rsc_amount,805,660)
-        draw_mouse(mouseX, mouseY)
     }
 }
 async function keyPressed() {
@@ -329,7 +329,16 @@ async function initialize_game() {
     }
 
 }
-function draw_mouse(mouseX,mouseY){
-    cursor ('https://i.ibb.co/bRR4gZH/Vector-2.png',mouseX,mouseY)
-}
 
+
+function endGame (){
+    for (let i = 0; i < building_array.length; i++) {
+        if (building_array[i].health == 0){
+            if (buildings_array[i].user_id == user_id)
+            win_img = loadImage('./images/food.png')
+        } else {
+            win_img = loadImage('./images/food.png')
+        }
+        
+    }
+}
