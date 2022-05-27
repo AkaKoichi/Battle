@@ -3,12 +3,21 @@ var router = express.Router();
 var troop_model = require("../models/troop_model");
 
 
+router.put('/attack/:id', async function (req, res, next) {
+  let user_id = req.params.id;
+  let attacker = req.body.attacker
+  let defender = req.body.defender;
+  let bit = req.body.bit;
+  let result = await troop_model.attack_troop(user_id, attacker, defender, bit);
+  res.status(result.status).send(result.result);
+});
+
 router.put('/move/:id', async function (req, res, next) {
   let troop_id = req.params.id;
   let user_id = req.body.user_id
   let direction = req.body.direction;
   let movement = req.body.movement;
-  let result = await troop_model.move_troop(user_id,troop_id,direction,movement);
+  let result = await troop_model.move_troop(user_id, troop_id, direction, movement);
   res.status(result.status).send(result.result);
 });
 
@@ -20,13 +29,16 @@ router.get('/resources/:id', async function (req, res, next) {
 
 
 router.post('/train/:id', async function (req, res, next) {
+  console.log('----')
   let troop_id = req.params.id;
+  console.log(troop_id)
   let id = req.body.user_id;
-  let x = req.body.x;
-  let y = req.body.y;
-  let resources = req.body.resources
+  console.log(id)
+  let bld_id = req.body.bld_id;
+  let game_id= req.body.game_id;
+  console.log(bld_id)
   console.log("Get troop with id " + troop_id);
-  let result = await troop_model.train(id, troop_id, x, y, resources);
+  let result = await troop_model.train(id, troop_id, bld_id,game_id);
   res.status(result.status).send(result.result);
 });
 

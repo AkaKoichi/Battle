@@ -30,7 +30,6 @@ module.exports.get_resources_id = async function(game_id,user_id) {
     return { status: 500, result: err};
   }
 }  
-
 module.exports.update_resources = async function (user_id, rsc_amount,rsc_id) {
   try {
     let sql = `UPDATE user_resources SET rsc_amount = $2 WHERE user_id = $1 and rsc_id= $3 ; `;

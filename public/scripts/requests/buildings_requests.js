@@ -32,21 +32,65 @@ async function get_buildings_by_id(id) {
     }
 }   
 
-async function build(id,bld_id,bld_x,bld_y,bld_current_health) {
+async function build(user_id, troop_id,bld_id,game_id) {
     try {
         // TODO: Verify user information  and give errors
-        const response = await fetch(`/api/buildings/build/${id}`,
+        const response = await fetch(`/api/buildings/build/${user_id}`,
         {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
               },
-            body: JSON.stringify({bld_id,bld_x,bld_y,bld_current_health}) 
+            body: JSON.stringify({troop_id,bld_id,game_id}) 
         });
         var result= await response.json();
+        
         return {inserted: response.status==200 , result: result };
     }   catch (err) {
         // Treat 500 errors here
         console.log(err);
     }
 } 
+
+async function delete_building_id(id) {
+    console.log('ytyt')
+    try {
+        const response = await fetch(`/api/buildings/delete/${id}`, {
+            
+            method: "DELETE"
+        });
+        console.log(response)
+        if (response.status == 200) {
+            var building = await response.json();
+            return building;
+        } else {
+            // Treat errors like 404 here
+            console.log( response);
+        }
+    } catch (err) {
+        // Treat 500 errors here    
+        console.log(err);
+    }
+}
+
+async function update_building_id(id, user_bld_id, health) {
+    try {
+        const response = await fetch(`/api/buildings/update/${user_bld_id}`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({id, health })
+        });
+        if (response.status == 200) {
+            var troops = await response.json();
+            return troops;
+        } else {
+            // Treat errors like 404 here
+            console.log( response); 
+        }
+    } catch (err) {
+        // Treat 500 errors here    
+        console.log(err);
+    }
+}
