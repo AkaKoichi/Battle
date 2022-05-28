@@ -313,8 +313,8 @@ module.exports.attack_troop = async function (user_id, attacker, defender, bit, 
       if (can_attack && can_attack_troop) {
         defender_info.bld_current_health -= attacker_info.trp_attack;
         if (defender_info.bld_current_health <= 0) {
-          if (defender_info.bld_name == 'tc1' || 'tc2' || 'tc3' || 'tc4') {
-            await delete_building(defender)
+          await delete_building(defender)
+          if (defender_info.bld_name == 'tc1' ||defender_info.bld_name == 'tc2' ||defender_info.bld_name == 'tc3' || defender_info.bld_name =='tc4') {
             return { status: 200, result: { msg: "you won" } };
           }
         }

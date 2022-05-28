@@ -201,13 +201,15 @@ async function make_attack(troop_array, user_id, buildings, bit, game_id) {
     if (res.msg == 'success attack' && bit == 0) {
         troop_array[defender_index].hurt = true
         troop_array[defender_index].timer = 1000
-    } else if (res.msg == 'you won') {
-        alert('you WOOOOOOOON')
-        initialize_game()
     } else if (res.msg == 'success attack' && bit == 1){
         alert('attacked building')
         initialize_game()
+    
+    } else if (res.msg == 'you won') {
+        alert('you WOOOOOOOON')
+        initialize_game()
     }
+    
 
     attacker_index = -1
     defender_index = -1

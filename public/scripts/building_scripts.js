@@ -55,6 +55,7 @@ function mouse_pressed_buildings(building_array, x, y, troop_array, user_id, gam
                 break
             } else {
                 building_array[i].unselect()
+                pop_up_open = false;
             }
         }
     }
@@ -187,13 +188,14 @@ function set_defender_building(buildings, user_id) {
 }
 
 
-function draw_pop_up_buildings(buildings_array, tilesize, images,troops) {
+function draw_pop_up_buildings(buildings_array, tilesize, images, troops) {
+    
     let w = color('white');
     let b = color('black');
     for (let i = 0; i < buildings_array.length; i++) {
         bulding_image = images[buildings_array[i].bld_id]
         for (let i = 0; i < troops.length; i++) {
-            if (troops[i].selected){
+            if (troops[i].selected) {
                 return
             }
         }
@@ -203,6 +205,7 @@ function draw_pop_up_buildings(buildings_array, tilesize, images,troops) {
             if (troops_resources == []) {
                 return
             } else {
+                pop_up_open = true;
 
                 let last_name;
 
@@ -232,6 +235,7 @@ function draw_pop_up_buildings(buildings_array, tilesize, images,troops) {
             }
         }
         else if ((prepare_to_train == false && buildings_array[i].selected == true) && (buildings_array[i].bld_name == 'tc1' || buildings_array[i].bld_name == 'tc2' || buildings_array[i].bld_name == 'tc3' || buildings_array[i].bld_name == 'tc4')) {
+            pop_up_open = true;
             fill(170, 160, 85);
             rect(windowWidth / 1.5, 0, 501, windowHeight);
             noStroke()
@@ -257,6 +261,7 @@ function draw_pop_up_buildings(buildings_array, tilesize, images,troops) {
             prepare_to_train = true;
         }
         else if (prepare_to_train == false && buildings_array[i].selected == true && buildings_array[i].bld_name == 'Mine') {
+            pop_up_open = true;
             fill(170, 160, 85);
             rect(windowWidth / 1.5, 0, 501, windowHeight);
             noStroke()
