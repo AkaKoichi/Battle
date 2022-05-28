@@ -7,6 +7,7 @@ let x;
 let y_pop_buttons = 0
 
 
+
 class building {
     constructor(user_id, user_bld_id, bld_id, name, health, current_health, bld_x, bld_y) {
         this.user_id = user_id;
@@ -40,7 +41,6 @@ function mouse_pressed_buildings(building_array, x, y, troop_array, user_id, gam
                 (building_array[i].x == tile.x && building_array[i].y == tile.y) &&
                 (building_array[i].user_id != user_id) &&
                 (attack > 0)) {
-                building_array[i].select()
                 building_defender_index = i;
 
                 make_attack(troop_array, user_id, building_array, 1, game_id)
@@ -50,6 +50,7 @@ function mouse_pressed_buildings(building_array, x, y, troop_array, user_id, gam
             }
             if (y == building_array[i].x && x == building_array[i].y) {
                 building_array[i].select();
+                buildings_selected_i = i
 
                 break
             } else {
@@ -100,7 +101,7 @@ function draw_buildings(matrix, buildings_array, num_squares, user_id, square_si
     }
 }
 
-async function key_buildings(its_my_turn, troop_array, user_id, game_id) {
+async function key_buildings(its_my_turn, troop_array, user_id, game_id, fac_id) {
     if (its_my_turn) {
         for (i = 0; i < troop_array.length; i++) {
             if (troop_array[i].user_id == user_id) {
@@ -109,7 +110,7 @@ async function key_buildings(its_my_turn, troop_array, user_id, game_id) {
                         switch (key) {
                             case 'b':
                             case 'B':
-                                build_building(troop_array, user_id, game_id);
+                                build_building(troop_array, user_id, game_id, fac_id);
                                 break;
                         }
                     }
@@ -121,7 +122,8 @@ async function key_buildings(its_my_turn, troop_array, user_id, game_id) {
 
 
 
-async function build_building(troop_array, user_id, game_id) {
+async function build_building(troop_array, user_id, game_id, fac_id) {
+    console.log(fac_id)
     let built = false;
 
 
@@ -131,8 +133,11 @@ async function build_building(troop_array, user_id, game_id) {
             if (troop_array[troop_selected_i].x == resources_places[j].x && troop_array[troop_selected_i].y == resources_places[j].y) {
                 console.log(resources_places[j].resource)
                 if (resources_places[j].resource == 'iron') {
-                    await build(user_id, troop_array[troop_selected_i].user_trp_id, 4, game_id)//tirar hard code
-
+                    let res = await build(user_id, troop_array[troop_selected_i].user_trp_id, 1, game_id, fac_id)//tirar hard code
+                    if (res.result.msg == 'building exists here') {
+                        alert('cannot build here , building already exists in this tile')
+                        return
+                    }
                     alert("Building Successfully Built");
                     initialize_game()
                     built = true;
@@ -141,8 +146,12 @@ async function build_building(troop_array, user_id, game_id) {
 
                 if (resources_places[j].resource == 'food') {
                     console.log('fff')
-                    await build(user_id, troop_array[troop_selected_i].user_trp_id, 5, game_id)// tirar hard code
-
+                    let res = await build(user_id, troop_array[troop_selected_i].user_trp_id, 2, game_id, fac_id)// tirar hard code
+                    console.log(res)
+                    if (res.result.msg == 'building exists here') {
+                        alert('cannot build here , building already exists in this tile')
+                        return
+                    }
                     alert("Building Successfully Built");
                     initialize_game()
                     built = true;
@@ -151,7 +160,11 @@ async function build_building(troop_array, user_id, game_id) {
             }
         }
         if (!built) {
-            await build(user_id, troop_array[troop_selected_i].user_trp_id, 3, game_id)// tirar hard code
+            let res = await build(user_id, troop_array[troop_selected_i].user_trp_id, 3, game_id, fac_id)// tirar hard code
+            if (res.result.msg == 'building exists here') {
+                alert('cannot build here , building already exists in this tile')
+                return
+            }
             alert("Building Successfully Built");
             initialize_game();
         }
@@ -174,11 +187,17 @@ function set_defender_building(buildings, user_id) {
 }
 
 
-function draw_pop_up_buildings(buildings_array, tilesize, images) {
+function draw_pop_up_buildings(buildings_array, tilesize, images,troops) {
     let w = color('white');
     let b = color('black');
     for (let i = 0; i < buildings_array.length; i++) {
         bulding_image = images[buildings_array[i].bld_id]
+        for (let i = 0; i < troops.length; i++) {
+            if (troops[i].selected){
+                return
+            }
+        }
+
         if (prepare_to_train == false && buildings_array[i].selected == true && buildings_array[i].bld_name == 'Training Camp') {
 
             if (troops_resources == []) {
@@ -220,7 +239,8 @@ function draw_pop_up_buildings(buildings_array, tilesize, images) {
             fill(w);
             fill(b);
             text(buildings[i].bld_name, windowWidth / 1.4, windowHeight / 2)
-            text(buildings[i].bld_health, windowWidth / 1.4, windowHeight / 1.8)
+            console.log(buildings[i].current_health)
+            text(buildings[i].current_health, windowWidth / 1.4, windowHeight / 1.8)
             fill(w);
             prepare_to_train = true;
         }

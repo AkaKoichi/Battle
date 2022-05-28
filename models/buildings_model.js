@@ -33,7 +33,7 @@ module.exports.get_buildings_id = async function (game_id) {
 }
 
 
-module.exports.build_building = async function (user_id, troop_id, bld_id, game_id) {
+module.exports.build_building = async function (user_id, troop_id, bit, game_id,fac_id) {
 
   let build_iron_cost;
   let build_food_cost;
@@ -41,6 +41,21 @@ module.exports.build_building = async function (user_id, troop_id, bld_id, game_
   let user_food;
   let your_turn;
   let turn_id;
+  let bld_name;
+  if (bit == 1){
+    bld_name ='Mine'
+  }else if (bit == 2){
+    bld_name ='Field'
+  }else if (bit == 3){
+    bld_name ='Training Camp'
+  }
+  let sql=`select bld_id 
+  from buildings
+  where bld_name like $1 and bld_fac_id = $2`
+  let result = await pool.query(sql, [bld_name,fac_id]);
+  result=result.rows[0].bld_id
+  let bld_id = result;
+
   try {
     let sql = `select rsc_amount from resources_buildings where bld_id = $1`
     let result = await pool.query(sql, [bld_id]);
@@ -71,9 +86,18 @@ module.exports.build_building = async function (user_id, troop_id, bld_id, game_
       let x = result_b.rows[0].troop_x;
       let y = result_b.rows[0].troop_y;
 
+      sql = `select user_bld_id
+      from user_buildings
+      where bld_x = $1 and bld_y = $2`
+      result = await pool.query(sql, [x,y]);
+      if (result.rows[0] != undefined) {
+        return { status: 200, result: {msg:'building exists here'} };
+      }
+
       sql = `Insert into user_buildings (user_id,bld_id,bld_x,bld_y,bld_current_health)values ($1,$2,$3,$4,$5) `;
       result = await pool.query(sql, [user_id, bld_id, x, y, bld_current_health]);
       let buildings = result.rows;
+      console.log('mau mau')
       await update_resources(user_id, user_iron - build_iron_cost, 1)
       await update_resources(user_id, user_food - build_food_cost, 2)
       return { status: 200, result: buildings };

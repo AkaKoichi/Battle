@@ -72,6 +72,8 @@ function draw_troops(matrix, troop_array, num_squares, user_id, square_size, dia
                 if (troop_array[i].timer == 0) {
                     console.log(troop_array[i].timer == 0)
                     troop_array[i].hurt = false
+                    initialize_game()
+                    console.log('ff')
                 }
             } else image(trp_image, troop_array[i].x * square_size + (square_size - trp_image.width / 7) / 2, troop_array[i].y * square_size - square_size / 2, trp_image.width / 7, trp_image.height / 7);
 
@@ -83,10 +85,10 @@ function draw_troops(matrix, troop_array, num_squares, user_id, square_size, dia
                 image(hurt_image, troop_array[i].x * square_size + (square_size - trp_image.width / 7) / 2, troop_array[i].y * square_size - square_size / 2, trp_image.width / 7, trp_image.height / 7);
 
                 troop_array[i].timer--
-                console.log(i, troop_array[i].hurt, troop_array[i].timer)
                 if (troop_array[i].timer == 0) {
                     console.log(troop_array[i].timer)
                     troop_array[i].hurt = false
+                    initialize_game()
                 }
             }
             else image(trp_image, troop_array[i].x * square_size + (square_size - trp_image.width / 7) / 2, troop_array[i].y * square_size - square_size / 2, trp_image.width / 7, trp_image.height / 7);
@@ -127,14 +129,16 @@ async function mouse_pressed_troops(user_id, troop_array, buildings, game_id) {
     let tile = mouse_over_tile()
     for (let i = 0; i < troop_array.length; i++) {
         let can_move = get_dist_move(troop_array[i], tile)
+        console.log(can_move.can_move)
         if (tile.x >= 0 && tile.x <= board_size - 1 && tile.y >= 0 && tile.y <= board_size - 1) {
             if ((can_move_troop) &&
                 (troop_selected_i == i) &&
-                (can_move) && (clicks > 0) &&
+                (can_move.can_move) && (clicks > 0) &&
                 (troop_array[i].user_id == user_id) &&
                 (its_my_turn)) {
                 troop_array[i].x = tile.x
                 troop_array[i].y = tile.y
+                troop_array[i].movement = (troop_array[i].movement - can_move.x - can_move.y)
                 can_move_troop = false
                 troop_selected_i = 0
                 clicks = 0
@@ -145,6 +149,7 @@ async function mouse_pressed_troops(user_id, troop_array, buildings, game_id) {
                 break
             } else {
                 troop_array[i].unselect()
+                console.log(troop_selected_i)
             }
         }
 
@@ -178,6 +183,7 @@ async function mouse_pressed_troops(user_id, troop_array, buildings, game_id) {
             break
         } else {
             troop_array[i].unselect()
+            console.log(troop_selected_i)
         }
     }
 }
@@ -187,48 +193,22 @@ async function mouse_pressed_troops(user_id, troop_array, buildings, game_id) {
 
 async function make_attack(troop_array, user_id, buildings, bit, game_id) {
 
-    var attacker = troop_array[attacker_index];
-    if (bit == 0) var defender = troop_array[defender_index];
-    else var defender = buildings[building_defender_index];
+    var attacker = troop_array[attacker_index].user_trp_id;
+    if (bit == 0) var defender = troop_array[defender_index].user_trp_id;
+    else var defender = buildings[building_defender_index].user_bld_id;
 
     let res = await attack_troop_id(user_id, attacker, defender, bit, game_id)
     if (res.msg == 'success attack' && bit == 0) {
         troop_array[defender_index].hurt = true
         troop_array[defender_index].timer = 1000
-
-        initialize_game()
-    }else if (res.msg == 'you won'){
+    } else if (res.msg == 'you won') {
         alert('you WOOOOOOOON')
         initialize_game()
-    }else{
+    } else if (res.msg == 'success attack' && bit == 1){
         alert('attacked building')
         initialize_game()
     }
 
-
-    /* if (res.result == inserted) */
-
-    /* if (can_attack && dice_dmg_multiplier >= 1 && bit == 0) {
-        troop_array[defender_index].hurt = true
-        troop_array[defender_index].timer = 1000
-        defender.health -= attacker.attack * dice_dmg_multiplier;
-        if (defender.health <= 0) {
-            await delete_troops_id(troop_array[defender_index].user_trp_id)
-        }
-        await update_troops_id(defender.user_id, defender.user_trp_id, defender.x, defender.y, defender.health);
-        alert('defender health after attack : ' + defender.health)
-        initialize_game()
-    } else if (can_attack && dice_dmg_multiplier >= 1 && bit == 1) {
-        defender.health -= attacker.attack * dice_dmg_multiplier;
-        if (defender.health <= 0) {
-            await delete_troops_id(troop_array[defender_index].user_trp_id)
-        }
-        await update_troops_id(defender.user_id, defender.user_trp_id, defender.x, defender.y, defender.health);
-        alert('defender health after attack : ' + defender.health)
-        initialize_game()
-
-
-    } */
     attacker_index = -1
     defender_index = -1
     building_defender_index = -1
@@ -242,7 +222,9 @@ function get_dist_attack(attacker, defender) {
 function get_dist_move(troop, tile) {
     distX = Math.abs(troop.x - tile.x)
     distY = Math.abs(troop.y - tile.y)
-    return distX <= troop.movement && distY <= troop.movement;
+    return {can_move:(distX <= troop.movement && distY <= troop.movement),
+            x:distX,
+            y:distY};
 }
 
 
@@ -261,17 +243,17 @@ function dice(min, max) {
     return Math.floor(Math.random() * (max - min + 1) + min);
 }
 
-async function train(user_id, troop_id, buildings,game_id) {
+async function train(user_id, troop_id, buildings, game_id) {
     console.log(buildings)
     for (let i = 0; i < buildings.length; i++) {
         console.log('qq')
         if ((buildings[i].bld_name == 'Training Camp') &&
             (buildings[i].user_id == user_id) &&
-            (buildings[i].selected)) {
+            (i == buildings_selected_i)) {
             /* (buildings[i].selected == true) */
             console.log('qq')
             let bld_id = buildings[i].user_bld_id
-            let result = await train_troop(user_id, troop_id, bld_id,game_id)
+            let result = await train_troop(user_id, troop_id, bld_id, game_id)
             if (result.inserted) {
                 alert('troop successfully trained')
                 initialize_game()

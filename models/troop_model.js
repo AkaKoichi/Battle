@@ -47,7 +47,7 @@ module.exports.update_troop = async function (user_id, user_trp_id, x, y, health
   }
 }
 
-module.exports.train = async function (user_id, troop_id, bld_id,game_id) {
+module.exports.train = async function (user_id, troop_id, bld_id, game_id) {
   console.log('aaa')
   let troop_iron_cost;
   let troop_food_cost;
@@ -69,7 +69,7 @@ module.exports.train = async function (user_id, troop_id, bld_id,game_id) {
 
     turn_id = await check_current_playing_by_game_id(game_id)
     turn_id = turn_id.result[0].current_user_playing;
-    your_turn = (turn_id == user_id); 
+    your_turn = (turn_id == user_id);
 
   } catch (err) {
     console.log(err)
@@ -178,11 +178,12 @@ module.exports.attack_troop = async function (user_id, attacker, defender, bit, 
   let turn_id;
   let can_attack = false;
   let dice_dmg_multiplier = null;
-  can_attack = get_dist_attack(attacker, defender)
-  let sql = `select can_attack_troop
+
+
+  sql = `select can_attack_troop
     from player_game
     where user_player = $1`
-  let result = await pool.query(sql, [user_id]);
+  result = await pool.query(sql, [user_id]);
   let can_attack_troop = result.rows[0].can_attack_troop
   /* turn_id = await check_current_playing_by_game_id(game_id)
   console.log(game_id)
@@ -190,19 +191,70 @@ module.exports.attack_troop = async function (user_id, attacker, defender, bit, 
   your_turn = (turn_id == user_id) */
   if (bit == 0) {
     let sql = `
+    select troop_x,troop_y 
+    from user_troops
+    where user_trp_id = $1`
+    let result = await pool.query(sql, [attacker]);
+    let attacker_coordinates = result.rows[0]
+    sql = `
+    select troop_x,troop_y 
+    from user_troops
+    where user_trp_id = $1`
+    result = await pool.query(sql, [defender]);
+    let defender_coordinates = result.rows[0]
+    
+    sql = `
+    select  troop_id
+    from user_troops
+    where user_trp_id = $1`
+    result = await pool.query(sql, [attacker]);
+    let attacker_troop_id =result.rows[0].troop_id
+
+    sql = `
+    select  troop_id
+    from user_troops
+    where user_trp_id = $1`
+    result = await pool.query(sql, [defender]);
+    let defender_troop_id =result.rows[0].troop_id
+
+    sql = `
+    select  trp_range
+    from troops
+    where trp_id = $1`
+    result = await pool.query(sql, [attacker_troop_id]);
+    let range = result.rows[0].trp_range
+    can_attack = get_dist_attack(attacker_coordinates, defender_coordinates,range,bit)
+    sql = `
     select dics_roll
     from rolls_to_deal_damage
     where trp_id1 = $1 and trp_id2 = $2;`
-    let result = await pool.query(sql, [attacker.trp_id, defender.trp_id]);
+    result = await pool.query(sql, [attacker_troop_id ,defender_troop_id]);
     result = result.rows[0].dics_roll
     dice_dmg_multiplier = roll_dice(result, 6)
+
+    sql = `
+    select *
+    from user_troops,troops
+    where user_trp_id = $1 and user_troops.troop_id = troops.trp_id;`
+    result = await pool.query(sql, [attacker]);
+    let attacker_info = result.rows[0]
+
+    sql = `
+    select *
+    from user_troops,troops
+    where user_trp_id = $1 and user_troops.troop_id = troops.trp_id;`
+    result = await pool.query(sql, [defender]);
+    let defender_info = result.rows[0]
+
     try {
-      if (can_attack && dice_dmg_multiplier >= 1 && can_attack_troop ) {
-        defender.health -= attacker.attack * dice_dmg_multiplier;
-        if (defender.health <= 0) {
-          await this.delete_troop(defender.user_trp_id)
+      if (can_attack && dice_dmg_multiplier >= 1 && can_attack_troop) {
+        console.log(defender_info.troop_current_health)
+        defender_info.troop_current_health -= attacker_info.trp_attack * dice_dmg_multiplier;
+        console.log(defender_info.troop_current_health)
+        if (defender_info.troop_current_health <= 0) {
+          await this.delete_troop(defender)
         }
-        await this.update_troop(defender.user_id, defender.user_trp_id, defender.x, defender.y, defender.health);
+        await this.update_troop(defender_info.user_id, defender_info.user_trp_id, defender_info.troop_x, defender_info.troop_y, defender_info.troop_current_health, defender_info.troop_current_movement);
         return { status: 200, result: { msg: "success attack" } };
       } else {
         return { status: 200, result: { msg: "success missed" } };
@@ -213,16 +265,60 @@ module.exports.attack_troop = async function (user_id, attacker, defender, bit, 
 
     }
   } else if (bit == 1) {
+    let sql = `
+    select troop_x,troop_y 
+    from user_troops
+    where user_trp_id = $1`
+    let result = await pool.query(sql, [attacker]);
+    let attacker_coordinates = result.rows[0]
+
+    sql = `
+    select bld_x,bld_y 
+    from user_buildings
+    where user_bld_id = $1`
+    result = await pool.query(sql, [defender]);
+    let defender_coordinates = result.rows[0]
+
+    sql = `
+    select  troop_id
+    from user_troops
+    where user_trp_id = $1`
+    result = await pool.query(sql, [attacker]);
+    let attacker_troop_id =result.rows[0].troop_id
+
+    sql = `
+    select  trp_range
+    from troops
+    where trp_id = $1`
+    result = await pool.query(sql, [attacker_troop_id]);
+    let range = result.rows[0].trp_range
+
+    can_attack = get_dist_attack(attacker_coordinates, defender_coordinates,range,bit)
+
+    sql = `
+    select *
+    from user_troops,troops
+    where user_trp_id = $1 and user_troops.troop_id = troops.trp_id;`
+    result = await pool.query(sql, [attacker]);
+    let attacker_info = result.rows[0]
+
+    sql = `
+    select *
+    from user_buildings,buildings
+    where user_bld_id = $1 and user_buildings.bld_id = buildings.bld_id;`
+    result = await pool.query(sql, [defender]);
+    let defender_info = result.rows[0]
+
     try {
-      if (can_attack && can_attack_troop ) {
-        defender.bld_current_health -= attacker.attack;
-        if (defender.bld_current_health <= 0) {
-          if (defender.name== 'tc1'||'tc2'||'tc3'||'tc4'){
+      if (can_attack && can_attack_troop) {
+        defender_info.bld_current_health -= attacker_info.trp_attack;
+        if (defender_info.bld_current_health <= 0) {
+          if (defender_info.bld_name == 'tc1' || 'tc2' || 'tc3' || 'tc4') {
+            await delete_building(defender)
             return { status: 200, result: { msg: "you won" } };
-          }else await delete_building(defender.user_bld_id)
-         
+          }
         }
-        await update_building(defender.user_id, defender.user_bld_id, defender.bld_current_health);
+        await update_building(defender_info.user_id, defender_info.user_bld_id, defender_info.bld_current_health);
         return { status: 200, result: { msg: "success attack" } };
       } else {
         return { status: 200, result: { msg: "success missed" } };
@@ -250,10 +346,18 @@ function dice(min, max) {
   return Math.floor(Math.random() * (max - min + 1) + min);
 }
 
-function get_dist_attack(attacker, defender) {
-  distX = Math.abs(attacker.x - defender.x)
-  distY = Math.abs(attacker.y - defender.y)
-  return distX <= attacker.range && distY <= attacker.range;
+function get_dist_attack(attacker, defender,range, bit) {
+  if (bit == 0) {
+    distX = Math.abs(attacker.troop_x - defender.troop_x)
+    distY = Math.abs(attacker.troop_y - defender.troop_y)
+    return distX <= range && distY <= range;
+
+  }else if (bit == 1){
+    distX = Math.abs(attacker.troop_x - defender.bld_x)
+    distY = Math.abs(attacker.troop_y - defender.bld_y)
+    return distX <= range && distY <= range;
+  }
+
 }
 
 

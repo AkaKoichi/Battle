@@ -40,7 +40,8 @@ router.post('/build/:id', async function (req, res, next) {
   let bld_id = req.body.bld_id;
   let troop_id = req.body.troop_id;
   let game_id = req.body.game_id;
-  let result = await building_model.build_building(id, troop_id,bld_id,game_id);
+  let fac_id = req.body.fac_id;
+  let result = await building_model.build_building(id, troop_id,bld_id,game_id,fac_id);
   res.status(result.status).send(result.result);
 });
 

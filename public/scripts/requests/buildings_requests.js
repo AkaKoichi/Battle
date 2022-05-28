@@ -32,7 +32,7 @@ async function get_buildings_by_id(id) {
     }
 }   
 
-async function build(user_id, troop_id,bld_id,game_id) {
+async function build(user_id, troop_id,bld_id,game_id,fac_id) {
     try {
         // TODO: Verify user information  and give errors
         const response = await fetch(`/api/buildings/build/${user_id}`,
@@ -41,7 +41,7 @@ async function build(user_id, troop_id,bld_id,game_id) {
             headers: {
                 "Content-Type": "application/json"
               },
-            body: JSON.stringify({troop_id,bld_id,game_id}) 
+            body: JSON.stringify({troop_id,bld_id,game_id,fac_id}) 
         });
         var result= await response.json();
         

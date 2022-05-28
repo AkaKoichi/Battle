@@ -5,6 +5,7 @@ var oponent_info;
 var game_info;
 let resources;
 var troop_selected_i;
+var buildings_selected_i;
 
 let game_initialized = false;
 let buildings_setup_done = false;
@@ -187,7 +188,7 @@ async function draw() {
         }
 
         draw_troops(matrix, troop_array, num_squares, user_info.user_id, square_size, diameter, x, y, troop_images, hurt_troop_images)
-        draw_pop_up_buildings(buildings_array, square_size, buildings_images)
+        draw_pop_up_buildings(buildings_array, square_size, buildings_images,troop_array)
         draw_pop_up_troops(troop_array, tilesize, troop_images)
         fill(color('white'))
         text('user id : ' + user_info.user_id, 800, 200)
@@ -200,7 +201,7 @@ async function draw() {
 }
 async function keyPressed() {
     await key_troops(its_my_turn, troop_array, user_info.user_id, buildings)
-    await key_buildings(its_my_turn, troop_array, user_info.user_id,game_info.game_id)
+    await key_buildings(its_my_turn, troop_array, user_info.user_id,game_info.game_id,user_info.player_fac_id)
 }
 
 async function mousePressed() {
