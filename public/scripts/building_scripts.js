@@ -70,7 +70,7 @@ async function buildings_setup(user_id, buildings, fac_id, game_id) {
 
         } else {
             let temp_button = createButton('Train');
-            temp_button.position(windowWidth / 1.14, windowHeight / 1.96 + y_pop_buttons);
+            temp_button.position(windowWidth / 1.05, windowHeight / 1.59 + y_pop_buttons);
             temp_button.mousePressed(async function () {
                 train(user_id, troops_resources[i].trp_id, buildings, game_id)
 
@@ -215,17 +215,19 @@ function draw_pop_up_buildings(buildings_array, tilesize, images, troops) {
                 image(bulding_image, windowWidth / 1.4, windowHeight / 20, bulding_image.width, bulding_image.height);
                 fill(w);
                 fill(b);
-                text(buildings[i].bld_name, windowWidth / 1.4, windowHeight / 2.5)
-                text(buildings[i].bld_health, windowWidth / 1.4, windowHeight / 2.3)
+                text("Name :" + buildings[i].bld_name, windowWidth / 1.4, windowHeight / 2.3)
+                text("Health : " + buildings[i].bld_health, windowWidth / 1.4, windowHeight / 2.1)
+                text("FOOD", windowWidth / 1.31, windowHeight / 1.8 )
+                text("IRON", windowWidth / 1.21, windowHeight / 1.8 )
                 fill(w);
                 let y_pop = 250;
                 for (let i = 0; i < troops_resources.length; i++) {
                     if (last_name == troops_resources[i].trp_name) {
-                        text(troops_resources[i].rsc_amount, windowWidth / 1.2, windowHeight / 4.65 + y_pop - 15)
+                        text(troops_resources[i].rsc_amount, windowWidth / 1.2, windowHeight / 3 + y_pop - 15)
                         for (let i = 0; i < buttons.length; i++)  buttons[i].show()
                     } else {
-                        text(troops_resources[i].trp_name, windowWidth / 1.45, windowHeight / 4.65 + y_pop)
-                        text(troops_resources[i].rsc_amount, windowWidth / 1.3, windowHeight / 4.65 + y_pop)
+                        text(troops_resources[i].trp_name, windowWidth / 1.45, windowHeight / 3 + y_pop)
+                        text(troops_resources[i].rsc_amount, windowWidth / 1.3, windowHeight / 3 + y_pop)
                         last_name = troops_resources[i].trp_name;
                     }
                     y_pop += 15
