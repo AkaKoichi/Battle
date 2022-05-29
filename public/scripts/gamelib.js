@@ -54,7 +54,6 @@ window.onload = async () => {
     user_info = await get_user_info();
     game_info = await get_game_id(user_info.user_id)
     oponent_info = await get_oponent_id(user_info.user_id, game_info.game_id);
-    console.log(oponent_info)
     resources = await get_resources_by_id(game_info.game_id, user_info.user_id);
     let bol = await check_current_playing_by_game(game_info.game_id)
     if (bol[0].current_user_playing == user_info.user_id) {
@@ -135,29 +134,25 @@ async function setup() {
     move_button = createButton('Move');
     move_button.position(30, 175);
     move_button.mousePressed(async function () {
-        can_move_troop = true;
-        can_attack_troop = false;
-    });
+        update_troop(user_info.user_id, 0)
+    }
+    )
+
     attack_button = createButton('Attack');
     attack_button.position(30, 200);
     attack_button.mousePressed(async function () {
-        can_attack_troop = true;
-        can_move_troop = false;
-    });
-
-
-}
+        update_troop(user_info.user_id, 1)
+    }
+    )
+};
 
 async function draw() {
     if (game_info != undefined && game_initialized == false) {
         initialize_game()
-
-        console.log('qwewqeqwe')
         game_initialized = true;
     }
     if (buildings_array.length != 0 && user_info != undefined && game_initialized == true && buildings_setup_done == false) {
         buildings_setup(user_info.user_id, buildings_array, user_info.player_fac_id, game_info.game_id)
-        console.log(buildings_array)
         buildings_setup_done = true;
     }
     clear();
@@ -199,8 +194,11 @@ async function draw() {
         fill(color('black'))
         image(iron_amount_img, 920, 600, iron_amount_img.width * 0.5, iron_amount_img.height * 0.5)
         image(food_amount_img, 770, 600, food_amount_img.width * 0.5, food_amount_img.height * 0.5)
-        text(resources[0].rsc_amount, 935, 660)
-        text(resources[1].rsc_amount, 805, 660)
+        if (resources[0] != undefined) {
+            text(resources[0].rsc_amount, 935, 660)
+            text(resources[1].rsc_amount, 805, 660)
+        }
+
     }
 }
 async function keyPressed() {
@@ -232,11 +230,6 @@ async function end_turn() {
     }
     for (let i = 0; i < troop_array.length; i++) {
         troop_array[i].movement = troop_array[i].init_movement
-        await update_troops_id(
-            user_info.user_id,
-            troop_array[i].user_trp_id,
-            troop_array[i].x, troop_array[i].y,
-            troop_array[i].health, troop_array[i].movement);
     }
     let bol = await check_current_playing_by_game(game_info.game_id)
     if (bol[0].current_user_playing == user_info.user_id) {
@@ -357,3 +350,15 @@ function endGame() {
 
     }
 }
+
+async function update_troop(user_id, bit) {
+    console.log('entrou')
+    if (bit == 0) {
+        update_troop_id(user_id, bit)
+        can_move_troop = true;
+    } else if (bit == 1) {
+        update_troop_id(user_id, bit)
+        can_attack_troop = true;
+    }
+}
+
