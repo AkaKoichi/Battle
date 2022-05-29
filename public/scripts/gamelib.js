@@ -357,5 +357,4 @@ function draw_endGame (){
             image(win_img2, 500, 200, 1000, 1000)
         }
 
-    }
 }
