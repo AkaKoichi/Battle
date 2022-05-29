@@ -428,15 +428,21 @@ module.exports.update_troop = async function (user_id, bit) {
 
 }
 
-module.exports.get_troops_rolls_id = async function () {
+module.exports.get_troops_rolls_id = async function (fac_id) {
   try {
     let sql = `select  trp_name
     from troops,rolls_to_deal_damage
     where trp_id= trp_id1  and trp_fac_id = $1 `;
-    let result = await pool.query(sql);
-    console.log(result.rolls)
+    let result = await pool.query(sql,[fac_id]);
+    let trp_id1_array = result.rows
+     sql = `select  trp_name,dics_roll
+    from troops,rolls_to_deal_damage
+    where trp_id= trp_id2  and trp_fac_id = $1 `;
+    result = await pool.query(sql,[fac_id]);
+    let trp_id2_array = result.rows
+    console.log(trp_id2_array)
     let troops = result.rows;
-    return { status: 200, result: troops };
+    return { status: 200, result: {trp_id1_array:trp_id1_array, trp_id2_array:trp_id2_array} };
   } catch (err) {
     console.log(err);
     return { status: 500, result: err };

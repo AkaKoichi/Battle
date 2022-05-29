@@ -37,6 +37,7 @@ var pop_up_open = false;
 let end_turn_button;
 let move_button;
 let attack_button;
+let roll_button;
 
 var board_size = 16;
 let tilesize = 44;  //700 / board_size;
@@ -146,6 +147,12 @@ async function setup() {
     attack_button.position(30, 200);
     attack_button.mousePressed(async function () {
         update_troop(user_info.user_id, 1)
+    }
+    )
+    roll_button = createButton('Check Roll');
+    roll_button.position(30, 230);
+    roll_button.mousePressed(async function () {
+    draw_pop_up_rolls()
     }
     )
 };
