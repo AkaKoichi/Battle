@@ -362,7 +362,7 @@ async function initialize_game() {
 
 function draw_endGame(fac_id) {
     if (fac_id == 1) image(win_img, 0, 0, win_img.width, win_img.height)
-    else image(win_img2, 0, 0, win_img2.width, win2_img.height)
+    else image(win_img2, 0, 0, win_img2.width, win_img2.height)
 
 }
 
