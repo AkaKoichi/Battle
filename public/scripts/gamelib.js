@@ -144,18 +144,11 @@ async function setup() {
     attack_button = createButton('Attack');
     attack_button.position(30, 200);
     attack_button.mousePressed(async function () {
-<<<<<<< HEAD
-        update_troop(user_info.user_id, 1)
-    }
-    )
-};
-=======
         can_attack_troop = true;
         can_move_troop = false;
     });
 
 }
->>>>>>> 807a92f9642b91f1e8b6bd3a3971c365f9f86602
 
 async function draw() {
     if (game_info != undefined && game_initialized == false) {
