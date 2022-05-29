@@ -151,10 +151,7 @@ async function setup() {
     )
     roll_button = createButton('Check Roll');
     roll_button.position(30, 230);
-    roll_button.mousePressed(async function () {
-    draw_pop_up_rolls()
-    }
-    )
+    roll_button.mousePressed(draw_pop_up_rolls)
 };
 
 async function draw() {
@@ -356,18 +353,13 @@ async function initialize_game() {
 
 
     }
-
 }
-
 
 function draw_endGame(fac_id) {
     if (fac_id == 1) image(win_img, 0, 0, win_img.width, win_img.height)
     else image(win_img2, 0, 0, win_img2.width, win_img2.height)
 
 }
-
-
-
 
 async function update_troop(user_id, bit) {
     console.log('entrou')

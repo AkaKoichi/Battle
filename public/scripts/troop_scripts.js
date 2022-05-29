@@ -3,9 +3,6 @@
 
 // test mf test testttttttt
 
-const { get_troops_rolls_id } = require("../../models/troop_model");
-
-
 let troop_shown = false;
 let trp_image;
 let clicks = 0;
@@ -212,8 +209,6 @@ async function make_attack(troop_array, user_id, buildings, bit, game_id) {
         initialize_game()
         won = true;
     }
-
-
     attacker_index = -1
     defender_index = -1
     building_defender_index = -1
@@ -298,7 +293,7 @@ function draw_pop_up_troops(troop_array, tilesize, images) {
     }
 }
 async function draw_pop_up_rolls() {
-    res = await get_troops_rolls_id(1)
+    let res = await get_troops_rolls(1)
     console.log(res.trp_id1_array)
     console.log(res.trp_id2_array)
 }
