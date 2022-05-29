@@ -29,7 +29,6 @@ router.get('/resources/:id', async function (req, res, next) {
 
 
 router.post('/train/:id', async function (req, res, next) {
-  console.log('----')
   let troop_id = req.params.id;
   console.log(troop_id)
   let id = req.body.user_id;

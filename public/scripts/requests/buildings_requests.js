@@ -53,7 +53,6 @@ async function build(user_id, troop_id,bld_id,game_id,fac_id) {
 } 
 
 async function delete_building_id(id) {
-    console.log('ytyt')
     try {
         const response = await fetch(`/api/buildings/delete/${id}`, {
             
