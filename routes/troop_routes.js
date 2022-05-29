@@ -3,6 +3,12 @@ var router = express.Router();
 var troop_model = require("../models/troop_model");
 
 
+router.get('/rolls/:id', async function (req, res, next) {
+  let fac_id = req.params.id
+  console.log(fac_id)
+  let result = await troop_model.get_troops_rolls_id(fac_id);
+  res.status(result.status).send(result.result);
+});
 
 router.put('/update_troop/:id', async function (req, res, next) {
   let user_id = req.params.id;

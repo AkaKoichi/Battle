@@ -173,5 +173,19 @@ async function update_troop_id(user_id,bit) {
     }
 }
 
-
+async function get_troops_rolls(fac_id) {
+    try {
+        const response = await fetch(`/api/troops/rolls/${fac_id}`);
+        if (response.status == 200) {
+            var troops = await response.json();
+            return troops;
+        } else {
+            // Treat errors like 404 here
+            console.log(response);
+        }
+    } catch (err) {
+        // Treat 500 errors here    
+        console.log(err);
+    }
+}
 
