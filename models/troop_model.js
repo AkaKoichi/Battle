@@ -428,7 +428,20 @@ module.exports.update_troop = async function (user_id, bit) {
 
 }
 
-
+module.exports.get_troops_rolls_id = async function () {
+  try {
+    let sql = `select  trp_name
+    from troops,rolls_to_deal_damage
+    where trp_id= trp_id1  and trp_fac_id = $1 `;
+    let result = await pool.query(sql);
+    console.log(result.rolls)
+    let troops = result.rows;
+    return { status: 200, result: troops };
+  } catch (err) {
+    console.log(err);
+    return { status: 500, result: err };
+  }
+}
 
 
 
