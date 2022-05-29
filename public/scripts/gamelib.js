@@ -255,8 +255,9 @@ async function end_turn() {
 
 async function your_turn() {
     its_my_turn = true;
-    end_turn_button.removeAttribute('disabled')
-    move_button.removeAttribute('disabled')
+    end_turn_button.removeAttribute('disabled');
+    move_button.removeAttribute('disabled');
+    attack_button.removeAttribute('disabled');
 
 }
 
@@ -264,6 +265,8 @@ function opponent_turn() {
     its_my_turn = false;
     end_turn_button.attribute('disabled', '');
     move_button.attribute('disabled', '');
+    move_button.attribute('disabled', '');
+
 }
 
 function toggle_button(button) {
