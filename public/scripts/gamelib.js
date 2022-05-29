@@ -7,6 +7,9 @@ let resources;
 var troop_selected_i;
 var buildings_selected_i;
 var won = false;
+let pop_rolls = false;
+var trp_id1_array;
+var trp_id2_array;
 
 let game_initialized = false;
 let buildings_setup_done = false;
@@ -130,7 +133,7 @@ async function setup() {
             matrix[x][y] = pos;
         }
     }
-
+    setup_troop()
 
     end_turn_button = createButton('End Turn');
     end_turn_button.position(30, 150);
@@ -151,8 +154,8 @@ async function setup() {
     )
     roll_button = createButton('Check Roll');
     roll_button.position(30, 230);
-    roll_button.mousePressed(async function () {
-    draw_pop_up_rolls()
+    roll_button.mousePressed(  async function () {
+        pop_rolls = true
     }
     )
 };
@@ -209,13 +212,16 @@ async function draw() {
         fill(color('white'))
         text('user id : ' + user_info.user_id, 800, 200)
         fill(color('black'))
+        if(pop_rolls == true){
+            draw_pop_up_rolls()
+            console.log("fffffff")
+        }
         image(iron_amount_img, 920, 600, iron_amount_img.width * 0.5, iron_amount_img.height * 0.5)
         image(food_amount_img, 770, 600, food_amount_img.width * 0.5, food_amount_img.height * 0.5)
         if (resources[0] != undefined) {
             text(resources[0].rsc_amount, 935, 660)
             text(resources[1].rsc_amount, 805, 660)
         }
-
     }
 
 }

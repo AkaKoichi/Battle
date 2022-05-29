@@ -3,8 +3,6 @@
 
 // test mf test testttttttt
 
-const { get_troops_rolls_id } = require("../../models/troop_model");
-
 
 let troop_shown = false;
 let trp_image;
@@ -297,8 +295,16 @@ function draw_pop_up_troops(troop_array, tilesize, images) {
         else troop_shown = false;
     }
 }
-async function draw_pop_up_rolls() {
-    res = await get_troops_rolls_id(1)
-    console.log(res.trp_id1_array)
-    console.log(res.trp_id2_array)
+function draw_pop_up_rolls() {
+    console.log(trp_id1_array)
+    for (i = 0; i<trp_id1_array.length; i++){
+        text (trp_id1_array.trp_name, 100,100 )
+        text (trp_id2_array.trp_name, 200,100 )
+        text (trp_id2_array.dics_roll, 300,100 )
+    }
+}
+async function setup_troop(){
+    let res = await get_troops_rolls(1)
+    trp_id1_array = res.trp_id1_array
+    trp_id2_array = res.trp_id2_array
 }
