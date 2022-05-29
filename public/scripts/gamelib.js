@@ -6,6 +6,11 @@ var game_info;
 let resources;
 var troop_selected_i;
 var buildings_selected_i;
+var won = false;
+
+let pop_rolls = false;
+var trp_id1_array;
+var trp_id2_array;
 
 let game_initialized = false;
 let buildings_setup_done = false;
@@ -20,6 +25,7 @@ let mine_image;
 let iron_amount_img;
 let food_amount_img;
 let win_img;
+let win_img2;
 
 let troop_array = []
 let troops = [];
@@ -29,11 +35,13 @@ var resources_places = [];
 
 var can_move_troop = false;
 var can_attack_troop = false;
+var pop_up_open = false;
 
 
 let end_turn_button;
 let move_button;
 let attack_button;
+let roll_button;
 
 var board_size = 16;
 let tilesize = 44;  //700 / board_size;
@@ -53,7 +61,6 @@ window.onload = async () => {
     user_info = await get_user_info();
     game_info = await get_game_id(user_info.user_id)
     oponent_info = await get_oponent_id(user_info.user_id, game_info.game_id);
-    console.log(oponent_info)
     resources = await get_resources_by_id(game_info.game_id, user_info.user_id);
     let bol = await check_current_playing_by_game(game_info.game_id)
     if (bol[0].current_user_playing == user_info.user_id) {
@@ -67,10 +74,13 @@ window.onload = async () => {
         disable_button(move_button)
         disable_button(attack_button)
     }
+
     setInterval(() => {
-        if (its_my_turn == false) initialize_game()
+        if (its_my_turn == false && pop_up_open == false) initialize_game()
 
     }, 500);
+
+
 
 }
 
@@ -93,6 +103,8 @@ async function setup() {
     mine_image = loadImage('./images/tile/mine_start.png')
     iron_amount_img = loadImage('./images/iron.png')
     food_amount_img = loadImage('./images/food.png')
+    win_img = loadImage('./images/win/per_win.png')
+    win_img2 = loadImage('./images/win/mc_win.png')
     let troop_info = await get_troops();
     for (let troop of troop_info) {
         if (troop.trp_normal_url)
@@ -123,6 +135,7 @@ async function setup() {
         }
     }
 
+    setup_troop()
 
     end_turn_button = createButton('End Turn');
     end_turn_button.position(30, 150);
@@ -131,37 +144,46 @@ async function setup() {
     move_button = createButton('Move');
     move_button.position(30, 175);
     move_button.mousePressed(async function () {
-        can_move_troop = true;
-        can_attack_troop = false;
-    });
+        update_troop(user_info.user_id, 0)
+    }
+    )
+
     attack_button = createButton('Attack');
     attack_button.position(30, 200);
     attack_button.mousePressed(async function () {
-        can_attack_troop = true;
-        can_move_troop = false;
-    });
+        update_troop(user_info.user_id, 1)
+    }
+    )
+    roll_button = createButton('Check Roll');
+    roll_button.position(30, 230);
+    roll_button.mousePressed(  async function () {
+        pop_rolls = true
+    }
+    )
+};
 
-
-}
 
 async function draw() {
     if (game_info != undefined && game_initialized == false) {
         initialize_game()
-        
-        console.log('qwewqeqwe')
         game_initialized = true;
     }
     if (buildings_array.length != 0 && user_info != undefined && game_initialized == true && buildings_setup_done == false) {
-        buildings_setup(user_info.user_id, buildings_array, user_info.player_fac_id,game_info.game_id)
-        console.log(buildings_array)
+        buildings_setup(user_info.user_id, buildings_array, user_info.player_fac_id, game_info.game_id)
         buildings_setup_done = true;
     }
+
     clear();
     if (user_info == undefined)
         return;
     let square_size = tilesize; //width / board_size;
     let num_squares = 0;
     let hovered_tile = mouse_over_tile();
+    if (won) {
+        clear();
+        draw_endGame(user_info.player_fac_id)
+        return
+    }
 
     for (let y = 0; y < square_size * board_size; y += square_size) {
         for (let x = 0; x < square_size * board_size; x += square_size) {
@@ -188,20 +210,27 @@ async function draw() {
         }
 
         draw_troops(matrix, troop_array, num_squares, user_info.user_id, square_size, diameter, x, y, troop_images, hurt_troop_images)
-        draw_pop_up_buildings(buildings_array, square_size, buildings_images,troop_array)
+        draw_pop_up_buildings(buildings_array, square_size, buildings_images, troop_array)
         draw_pop_up_troops(troop_array, tilesize, troop_images)
         fill(color('white'))
         text('user id : ' + user_info.user_id, 800, 200)
         fill(color('black'))
         image(iron_amount_img, 920, 600, iron_amount_img.width * 0.5, iron_amount_img.height * 0.5)
         image(food_amount_img, 770, 600, food_amount_img.width * 0.5, food_amount_img.height * 0.5)
-        text(resources[0].rsc_amount, 935, 660)
-        text(resources[1].rsc_amount, 805, 660)
+        if (resources[0] != undefined) {
+            text(resources[0].rsc_amount, 935, 660)
+            text(resources[1].rsc_amount, 805, 660)
+        }
+        if(pop_rolls == true){
+            draw_pop_up_rolls()
+        }
+
     }
+
 }
 async function keyPressed() {
     await key_troops(its_my_turn, troop_array, user_info.user_id, buildings)
-    await key_buildings(its_my_turn, troop_array, user_info.user_id,game_info.game_id,user_info.player_fac_id)
+    await key_buildings(its_my_turn, troop_array, user_info.user_id, game_info.game_id, user_info.player_fac_id)
 }
 
 async function mousePressed() {
@@ -209,8 +238,8 @@ async function mousePressed() {
     console.log(tile)
     let y = (int)(mouseX / tilesize)
     let x = (int)(mouseY / tilesize)
-    mouse_pressed_troops(user_info.user_id, troop_array, buildings,game_info.game_id)
-    mouse_pressed_buildings(buildings_array, x, y, troop_array, user_info.user_id,game_info.game_id)
+    mouse_pressed_troops(user_info.user_id, troop_array, buildings, game_info.game_id)
+    mouse_pressed_buildings(buildings_array, x, y, troop_array, user_info.user_id, game_info.game_id)
 }
 
 async function end_turn() {
@@ -228,11 +257,6 @@ async function end_turn() {
     }
     for (let i = 0; i < troop_array.length; i++) {
         troop_array[i].movement = troop_array[i].init_movement
-        await update_troops_id(
-            user_info.user_id,
-            troop_array[i].user_trp_id,
-            troop_array[i].x, troop_array[i].y,
-            troop_array[i].health, troop_array[i].movement);
     }
     let bol = await check_current_playing_by_game(game_info.game_id)
     if (bol[0].current_user_playing == user_info.user_id) {
@@ -251,8 +275,9 @@ async function end_turn() {
 
 async function your_turn() {
     its_my_turn = true;
-    end_turn_button.removeAttribute('disabled')
-    move_button.removeAttribute('disabled')
+    end_turn_button.removeAttribute('disabled');
+    move_button.removeAttribute('disabled');
+    attack_button.removeAttribute('disabled');
 
 }
 
@@ -260,6 +285,8 @@ function opponent_turn() {
     its_my_turn = false;
     end_turn_button.attribute('disabled', '');
     move_button.attribute('disabled', '');
+    move_button.attribute('disabled', '');
+
 }
 
 function toggle_button(button) {
@@ -338,18 +365,22 @@ async function initialize_game() {
 
 
     }
+}
+
+function draw_endGame(fac_id) {
+    if (fac_id == 1) image(win_img, 0, 0, win_img.width, win_img.height)
+    else image(win_img2, 0, 0, win_img2.width, win_img2.height)
 
 }
 
-
-function endGame (){
-    for (let i = 0; i < building_array.length; i++) {
-        if (building_array[i].health == 0){
-            if (buildings_array[i].user_id == user_id)
-            win_img = loadImage('./images/food.png')
-        } else {
-            win_img = loadImage('./images/food.png')
-        }
-        
+async function update_troop(user_id, bit) {
+    console.log('entrou')
+    if (bit == 0) {
+        update_troop_id(user_id, bit)
+        can_move_troop = true;
+    } else if (bit == 1) {
+        update_troop_id(user_id, bit)
+        can_attack_troop = true;
     }
 }
+

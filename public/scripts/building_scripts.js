@@ -55,6 +55,7 @@ function mouse_pressed_buildings(building_array, x, y, troop_array, user_id, gam
                 break
             } else {
                 building_array[i].unselect()
+                pop_up_open = false;
             }
         }
     }
@@ -106,14 +107,13 @@ async function key_buildings(its_my_turn, troop_array, user_id, game_id, fac_id)
         for (i = 0; i < troop_array.length; i++) {
             if (troop_array[i].user_id == user_id) {
                 if (troop_array[i].selected) {
-                    if (troop_array[i].movement > 0) {
-                        switch (key) {
-                            case 'b':
-                            case 'B':
-                                build_building(troop_array, user_id, game_id, fac_id);
-                                break;
-                        }
+                    switch (key) {
+                        case 'b':
+                        case 'B':
+                            build_building(troop_array, user_id, game_id, fac_id);
+                            break;
                     }
+
                 }
             }
         }
@@ -167,6 +167,7 @@ async function build_building(troop_array, user_id, game_id, fac_id) {
             }
             alert("Building Successfully Built");
             initialize_game();
+            location.reload()
         }
     }
 }
@@ -187,13 +188,14 @@ function set_defender_building(buildings, user_id) {
 }
 
 
-function draw_pop_up_buildings(buildings_array, tilesize, images,troops) {
+function draw_pop_up_buildings(buildings_array, tilesize, images, troops) {
+
     let w = color('white');
     let b = color('black');
     for (let i = 0; i < buildings_array.length; i++) {
         bulding_image = images[buildings_array[i].bld_id]
         for (let i = 0; i < troops.length; i++) {
-            if (troops[i].selected){
+            if (troops[i].selected) {
                 return
             }
         }
@@ -203,6 +205,7 @@ function draw_pop_up_buildings(buildings_array, tilesize, images,troops) {
             if (troops_resources == []) {
                 return
             } else {
+                pop_up_open = true;
 
                 let last_name;
 
@@ -214,8 +217,8 @@ function draw_pop_up_buildings(buildings_array, tilesize, images,troops) {
                 fill(b);
                 text("Name :" + buildings[i].bld_name, windowWidth / 1.4, windowHeight / 2.3)
                 text("Health : " + buildings[i].bld_health, windowWidth / 1.4, windowHeight / 2.1)
-                text("FOOD", windowWidth / 1.31, windowHeight / 1.8 )
-                text("IRON", windowWidth / 1.21, windowHeight / 1.8 )
+                text("FOOD", windowWidth / 1.31, windowHeight / 1.8)
+                text("IRON", windowWidth / 1.21, windowHeight / 1.8)
                 fill(w);
                 let y_pop = 250;
                 for (let i = 0; i < troops_resources.length; i++) {
@@ -234,6 +237,7 @@ function draw_pop_up_buildings(buildings_array, tilesize, images,troops) {
             }
         }
         else if ((prepare_to_train == false && buildings_array[i].selected == true) && (buildings_array[i].bld_name == 'tc1' || buildings_array[i].bld_name == 'tc2' || buildings_array[i].bld_name == 'tc3' || buildings_array[i].bld_name == 'tc4')) {
+            pop_up_open = true;
             fill(170, 160, 85);
             rect(windowWidth / 1.5, 0, 501, windowHeight);
             noStroke()
@@ -241,7 +245,6 @@ function draw_pop_up_buildings(buildings_array, tilesize, images,troops) {
             fill(w);
             fill(b);
             text(buildings[i].bld_name, windowWidth / 1.4, windowHeight / 2)
-            console.log(buildings[i].current_health)
             text(buildings[i].current_health, windowWidth / 1.4, windowHeight / 1.8)
             fill(w);
             prepare_to_train = true;
@@ -259,6 +262,7 @@ function draw_pop_up_buildings(buildings_array, tilesize, images,troops) {
             prepare_to_train = true;
         }
         else if (prepare_to_train == false && buildings_array[i].selected == true && buildings_array[i].bld_name == 'Mine') {
+            pop_up_open = true;
             fill(170, 160, 85);
             rect(windowWidth / 1.5, 0, 501, windowHeight);
             noStroke()

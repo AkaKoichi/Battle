@@ -3,21 +3,38 @@ var router = express.Router();
 var troop_model = require("../models/troop_model");
 
 
+router.get('/rolls/:id', async function (req, res, next) {
+  let fac_id = req.params.id
+  console.log(fac_id)
+  let result = await troop_model.get_troops_rolls_id(fac_id);
+  res.status(result.status).send(result.result);
+});
+
+router.put('/update_troop/:id', async function (req, res, next) {
+  let user_id = req.params.id;
+  let bit = req.body.bit;
+ 
+  let result = await troop_model.update_troop(user_id,bit);
+  res.status(result.status).send(result.result);
+});
+
 router.put('/attack/:id', async function (req, res, next) {
   let user_id = req.params.id;
   let attacker = req.body.attacker
   let defender = req.body.defender;
   let bit = req.body.bit;
-  let result = await troop_model.attack_troop(user_id, attacker, defender, bit);
+  let game_id = req.body.game_id;
+  let result = await troop_model.attack_troop(user_id, attacker, defender, bit,game_id);
   res.status(result.status).send(result.result);
 });
 
 router.put('/move/:id', async function (req, res, next) {
   let troop_id = req.params.id;
   let user_id = req.body.user_id
-  let direction = req.body.direction;
-  let movement = req.body.movement;
-  let result = await troop_model.move_troop(user_id, troop_id, direction, movement);
+  let tile_x = req.body.tile_x;
+  let tile_y = req.body.tile_y;
+  let game_id = req.body.game_id;
+  let result = await troop_model.move_troop(user_id, troop_id, tile_x, tile_y, game_id);
   res.status(result.status).send(result.result);
 });
 
@@ -58,7 +75,7 @@ router.put('/update/:id', async function (req, res, next) {
   let movement = req.body.movement;
   console.log("Get troop with id " + id)
   console.log(id, user_trp_id, x, y)
-  let result = await troop_model.update_troop(id, user_trp_id, x, y, health, movement);
+  let result = await troop_model.update_troop_id(id, user_trp_id, x, y, health, movement);
   res.status(result.status).send(result.result);
 });
 

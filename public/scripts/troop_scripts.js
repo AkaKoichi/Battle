@@ -3,7 +3,6 @@
 
 // test mf test testttttttt
 
-
 let troop_shown = false;
 let trp_image;
 let clicks = 0;
@@ -66,14 +65,14 @@ function draw_troops(matrix, troop_array, num_squares, user_id, square_size, dia
         if (troop_array[i].user_id == user_id) {
 
             if (troop_array[i].hurt == true) {
-                console.log('aa')
+
                 image(hurt_image, troop_array[i].x * square_size + (square_size - trp_image.width / 7) / 2, troop_array[i].y * square_size - square_size / 2, trp_image.width / 7, trp_image.height / 7);
                 troop_array[i].timer--
                 if (troop_array[i].timer == 0) {
-                    console.log(troop_array[i].timer == 0)
+
                     troop_array[i].hurt = false
                     initialize_game()
-                    console.log('ff')
+
                 }
             } else image(trp_image, troop_array[i].x * square_size + (square_size - trp_image.width / 7) / 2, troop_array[i].y * square_size - square_size / 2, trp_image.width / 7, trp_image.height / 7);
 
@@ -81,12 +80,12 @@ function draw_troops(matrix, troop_array, num_squares, user_id, square_size, dia
 
 
             if (troop_array[i].hurt == true) {
-                console.log('aa')
+
                 image(hurt_image, troop_array[i].x * square_size + (square_size - trp_image.width / 7) / 2, troop_array[i].y * square_size - square_size / 2, trp_image.width / 7, trp_image.height / 7);
 
                 troop_array[i].timer--
                 if (troop_array[i].timer == 0) {
-                    console.log(troop_array[i].timer)
+
                     troop_array[i].hurt = false
                     initialize_game()
                 }
@@ -109,12 +108,14 @@ async function key_troops(its_my_turn, troop_array, user_id, buildings) {
                         case 'l':
                         case 'L':
                             troop_array[i].movement = troop_array[i].init_movement;
+                            await update_troops_id(troop_array[i].user_id, troop_array[i].user_trp_id, troop_array[i].x, troop_array[i].y, troop_array[i].health, troop_array[i].movement)
                             /* document.getElementById("movement").innerHTML = troop_array[i].movement; */
                             break;
 
                         case 'k':
                         case 'K':
                             troop_array[i].movement = 500;
+                            await update_troops_id(troop_array[i].user_id, troop_array[i].user_trp_id, troop_array[i].x, troop_array[i].y, troop_array[i].health, troop_array[i].movement)
                             /* document.getElementById("movement").innerHTML = troop_array[i].movement; */
                             break;
 
@@ -129,27 +130,25 @@ async function mouse_pressed_troops(user_id, troop_array, buildings, game_id) {
     let tile = mouse_over_tile()
     for (let i = 0; i < troop_array.length; i++) {
         let can_move = get_dist_move(troop_array[i], tile)
-        console.log(can_move.can_move)
+
         if (tile.x >= 0 && tile.x <= board_size - 1 && tile.y >= 0 && tile.y <= board_size - 1) {
             if ((can_move_troop) &&
                 (troop_selected_i == i) &&
                 (can_move.can_move) && (clicks > 0) &&
                 (troop_array[i].user_id == user_id) &&
                 (its_my_turn)) {
-                troop_array[i].x = tile.x
-                troop_array[i].y = tile.y
-                troop_array[i].movement = (troop_array[i].movement - can_move.x - can_move.y)
-                can_move_troop = false
-                troop_selected_i = 0
-                clicks = 0
-                await update_troops_id(user_id, troop_array[i].user_trp_id, troop_array[i].x, troop_array[i].y, troop_array[i].health, troop_array[i].movement);
-                /* let response = await move_troop_id(user_id, troop_array[i].user_trp_id, 'right', troop_array[i].movement)
-                if (response != undefined) initialize_game()
-                else alert('there cant be 2 troops in the same tile') */
-                break
+                let res = await move_troop_id(user_id, troop_array[i].user_trp_id, tile.x, tile.y, game_id)
+                if (res.troops.msg != undefined) {
+                    initialize_game()   
+                    can_move_troop = false
+                    troop_selected_i = 0
+                    clicks = 0
+                    break
+                }
+
             } else {
                 troop_array[i].unselect()
-                console.log(troop_selected_i)
+
             }
         }
 
@@ -183,7 +182,7 @@ async function mouse_pressed_troops(user_id, troop_array, buildings, game_id) {
             break
         } else {
             troop_array[i].unselect()
-            console.log(troop_selected_i)
+
         }
     }
 }
@@ -201,14 +200,15 @@ async function make_attack(troop_array, user_id, buildings, bit, game_id) {
     if (res.msg == 'success attack' && bit == 0) {
         troop_array[defender_index].hurt = true
         troop_array[defender_index].timer = 1000
+    } else if (res.msg == 'success attack' && bit == 1) {
+        alert('attacked building')
+        initialize_game()
+
     } else if (res.msg == 'you won') {
         alert('you WOOOOOOOON')
         initialize_game()
-    } else if (res.msg == 'success attack' && bit == 1){
-        alert('attacked building')
-        initialize_game()
+        won = true;
     }
-
     attacker_index = -1
     defender_index = -1
     building_defender_index = -1
@@ -222,9 +222,11 @@ function get_dist_attack(attacker, defender) {
 function get_dist_move(troop, tile) {
     distX = Math.abs(troop.x - tile.x)
     distY = Math.abs(troop.y - tile.y)
-    return {can_move:(distX <= troop.movement && distY <= troop.movement),
-            x:distX,
-            y:distY};
+    return {
+        can_move: (distX <= troop.movement && distY <= troop.movement),
+        x: distX,
+        y: distY
+    };
 }
 
 
@@ -244,14 +246,14 @@ function dice(min, max) {
 }
 
 async function train(user_id, troop_id, buildings, game_id) {
-    console.log(buildings)
+
     for (let i = 0; i < buildings.length; i++) {
-        console.log('qq')
+
         if ((buildings[i].bld_name == 'Training Camp') &&
             (buildings[i].user_id == user_id) &&
             (i == buildings_selected_i)) {
             /* (buildings[i].selected == true) */
-            console.log('qq')
+
             let bld_id = buildings[i].user_bld_id
             let result = await train_troop(user_id, troop_id, bld_id, game_id)
             if (result.inserted) {
@@ -277,7 +279,9 @@ function draw_pop_up_troops(troop_array, tilesize, images) {
             text('Name :' + troop_array[i].name, windowWidth / 1.4, windowHeight / 20 + troop_image.height + 50)
             text('Health :' + troop_array[i].health, windowWidth / 1.4, windowHeight / 20 + troop_image.height + 70)
             text('movement :' + troop_array[i].movement, windowWidth / 1.4, windowHeight / 20 + troop_image.height + 90)
-            text('Attack :' + troop_array[i].attack, windowWidth / 1.4, windowHeight / 20 + troop_image.height + 110) 
+            text('Attack :' + troop_array[i].attack, windowWidth / 1.4, windowHeight / 20 + troop_image.height + 110)
+            text('Range :' + troop_array[i].range, windowWidth / 1.4, windowHeight / 20 + troop_image.height + 130)
+            //text('user_ID :' + troop_array[i].user_id, windowWidth / 1.4, windowHeight / 20 + troop_image.height + 130)
             fill(w);
             fill(b);
             //text(troops[i].trp_health, windowWidth / 1.4, windowHeight / 1.7)
@@ -287,4 +291,17 @@ function draw_pop_up_troops(troop_array, tilesize, images) {
         }
         else troop_shown = false;
     }
+}
+function draw_pop_up_rolls() {
+    console.log(trp_id1_array)
+    for (i = 0; i<trp_id1_array.length; i++){
+        text (trp_id1_array.trp_name, 100,100 )
+        text (trp_id2_array.trp_name, 200,100 )
+        text (trp_id2_array.dics_roll, 300,100 )
+    }
+}
+async function setup_troop(){
+    let res = await get_troops_rolls(1)
+    trp_id1_array = res.trp_id1_array
+    trp_id2_array = res.trp_id2_array
 }
