@@ -6,6 +6,7 @@ var game_info;
 let resources;
 var troop_selected_i;
 var buildings_selected_i;
+var won = false;
 
 let game_initialized = false;
 let buildings_setup_done = false;
@@ -144,18 +145,10 @@ async function setup() {
     attack_button = createButton('Attack');
     attack_button.position(30, 200);
     attack_button.mousePressed(async function () {
-<<<<<<< HEAD
         update_troop(user_info.user_id, 1)
     }
     )
 };
-=======
-        can_attack_troop = true;
-        can_move_troop = false;
-    });
-
-}
->>>>>>> 807a92f9642b91f1e8b6bd3a3971c365f9f86602
 
 async function draw() {
     if (game_info != undefined && game_initialized == false) {
@@ -210,6 +203,9 @@ async function draw() {
             text(resources[1].rsc_amount, 805, 660)
         }
 
+    }
+    if (won){
+        draw_endGame()
     }
 }
 async function keyPressed() {
@@ -350,17 +346,13 @@ async function initialize_game() {
 }
 
 
-function draw_endGame (){
-    
-        if (building_array[i].health == 0){
-            if (buildings_array[i].user_id == user_id)
-            image(win_img, 500, 200, 1000, 1000)
-        } else {
-            image(win_img2, 500, 200, 1000, 1000)
-        }
-
-    }
+function draw_endGame() {
+    image(win_img, 500, 200, 1000, 1000)
+    image(win_img2, 500, 200, 1000, 1000)
 }
+
+
+
 
 async function update_troop(user_id, bit) {
     console.log('entrou')

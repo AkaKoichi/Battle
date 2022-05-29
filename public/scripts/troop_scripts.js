@@ -208,6 +208,7 @@ async function make_attack(troop_array, user_id, buildings, bit, game_id) {
     } else if (res.msg == 'you won') {
         alert('you WOOOOOOOON')
         initialize_game()
+        won = true;
     }
 
 
