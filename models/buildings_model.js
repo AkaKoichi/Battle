@@ -117,7 +117,6 @@ module.exports.delete_building = async function (id) {
   } catch (err) {
     console.log(err);
     return { status: 500, result: err };
-
   }
 }
 
