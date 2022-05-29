@@ -5,8 +5,10 @@ var oponent_info;
 var game_info;
 let resources;
 var troop_selected_i;
+var buildings_selected_i;
 
 let game_initialized = false;
+let buildings_setup_done = false;
 
 var troop_images = {};
 var hurt_troop_images = {};
@@ -28,13 +30,14 @@ var resources_places = [];
 
 var can_move_troop = false;
 var can_attack_troop = false;
+var pop_up_open = false;
 
 
 let end_turn_button;
 let move_button;
 let attack_button;
 
-let board_size = 16;
+var board_size = 16;
 let tilesize = 44;  //700 / board_size;
 let matrix = [];
 
@@ -66,10 +69,13 @@ window.onload = async () => {
         disable_button(move_button)
         disable_button(attack_button)
     }
+
     setInterval(() => {
-        if (its_my_turn == false) initialize_game()
+        if (its_my_turn == false && pop_up_open == false) initialize_game()
 
     }, 500);
+
+
 
 }
 
@@ -133,20 +139,28 @@ async function setup() {
     move_button.position(30, 175);
     move_button.mousePressed(async function () {
         can_move_troop = true;
+        can_attack_troop = false;
     });
     attack_button = createButton('Attack');
     attack_button.position(30, 200);
     attack_button.mousePressed(async function () {
         can_attack_troop = true;
+        can_move_troop = false;
     });
 
-    buildings_setup(user_info.user_id, buildings, user_info.player_fac_id)
 }
 
 async function draw() {
     if (game_info != undefined && game_initialized == false) {
         initialize_game()
+
+        console.log('qwewqeqwe')
         game_initialized = true;
+    }
+    if (buildings_array.length != 0 && user_info != undefined && game_initialized == true && buildings_setup_done == false) {
+        buildings_setup(user_info.user_id, buildings_array, user_info.player_fac_id, game_info.game_id)
+        console.log(buildings_array)
+        buildings_setup_done = true;
     }
     clear();
     if (user_info == undefined)
@@ -180,21 +194,20 @@ async function draw() {
         }
 
         draw_troops(matrix, troop_array, num_squares, user_info.user_id, square_size, diameter, x, y, troop_images, hurt_troop_images)
-        draw_pop_up_buildings(buildings_array, square_size, buildings_images)
+        draw_pop_up_buildings(buildings_array, square_size, buildings_images, troop_array)
         draw_pop_up_troops(troop_array, tilesize, troop_images)
         fill(color('white'))
         text('user id : ' + user_info.user_id, 800, 200)
         fill(color('black'))
-        image(iron_amount_img,920,600,iron_amount_img.width * 0.5 , iron_amount_img.height * 0.5)
-        image(food_amount_img,770,600,food_amount_img.width * 0.5 , food_amount_img.height * 0.5)
-        text(resources[0].rsc_amount,935,660)
-        text(resources[1].rsc_amount,805,660)
-        
+        image(iron_amount_img, 920, 600, iron_amount_img.width * 0.5, iron_amount_img.height * 0.5)
+        image(food_amount_img, 770, 600, food_amount_img.width * 0.5, food_amount_img.height * 0.5)
+        text(resources[0].rsc_amount, 935, 660)
+        text(resources[1].rsc_amount, 805, 660)
     }
 }
 async function keyPressed() {
     await key_troops(its_my_turn, troop_array, user_info.user_id, buildings)
-    await key_buildings(its_my_turn, troop_array, user_info.user_id, resources)
+    await key_buildings(its_my_turn, troop_array, user_info.user_id, game_info.game_id, user_info.player_fac_id)
 }
 
 async function mousePressed() {
@@ -202,8 +215,8 @@ async function mousePressed() {
     console.log(tile)
     let y = (int)(mouseX / tilesize)
     let x = (int)(mouseY / tilesize)
-    mouse_pressed_troops(user_info.user_id, troop_array, buildings)
-    mouse_pressed_buildings(buildings_array, x, y, troop_array, user_info.user_id)
+    mouse_pressed_troops(user_info.user_id, troop_array, buildings, game_info.game_id)
+    mouse_pressed_buildings(buildings_array, x, y, troop_array, user_info.user_id, game_info.game_id)
 }
 
 async function end_turn() {
@@ -310,6 +323,7 @@ async function initialize_game() {
             buildings[i].bld_id,
             buildings[i].bld_name,
             buildings[i].bld_health,
+            buildings[i].bld_current_health,
             buildings[i].bld_x,
             buildings[i].bld_y)
         buildings_array.push(
@@ -342,6 +356,6 @@ function draw_endGame (){
         } else {
             image(win_img2, 500, 200, 1000, 1000)
         }
-        
-    
+
+    }
 }
