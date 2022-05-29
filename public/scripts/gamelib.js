@@ -20,6 +20,7 @@ let mine_image;
 let iron_amount_img;
 let food_amount_img;
 let win_img;
+let win_img2;
 
 let troop_array = []
 let troops = [];
@@ -96,6 +97,8 @@ async function setup() {
     mine_image = loadImage('./images/tile/mine_start.png')
     iron_amount_img = loadImage('./images/iron.png')
     food_amount_img = loadImage('./images/food.png')
+    win_img = loadImage('./images/win/per_win.png')
+    win_img2 = loadImage('./images/win/mc-win.png')
     let troop_info = await get_troops();
     for (let troop of troop_info) {
         if (troop.trp_normal_url)
@@ -141,10 +144,18 @@ async function setup() {
     attack_button = createButton('Attack');
     attack_button.position(30, 200);
     attack_button.mousePressed(async function () {
+<<<<<<< HEAD
         update_troop(user_info.user_id, 1)
     }
     )
 };
+=======
+        can_attack_troop = true;
+        can_move_troop = false;
+    });
+
+}
+>>>>>>> 807a92f9642b91f1e8b6bd3a3971c365f9f86602
 
 async function draw() {
     if (game_info != undefined && game_initialized == false) {
@@ -339,13 +350,13 @@ async function initialize_game() {
 }
 
 
-function endGame() {
-    for (let i = 0; i < building_array.length; i++) {
-        if (building_array[i].health == 0) {
+function draw_endGame (){
+    
+        if (building_array[i].health == 0){
             if (buildings_array[i].user_id == user_id)
-                win_img = loadImage('./images/food.png')
+            image(win_img, 500, 200, 1000, 1000)
         } else {
-            win_img = loadImage('./images/food.png')
+            image(win_img2, 500, 200, 1000, 1000)
         }
 
     }
