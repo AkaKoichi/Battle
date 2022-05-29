@@ -52,7 +52,7 @@ async function update_troops_id(id, user_trp_id, x, y, health, movement) {
     }
 }
 
-async function train_troop(user_id, troop_id, bld_id,game_id) {
+async function train_troop(user_id, troop_id, bld_id, game_id) {
     try {
         // TODO: Verify user information  and give errors
         const response = await fetch(`/api/troops/train/${troop_id}`,
@@ -61,7 +61,7 @@ async function train_troop(user_id, troop_id, bld_id,game_id) {
                 headers: {
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify({ user_id,bld_id,game_id})
+                body: JSON.stringify({ user_id, bld_id, game_id })
             });
         var result = await response.json();
         console.log('aaaa')
@@ -106,14 +106,14 @@ async function get_troops_resources(id) {
     }
 }
 
-async function move_troop_id(user_id, troop_id, direction, movement) {
+async function move_troop_id(user_id, troop_id, tile_x, tile_y, game_id) {
     try {
         const response = await fetch(`/api/troops/move/${troop_id}`, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify({ user_id, direction, movement })
+            body: JSON.stringify({ user_id, tile_x, tile_y, game_id })
         });
         if (response.status == 200) {
             var troops = await response.json();
@@ -128,14 +128,14 @@ async function move_troop_id(user_id, troop_id, direction, movement) {
     }
 }
 
-async function attack_troop_id(user_id, attacker, defender, bit) {
+async function attack_troop_id(user_id, attacker, defender, bit, game_id) {
     try {
         const response = await fetch(`/api/troops/attack/${user_id}`, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify({ attacker, defender, bit })
+            body: JSON.stringify({ attacker, defender, bit, game_id })
         });
         if (response.status == 200) {
             var troops = await response.json();
@@ -149,5 +149,29 @@ async function attack_troop_id(user_id, attacker, defender, bit) {
         console.log(err);
     }
 }
+
+async function update_troop_id(user_id,bit) {
+    try {
+        const response = await fetch(`/api/troops/update_troop/${user_id}`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({bit})
+            
+        });
+        if (response.status == 200) {
+            var troops = await response.json();
+            return troops;
+        } else {
+            // Treat errors like 404 here
+            console.log(response);
+        }
+    } catch (err) {
+        // Treat 500 errors here   
+        console.log(err);
+    }
+}
+
 
 

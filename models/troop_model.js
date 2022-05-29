@@ -33,7 +33,7 @@ module.exports.get_troops_id = async function (game_id) {
   }
 }
 
-module.exports.update_troop = async function (user_id, user_trp_id, x, y, health, current_movement) {
+module.exports.update_troop_id = async function (user_id, user_trp_id, x, y, health, current_movement) {
   try {
 
     let sql = `UPDATE user_troops SET troop_x = $3, troop_y = $4 , troop_current_health = $5, troop_current_movement =$6 WHERE user_id =$1 and user_trp_id =$2; `;
@@ -48,7 +48,7 @@ module.exports.update_troop = async function (user_id, user_trp_id, x, y, health
 }
 
 module.exports.train = async function (user_id, troop_id, bld_id, game_id) {
-  console.log('aaa')
+
   let troop_iron_cost;
   let troop_food_cost;
   let user_iron;
@@ -139,38 +139,58 @@ module.exports.get_all_troops_resources = async function (id) {
   }
 }
 
-module.exports.move_troop = async function (user_id, troop_id, direction, movement) {
-  if (movement > 0) {
+module.exports.move_troop = async function (user_id, troop_id, tile_x, tile_y, game_id) {
+  console.log('ENTROU')
+  let sql = `
+    select *
+    from user_troops,troops
+    where user_trp_id = $1 and user_troops.troop_id = troops.trp_id;`
+  let result = await pool.query(sql, [troop_id]);
+  let troop_info = result.rows[0]
+
+  let troop_coordinates = { x: troop_info.troop_x, y: troop_info.troop_y }
+
+  let tile_coordinates = { x: tile_x, y: tile_y }
+
+  let can_move = get_dist_move(troop_coordinates, tile_coordinates, troop_info.troop_current_movement)
+  console.log(can_move)
+
+  sql = `select can_move_troop
+    from player_game
+    where user_player = $1`
+  result = await pool.query(sql, [user_id]);
+  let can_move_troop = result.rows[0].can_move_troop
+
+  let turn_id = await check_current_playing_by_game_id(game_id)
+  turn_id = turn_id.result[0].current_user_playing
+  let your_turn = (turn_id == user_id)
+  if (can_move_troop && your_turn & can_move.can_move && troop_info.user_id == user_id) {
     try {
+      let sql = `select * from user_troops where troop_x =$1 and troop_y = $2;`;
+      let result = await pool.query(sql, [tile_coordinates.x, tile_coordinates.y]);
+      console.log(result.rows[0])
+      if (result.rows[0] == undefined) {
+        let sql = `UPDATE user_troops SET troop_x = $3, troop_y = $4 , troop_current_movement =$5 WHERE user_id =$1 and user_trp_id =$2; `;
+        let result = await pool.query(sql, [user_id, troop_info.user_trp_id, tile_coordinates.x, tile_coordinates.y, troop_info.troop_current_movement - can_move.x - can_move.y]);
 
-      let sql = `select troop_x,troop_y from user_troops where user_trp_id = $1 `;
-      let result = await pool.query(sql, [troop_id]);
-      console.log('SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS' + result.rows[0].troop_x);
+        sql = `UPDATE player_game SET can_move_troop = false  WHERE user_player  = $1;`
+        result = await pool.query(sql, [user_id]);
 
-      sql = `select * from user_troops where troop_x =$1 and troop_y = $2;`;
-      result1 = await pool.query(sql, [result.rows[0].troop_x, result.rows[0].troop_y + 1]);
-
-      if (result1.rows == 0) {
-
-        sql = `UPDATE user_troops SET troop_x = $3, troop_y = $4 , troop_current_movement =$5 WHERE user_id =$1 and user_trp_id =$2; `;
-        let result2 = await pool.query(sql, [user_id, troop_id, result.rows[0].troop_x, result.rows[0].troop_y + 1, movement - 1]);
-        let troops = result2.rows;
-        return { status: 200, result: troops };
-
-      } else return { status: 200 };
-
-
+        return { status: 200, result: { msg: 'troop moved succesfuly' } };
+      } else {
+        sql = `UPDATE player_game SET can_move_troop = false  WHERE user_player  = $1;`
+        result = await pool.query(sql, [user_id]);
+        return { status: 200, result: { msg: 'cannot move troop here , tile already has a troop' } };
+      }
     } catch (err) {
       console.log(err);
       return { status: 500, result: err };
-
     }
-  } else return { status: 200 };
-  /* troop_array[i].y += 1;
-  troop_array[i].movement -= 1
-  await update_troops_id(user_id, troop_array[i].user_trp_id, troop_array[i].x, troop_array[i].y, troop_array[i].health, troop_array[i].movement); */
-
-
+  } else {
+    sql = `UPDATE player_game SET can_move_troop = false  WHERE user_player  = $1;`
+    result = await pool.query(sql, [user_id]);
+    return { status: 200, result: { msg: 'you cannot' } }
+  }
 }
 
 module.exports.attack_troop = async function (user_id, attacker, defender, bit, game_id) {
@@ -185,10 +205,9 @@ module.exports.attack_troop = async function (user_id, attacker, defender, bit, 
     where user_player = $1`
   result = await pool.query(sql, [user_id]);
   let can_attack_troop = result.rows[0].can_attack_troop
-  /* turn_id = await check_current_playing_by_game_id(game_id)
-  console.log(game_id)
+  turn_id = await check_current_playing_by_game_id(game_id)
   turn_id = turn_id.result[0].current_user_playing
-  your_turn = (turn_id == user_id) */
+  your_turn = (turn_id == user_id)
   if (bit == 0) {
     let sql = `
     select troop_x,troop_y 
@@ -202,20 +221,20 @@ module.exports.attack_troop = async function (user_id, attacker, defender, bit, 
     where user_trp_id = $1`
     result = await pool.query(sql, [defender]);
     let defender_coordinates = result.rows[0]
-    
+
     sql = `
     select  troop_id
     from user_troops
     where user_trp_id = $1`
     result = await pool.query(sql, [attacker]);
-    let attacker_troop_id =result.rows[0].troop_id
+    let attacker_troop_id = result.rows[0].troop_id
 
     sql = `
     select  troop_id
     from user_troops
     where user_trp_id = $1`
     result = await pool.query(sql, [defender]);
-    let defender_troop_id =result.rows[0].troop_id
+    let defender_troop_id = result.rows[0].troop_id
 
     sql = `
     select  trp_range
@@ -223,12 +242,12 @@ module.exports.attack_troop = async function (user_id, attacker, defender, bit, 
     where trp_id = $1`
     result = await pool.query(sql, [attacker_troop_id]);
     let range = result.rows[0].trp_range
-    can_attack = get_dist_attack(attacker_coordinates, defender_coordinates,range,bit)
+    can_attack = get_dist_attack(attacker_coordinates, defender_coordinates, range, bit)
     sql = `
     select dics_roll
     from rolls_to_deal_damage
     where trp_id1 = $1 and trp_id2 = $2;`
-    result = await pool.query(sql, [attacker_troop_id ,defender_troop_id]);
+    result = await pool.query(sql, [attacker_troop_id, defender_troop_id]);
     result = result.rows[0].dics_roll
     dice_dmg_multiplier = roll_dice(result, 6)
 
@@ -247,16 +266,22 @@ module.exports.attack_troop = async function (user_id, attacker, defender, bit, 
     let defender_info = result.rows[0]
 
     try {
-      if (can_attack && dice_dmg_multiplier >= 1 && can_attack_troop) {
-        console.log(defender_info.troop_current_health)
+      if (can_attack && dice_dmg_multiplier >= 1 && can_attack_troop && your_turn) {
+
         defender_info.troop_current_health -= attacker_info.trp_attack * dice_dmg_multiplier;
-        console.log(defender_info.troop_current_health)
+
         if (defender_info.troop_current_health <= 0) {
           await this.delete_troop(defender)
         }
-        await this.update_troop(defender_info.user_id, defender_info.user_trp_id, defender_info.troop_x, defender_info.troop_y, defender_info.troop_current_health, defender_info.troop_current_movement);
+        await this.update_troop_id(defender_info.user_id, defender_info.user_trp_id, defender_info.troop_x, defender_info.troop_y, defender_info.troop_current_health, defender_info.troop_current_movement);
+
+        let sql = `UPDATE player_game SET can_attack_troop = false  WHERE user_player  = $1;`
+        let result = await pool.query(sql, [user_id]);
+
         return { status: 200, result: { msg: "success attack" } };
       } else {
+        let sql = `UPDATE player_game SET can_attack_troop = false  WHERE user_player  = $1;`
+        let result = await pool.query(sql, [user_id]);
         return { status: 200, result: { msg: "success missed" } };
       }
     } catch (err) {
@@ -284,7 +309,7 @@ module.exports.attack_troop = async function (user_id, attacker, defender, bit, 
     from user_troops
     where user_trp_id = $1`
     result = await pool.query(sql, [attacker]);
-    let attacker_troop_id =result.rows[0].troop_id
+    let attacker_troop_id = result.rows[0].troop_id
 
     sql = `
     select  trp_range
@@ -293,7 +318,7 @@ module.exports.attack_troop = async function (user_id, attacker, defender, bit, 
     result = await pool.query(sql, [attacker_troop_id]);
     let range = result.rows[0].trp_range
 
-    can_attack = get_dist_attack(attacker_coordinates, defender_coordinates,range,bit)
+    can_attack = get_dist_attack(attacker_coordinates, defender_coordinates, range, bit)
 
     sql = `
     select *
@@ -310,17 +335,21 @@ module.exports.attack_troop = async function (user_id, attacker, defender, bit, 
     let defender_info = result.rows[0]
 
     try {
-      if (can_attack && can_attack_troop) {
+      if (can_attack && can_attack_troop && your_turn) {
         defender_info.bld_current_health -= attacker_info.trp_attack;
         if (defender_info.bld_current_health <= 0) {
           await delete_building(defender)
-          if (defender_info.bld_name == 'tc1' ||defender_info.bld_name == 'tc2' ||defender_info.bld_name == 'tc3' || defender_info.bld_name =='tc4') {
+          if (defender_info.bld_name == 'tc1' || defender_info.bld_name == 'tc2' || defender_info.bld_name == 'tc3' || defender_info.bld_name == 'tc4') {
             return { status: 200, result: { msg: "you won" } };
           }
         }
         await update_building(defender_info.user_id, defender_info.user_bld_id, defender_info.bld_current_health);
+        let sql = `UPDATE player_game SET can_attack_troop = false  WHERE user_player  = $1;`
+        let result = await pool.query(sql, [user_id]);
         return { status: 200, result: { msg: "success attack" } };
       } else {
+        let sql = `UPDATE player_game SET can_attack_troop = false  WHERE user_player  = $1;`
+        let result = await pool.query(sql, [user_id]);
         return { status: 200, result: { msg: "success missed" } };
       }
     } catch (err) {
@@ -331,7 +360,6 @@ module.exports.attack_troop = async function (user_id, attacker, defender, bit, 
   }
 
 };
-
 function roll_dice(min, sides) {
   dice_number = dice(1, sides);
   if (dice_number == sides) {
@@ -341,24 +369,66 @@ function roll_dice(min, sides) {
   }
   return 0
 }
-
 function dice(min, max) {
   return Math.floor(Math.random() * (max - min + 1) + min);
 }
-
-function get_dist_attack(attacker, defender,range, bit) {
+function get_dist_attack(attacker, defender, range, bit) {
   if (bit == 0) {
     distX = Math.abs(attacker.troop_x - defender.troop_x)
     distY = Math.abs(attacker.troop_y - defender.troop_y)
     return distX <= range && distY <= range;
 
-  }else if (bit == 1){
+  } else if (bit == 1) {
     distX = Math.abs(attacker.troop_x - defender.bld_x)
     distY = Math.abs(attacker.troop_y - defender.bld_y)
     return distX <= range && distY <= range;
   }
 
 }
+
+function get_dist_move(troop, tile, movement) {
+  distX = Math.abs(troop.x - tile.x)
+  distY = Math.abs(troop.y - tile.y)
+  return {
+    can_move: (movement - distX - distY >= 0),
+    x: distX,
+    y: distY
+  };
+}
+
+module.exports.update_troop = async function (user_id, bit) {
+  console.log('ENTROU')
+  console.log(user_id)
+  console.log(bit)
+  if (bit == 0) {
+    try {
+      let sql = `UPDATE player_game SET can_move_troop = true  WHERE user_player  = $1;`
+      let result = await pool.query(sql, [user_id]);
+
+      sql = `UPDATE player_game SET can_attack_troop = false  WHERE user_player  = $1;`
+      result = await pool.query(sql, [user_id]);
+      return { status: 200, result: { msg: 'success' } };
+    } catch (err) {
+      console.log(err);
+      return { status: 500, result: err };
+    }
+  } else if (bit == 1) {
+    try {
+      let sql = `UPDATE player_game SET can_attack_troop = true  WHERE user_player  = $1;`
+      let result = await pool.query(sql, [user_id]);
+      sql = `UPDATE player_game SET can_move_troop = false  WHERE user_player  = $1;`
+      result = await pool.query(sql, [user_id]);
+      return { status: 200, result: { msg: 'success' } };
+    } catch (err) {
+      console.log(err);
+      return { status: 500, result: err };
+    }
+  }
+
+
+}
+
+
 
 
 
