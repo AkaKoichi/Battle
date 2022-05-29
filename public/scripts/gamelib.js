@@ -99,7 +99,7 @@ async function setup() {
     iron_amount_img = loadImage('./images/iron.png')
     food_amount_img = loadImage('./images/food.png')
     win_img = loadImage('./images/win/per_win.png')
-    win_img2 = loadImage('./images/win/mc-win.png')
+    win_img2 = loadImage('./images/win/mc_win.png')
     let troop_info = await get_troops();
     for (let troop of troop_info) {
         if (troop.trp_normal_url)
@@ -159,12 +159,18 @@ async function draw() {
         buildings_setup(user_info.user_id, buildings_array, user_info.player_fac_id, game_info.game_id)
         buildings_setup_done = true;
     }
+
     clear();
     if (user_info == undefined)
         return;
     let square_size = tilesize; //width / board_size;
     let num_squares = 0;
     let hovered_tile = mouse_over_tile();
+    if (won) {
+        clear();
+        draw_endGame(user_info.player_fac_id)
+        return
+    }
 
     for (let y = 0; y < square_size * board_size; y += square_size) {
         for (let x = 0; x < square_size * board_size; x += square_size) {
@@ -204,9 +210,7 @@ async function draw() {
         }
 
     }
-    if (won){
-        draw_endGame()
-    }
+
 }
 async function keyPressed() {
     await key_troops(its_my_turn, troop_array, user_info.user_id, buildings)
@@ -349,9 +353,10 @@ async function initialize_game() {
 }
 
 
-function draw_endGame() {
-    image(win_img, 500, 200, 1000, 1000)
-    image(win_img2, 500, 200, 1000, 1000)
+function draw_endGame(fac_id) {
+    if (fac_id == 1) image(win_img, 0, 0, win_img.width, win_img.height)
+    else image(win_img2, 0, 0, win_img2.width, win2_img.height)
+
 }
 
 
