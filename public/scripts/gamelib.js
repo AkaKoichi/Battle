@@ -135,7 +135,7 @@ async function setup() {
         }
     }
 
-    setup_troop()
+    /* setup_troop() */
 
     end_turn_button = createButton('End Turn');
     end_turn_button.position(30, 150);
@@ -154,12 +154,12 @@ async function setup() {
         update_troop(user_info.user_id, 1)
     }
     )
-    roll_button = createButton('Check Roll');
+   /*  roll_button = createButton('Check Roll');
     roll_button.position(30, 230);
     roll_button.mousePressed(  async function () {
         pop_rolls = true
     }
-    )
+    ) */
 };
 
 
@@ -221,9 +221,9 @@ async function draw() {
             text(resources[0].rsc_amount, 935, 660)
             text(resources[1].rsc_amount, 805, 660)
         }
-        if(pop_rolls == true){
+        /* if(pop_rolls == true){
             draw_pop_up_rolls()
-        }
+        } */
 
     }
 

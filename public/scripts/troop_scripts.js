@@ -139,7 +139,7 @@ async function mouse_pressed_troops(user_id, troop_array, buildings, game_id) {
                 (its_my_turn)) {
                 let res = await move_troop_id(user_id, troop_array[i].user_trp_id, tile.x, tile.y, game_id)
                 if (res.troops.msg != undefined) {
-                    initialize_game()   
+                    initialize_game()
                     can_move_troop = false
                     troop_selected_i = 0
                     clicks = 0
@@ -292,16 +292,20 @@ function draw_pop_up_troops(troop_array, tilesize, images) {
         else troop_shown = false;
     }
 }
-function draw_pop_up_rolls() {
-    console.log(trp_id1_array)
-    for (i = 0; i<trp_id1_array.length; i++){
-        text (trp_id1_array.trp_name, 100,100 )
-        text (trp_id2_array.trp_name, 200,100 )
-        text (trp_id2_array.dics_roll, 300,100 )
+
+/* function draw_pop_up_rolls() {
+    let y_pop_rolls = 100;
+    for (i = 0; i < trp_id1_array.length; i++) {
+        fill(color('white'))
+        text(trp_id1_array[i].trp_name, 100, y_pop_rolls)
+        text(trp_id2_array[i].trp_name, 200, y_pop_rolls)
+        text(trp_id2_array[i].dics_roll, 300, y_pop_rolls)
+        fill(color('black'))
+        y_pop_rolls += 15
     }
 }
-async function setup_troop(){
+async function setup_troop() {
     let res = await get_troops_rolls(1)
     trp_id1_array = res.trp_id1_array
     trp_id2_array = res.trp_id2_array
-}
+} */
