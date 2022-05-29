@@ -277,8 +277,7 @@ function draw_pop_up_troops(troop_array, tilesize, images) {
             text('Name :' + troop_array[i].name, windowWidth / 1.4, windowHeight / 20 + troop_image.height + 50)
             text('Health :' + troop_array[i].health, windowWidth / 1.4, windowHeight / 20 + troop_image.height + 70)
             text('movement :' + troop_array[i].movement, windowWidth / 1.4, windowHeight / 20 + troop_image.height + 90)
-            text('Attack :' + troop_array[i].attack, windowWidth / 1.4, windowHeight / 20 + troop_image.height + 110)
-            //text('user_ID :' + troop_array[i].user_id, windowWidth / 1.4, windowHeight / 20 + troop_image.height + 130)
+            text('Attack :' + troop_array[i].attack, windowWidth / 1.4, windowHeight / 20 + troop_image.height + 110) 
             fill(w);
             fill(b);
             //text(troops[i].trp_health, windowWidth / 1.4, windowHeight / 1.7)
