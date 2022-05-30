@@ -252,7 +252,6 @@ async function train(user_id, troop_id, buildings, game_id) {
         if ((buildings[i].bld_name == 'Training Camp') &&
             (buildings[i].user_id == user_id) &&
             (i == buildings_selected_i)) {
-            /* (buildings[i].selected == true) */
 
             let bld_id = buildings[i].user_bld_id
             let result = await train_troop(user_id, troop_id, bld_id, game_id)
