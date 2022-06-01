@@ -1,4 +1,5 @@
 var pool = require('./connection.js')
+let { update_resources } = require('./resources_model')
 
 module.exports.login_check = async function (name, password) {
   try {
@@ -94,8 +95,7 @@ module.exports.check_current_playing_by_game_id = async function (game_id) {
 }
 
 module.exports.update_current_playing_by_game_id = async function (user_id, game_id) {
-  console.log(user_id)
-  console.log('entrou model')
+  console.log('aa')
   try {
     let sql = `UPDATE player_game SET current_user_playing = $1 WHERE game_id = $2;`;
     let result = await pool.query(sql, [user_id, game_id]);
@@ -146,9 +146,148 @@ module.exports.get_game_id_by_user = async function (id) {
   }
 }
 
+module.exports.end_turn = async function (user_id,game_id) {
+  try {
+    let sql = `
+    select user_trp_id,trp_movement
+    from user_troops,troops
+    where user_id = $1 and trp_id = troop_id`;
+    let result = await pool.query(sql, [user_id]);
+    console.log('AQUI')
+    for (let i = 0; i < result.rowCount; i++) {
+      let troop_info = result.rows[i]
+      let sql = `
+      update user_troops 
+      set troop_current_movement = $1 ,
+      can_attack = true 
+      where user_trp_id = $2`;
+      let res = await pool.query(sql, [troop_info.trp_movement, troop_info.user_trp_id]);
 
 
+    }
+    sql = `select count(*)
+    from user_buildings
+    where user_buildings.bld_id = 4 or user_buildings.bld_id = 9  and user_id = $1`
+    result_iron = await pool.query(sql, [user_id]);
+
+    sql = `select count(*)
+    from user_buildings
+    where user_buildings.bld_id = 5 or user_buildings.bld_id = 10  and user_id = $1`
+    result_food = await pool.query(sql, [user_id]);
+
+    sql = `select rsc_amount
+    from user_resources
+    where user_id = $1`
+    res = await pool.query(sql, [user_id]);
+
+    
+
+    sql = `select bld_rsc_given 
+    from buildings
+    where bld_id = 4 or bld_id = 5`
+    let resources = await pool.query(sql);
+
+    let iron_resource_given = resources.rows[0].bld_rsc_given
+    let food_resource_given = resources.rows[1].bld_rsc_given
+
+    let resource_iron = res.rows[1].rsc_amount + (result_iron.rows[0].count * iron_resource_given)
+    let resource_food = res.rows[0].rsc_amount + (result_food.rows[0].count * food_resource_given)
+
+    await update_resources(user_id, resource_food, 1)//MUDAR O HARDCODE
+    await update_resources(user_id, resource_iron, 2)
+    res = await this.get_opponent_id_by_game (user_id, game_id)
+    console.log(res.result.user_player)
+    await this.update_current_playing_by_game_id(res.result.user_player, game_id)
+
+    return { status: 200, result: { msg: 'updated' } };
+  } catch (err) {
+    console.log(err);
+    return { status: 500, result: err };
+  }
+}
+
+//-----------------------------------------------------------------------------------------
+module.exports.create_game = async function (game_name,user_id) {
+  try {
+      let res = await this.get_player_active_games(user_id);
+      if (res.result.length > 0){
+          return {status:400, 
+          result:{msg:"You can only have one active match."}}
+      }else{
+          let sql = `insert into game (game_name,state) 
+                  values ($1,false) returning *`;
+          res = await pool.query(sql,[game_name]);
+          let game_id = res.rows[0].game_id;
+          sql = `insert into player_game (user_player, game_id, player_actions,player_fac_id, can_move_troop, can_attack_troop) 
+             values ($1,$2,5,1,false,false) returning *`;         
+          res = await pool.query(sql,[user_id, game_id,]);
+          let player_game_id = res.rows[0].player_game_id;
+
+          return { status: 200, result: 
+              {msg: "Match successfully created.", game_id: game_id, player_game_id : player_game_id} };
+      }
+  } catch (err) {
+      console.log(err);
+      return { status: 500, result: err };
+  }
+}
+
+module.exports.get_player_active_games = async function (user_id) {
+  try {
+      let sql =` Select * from player_game, game 
+                  where playergame.game_id = game.game_id
+                  and state = false and user_player = $1`;
+      let result = await pool.query(sql, [user_id]);
+      return { status: 200, result: result.rows };
+  } catch (err) {
+      console.log(err);
+      return { status: 500, result: err };
+  }
+}
 
 
+module.exports.join_game = async function (user_id,game_id) {
+  try {
+      let res = await this.get_player_active_games(user_id);
+      if (res.result.length > 0)
+          return {status:400, 
+              result:{msg:"You can only have one active match."}}
+      
+      let sql = `select * from player_game where game_id = $1`;
+      res = await pool.query(sql,[game_id]);
+      // since the match always has a player, no player means no match
+      if (res.rows.length == 0) {
+          return {status:400, 
+              result:{msg:"There is no match with that id"}}
+      } else if(res.rows.length > 1) {
+          return {status:400, 
+              result:{msg:"That match is full"}}
+      }
+      let opponent_id = res.rows[0].user_player;
+      sql = `insert into player_game (user_player, game_id, player_actions,player_fac_id, can_move_troop, can_attack_troop) 
+          values ($1,$2,5,1,false,false) returning *`;         
+      res = await pool.query(sql,[user_id,game_id]);
+      let player_game_id = res.rows[0].player_game_id;
+      return { status: 200, result: {msg: "You successfully joined the match",
+      player_game_id: player_game_id, opponent_id: opponent_id} };
+  } catch (err) {
+      console.log(err);
+      return { status: 500, result: err };
+  }
+}
 
+module.exports.get_players_and_games_waiting =  async function (user_id) {
+  try {
+      let sql = `select game.game_id, player_game_id, username from player_game, game, users
+                 where player_game.game_id = game.game_id and state = false and
+                 user_id = user_player and
+                 (select count(*) from player_game where player_game.game_id = game.game_id) = 1`
+      let res = await pool.query(sql);
+      return {status:200, result: res.rows};
+  } catch (err) {
+      console.log(err);
+      return { status: 500, result: err };
+  }
+
+}
 

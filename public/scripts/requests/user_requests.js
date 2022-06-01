@@ -163,3 +163,99 @@ async function get_game_id(id) {
     }
 }
 
+async function end_turn_id(user_id,game_id) {
+    try {
+        const response = await fetch(`/api/users/end_turn/${user_id}`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({game_id})
+        });
+        if (response.status == 200) {
+            var troops = await response.json();
+            return troops;
+        } else {
+            // Treat errors like 404 here
+            console.log(response);
+        }
+    } catch (err) {
+        // Treat 500 errors here   
+        console.log(err);
+    }
+}
+
+async function create_game_id(game_name,user_id) {
+    try {
+        // TODO: Verify user information  and give errors
+        const response = await fetch(`/api/users/create_game/${user_id}`,
+        {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+              },
+            body: JSON.stringify(game_name) 
+        });
+        var result= await response.json();
+        return {inserted: response.status==200 , result: result };
+    }   catch (err) {
+        // Treat 500 errors here
+        console.log(err);
+    }
+} 
+
+async function get_player_active_games_id(user_id) {
+    try {
+        const response = await fetch(`/api/users/active_games/${user_id}`);
+        if (response.status == 200) {
+           var user = await response.json();
+           return user;
+        } else {
+            // Treat errors like 404 here
+            console.log(response);
+        }
+    } catch (err) {
+        // Treat 500 errors here    
+        console.log(err);
+    }
+}
+
+async function join_game_id(user_id,game_id) {
+    try {
+        // TODO: Verify user information  and give errors
+        const response = await fetch(`/api/users/join_game/${game_id}`,
+        {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+              },
+            body: JSON.stringify(user_id) 
+        });
+        var result= await response.json();
+        return {inserted: response.status==200 , result: result };
+    }   catch (err) {
+        // Treat 500 errors here
+        console.log(err);
+    }
+} 
+
+async function get_players_and_games_waiting_id(user_id) {
+    try {
+        const response = await fetch(`/api/users/games_waiting/${user_id}`);
+        if (response.status == 200) {
+           var user = await response.json();
+           return user;
+        } else {
+            // Treat errors like 404 here
+            console.log(response);
+        }
+    } catch (err) {
+        // Treat 500 errors here    
+        console.log(err);
+    }
+}
+
+
+
+
+

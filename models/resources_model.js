@@ -20,10 +20,10 @@ module.exports.get_resources_id = async function(game_id,user_id) {
     where users.user_id=user_resources.user_id 
     and user_resources.rsc_id = resources.rsc_id 
     and player_game.game_id = game.game_id 
-    and game.game_id = $1 
-    and users.user_id = $2 `;
+    and game.game_id = $1
+    and users.user_id = $2
+    order by rsc_id`;
     let result = await pool.query(sql,[game_id,user_id]);
-    console.log(result.rows)
     let resources = result.rows;
     return { status: 200, result: resources};
   } catch (err) {

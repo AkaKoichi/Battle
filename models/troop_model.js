@@ -56,11 +56,10 @@ module.exports.train = async function (user_id, troop_id, bld_id, game_id) {
   let turn_id;
   let your_turn;
   try {
-    let sql = `select rsc_amount from resources_troops where trp_id = $1`
+    let sql = `select rsc_amount from resources_troops where trp_id = $1 order by rsc_id`
     let result = await pool.query(sql, [troop_id]);
-    troop_iron_cost = result.rows[0].rsc_amount
-    troop_food_cost = result.rows[1].rsc_amount
-
+    troop_food_cost = result.rows[0].rsc_amount
+    troop_iron_cost = result.rows[1].rsc_amount
     sql = `select rsc_amount from user_resources where user_id = $1`
     result = await pool.query(sql, [user_id]);
 
@@ -90,11 +89,11 @@ module.exports.train = async function (user_id, troop_id, bld_id, game_id) {
       let x = result_b.rows[0].bld_x;
       let y = result_b.rows[0].bld_y;
 
-      sql = `Insert into user_troops (user_id,troop_id,troop_x,troop_y,troop_current_health,troop_current_movement)values ($1,$2,$3,$4,$5,$6) `;
+      sql = `Insert into user_troops (user_id,troop_id,troop_x,troop_y,troop_current_health,troop_current_movement,can_attack)values ($1,$2,$3,$4,$5,$6,true) `;
       result = await pool.query(sql, [user_id, troop_id, x, y, troop_current_health, troop_movement]);
       let troops = result.rows;
-      await update_resources(user_id, user_iron - troop_iron_cost, 1)
-      await update_resources(user_id, user_food - troop_food_cost, 2)
+      await update_resources(user_id, user_iron - troop_iron_cost, 2)
+      await update_resources(user_id, user_food - troop_food_cost, 1)
       return { status: 200, result: troops };
 
     } catch (err) {
@@ -140,7 +139,6 @@ module.exports.get_all_troops_resources = async function (id) {
 }
 
 module.exports.move_troop = async function (user_id, troop_id, tile_x, tile_y, game_id) {
-  console.log('ENTROU')
   let sql = `
     select *
     from user_troops,troops
@@ -153,7 +151,6 @@ module.exports.move_troop = async function (user_id, troop_id, tile_x, tile_y, g
   let tile_coordinates = { x: tile_x, y: tile_y }
 
   let can_move = get_dist_move(troop_coordinates, tile_coordinates, troop_info.troop_current_movement)
-  console.log(can_move)
 
   sql = `select can_move_troop
     from player_game
@@ -168,7 +165,6 @@ module.exports.move_troop = async function (user_id, troop_id, tile_x, tile_y, g
     try {
       let sql = `select * from user_troops where troop_x =$1 and troop_y = $2;`;
       let result = await pool.query(sql, [tile_coordinates.x, tile_coordinates.y]);
-      console.log(result.rows[0])
       if (result.rows[0] == undefined) {
         let sql = `UPDATE user_troops SET troop_x = $3, troop_y = $4 , troop_current_movement =$5 WHERE user_id =$1 and user_trp_id =$2; `;
         let result = await pool.query(sql, [user_id, troop_info.user_trp_id, tile_coordinates.x, tile_coordinates.y, troop_info.troop_current_movement - can_move.x - can_move.y]);
@@ -258,15 +254,21 @@ module.exports.attack_troop = async function (user_id, attacker, defender, bit, 
     result = await pool.query(sql, [attacker]);
     let attacker_info = result.rows[0]
 
-    sql = `
+    let can_attack_turn = attacker_info.can_attack
+    if (can_attack_turn == false) return { status: 200, result: { msg: "cannot attack" } };
+
+      sql = `
     select *
     from user_troops,troops
     where user_trp_id = $1 and user_troops.troop_id = troops.trp_id;`
     result = await pool.query(sql, [defender]);
     let defender_info = result.rows[0]
 
+
+
     try {
       if (can_attack && dice_dmg_multiplier >= 1 && can_attack_troop && your_turn) {
+        console.log('passou')
 
         defender_info.troop_current_health -= attacker_info.trp_attack * dice_dmg_multiplier;
 
@@ -277,6 +279,9 @@ module.exports.attack_troop = async function (user_id, attacker, defender, bit, 
 
         let sql = `UPDATE player_game SET can_attack_troop = false  WHERE user_player  = $1;`
         let result = await pool.query(sql, [user_id]);
+
+        sql = `UPDATE user_troops SET can_attack = false  WHERE user_trp_id  = $1;`
+        result = await pool.query(sql, [attacker]);
 
         return { status: 200, result: { msg: "success attack" } };
       } else {
@@ -327,6 +332,8 @@ module.exports.attack_troop = async function (user_id, attacker, defender, bit, 
     result = await pool.query(sql, [attacker]);
     let attacker_info = result.rows[0]
 
+    let can_attack_turn = attacker_info.can_attack
+
     sql = `
     select *
     from user_buildings,buildings
@@ -335,7 +342,8 @@ module.exports.attack_troop = async function (user_id, attacker, defender, bit, 
     let defender_info = result.rows[0]
 
     try {
-      if (can_attack && can_attack_troop && your_turn) {
+      if (can_attack && can_attack_troop && your_turn && can_attack_turn) {
+        console.log('passou')
         defender_info.bld_current_health -= attacker_info.trp_attack;
         if (defender_info.bld_current_health <= 0) {
           await delete_building(defender)
@@ -397,9 +405,7 @@ function get_dist_move(troop, tile, movement) {
 }
 
 module.exports.update_troop = async function (user_id, bit) {
-  console.log('ENTROU')
-  console.log(user_id)
-  console.log(bit)
+
   if (bit == 0) {
     try {
       let sql = `UPDATE player_game SET can_move_troop = true  WHERE user_player  = $1;`
@@ -433,16 +439,16 @@ module.exports.get_troops_rolls_id = async function (fac_id) {
     let sql = `select  trp_name
     from troops,rolls_to_deal_damage
     where trp_id= trp_id1  and trp_fac_id = $1 `;
-    let result = await pool.query(sql,[fac_id]);
+    let result = await pool.query(sql, [fac_id]);
     let trp_id1_array = result.rows
-     sql = `select  trp_name,dics_roll
+    sql = `select  trp_name,dics_roll
     from troops,rolls_to_deal_damage
     where trp_id= trp_id2  and trp_fac_id = $1 `;
-    result = await pool.query(sql,[fac_id]);
+    result = await pool.query(sql, [fac_id]);
     let trp_id2_array = result.rows
     console.log(trp_id2_array)
     let troops = result.rows;
-    return { status: 200, result: {trp_id1_array:trp_id1_array, trp_id2_array:trp_id2_array} };
+    return { status: 200, result: { trp_id1_array: trp_id1_array, trp_id2_array: trp_id2_array } };
   } catch (err) {
     console.log(err);
     return { status: 500, result: err };

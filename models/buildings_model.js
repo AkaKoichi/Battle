@@ -57,10 +57,11 @@ module.exports.build_building = async function (user_id, troop_id, bit, game_id,
   let bld_id = result;
 
   try {
-    let sql = `select rsc_amount from resources_buildings where bld_id = $1`
+    let sql = `select rsc_amount from resources_buildings where bld_id = $1 order by rsc_id`
     let result = await pool.query(sql, [bld_id]);
-    build_iron_cost = result.rows[0].rsc_amount
-    build_food_cost = result.rows[1].rsc_amount
+    build_food_cost = result.rows[0].rsc_amount
+    build_iron_cost = result.rows[1].rsc_amount
+    
     sql = `select rsc_amount from user_resources where user_id = $1`
     result = await pool.query(sql, [user_id]);
     user_iron = result.rows[0].rsc_amount
@@ -97,9 +98,8 @@ module.exports.build_building = async function (user_id, troop_id, bit, game_id,
       sql = `Insert into user_buildings (user_id,bld_id,bld_x,bld_y,bld_current_health)values ($1,$2,$3,$4,$5) `;
       result = await pool.query(sql, [user_id, bld_id, x, y, bld_current_health]);
       let buildings = result.rows;
-      console.log('mau mau')
-      await update_resources(user_id, user_iron - build_iron_cost, 1)
-      await update_resources(user_id, user_food - build_food_cost, 2)
+      await update_resources(user_id, user_iron - build_iron_cost, 2)
+      await update_resources(user_id, user_food - build_food_cost, 1)
       return { status: 200, result: buildings };
     } catch (err) {
       console.log(err);

@@ -146,43 +146,44 @@ async function mouse_pressed_troops(user_id, troop_array, buildings, game_id) {
                     break
                 }
 
+            } else if (can_move_troop) {
+
             } else {
                 troop_array[i].unselect()
+                /* troop_selected_i=undefined */
+            }
+            if ((can_attack_troop) &&
+                (troop_array[i].x == tile.x && troop_array[i].y == tile.y) &&
+                (troop_array[i].user_id != user_id) &&
+                (attack > 0)) {
+                troop_array[i].select()
+                defender_index = i;
+                make_attack(troop_array, user_id, buildings, 0, game_id)
+                can_attack_troop = false;
+                attack = 0;
+                break
+            }
+
+            if ((can_attack_troop) &&
+                (troop_array[i].x == tile.x && troop_array[i].y == tile.y) &&
+                (troop_array[i].user_id == user_id)) {
+
+                troop_array[i].select()
+                attacker_index = i;
+                troop_selected_i = i
+                attack = 1
+                break
+
+            } else if (troop_array[i].x == tile.x && troop_array[i].y == tile.y) {
+                troop_array[i].select()
+                troop_selected_i = i
+                clicks = 1
+                break
+            } else {
+                troop_array[i].unselect()
+                /* troop_selected_i = undefined */
 
             }
-        }
-
-
-        if ((can_attack_troop) &&
-            (troop_array[i].x == tile.x && troop_array[i].y == tile.y) &&
-            (troop_array[i].user_id != user_id) &&
-            (attack > 0)) {
-            troop_array[i].select()
-            defender_index = i;
-            make_attack(troop_array, user_id, buildings, 0, game_id)
-            can_attack_troop = false;
-            attack = 0;
-            break
-        }
-
-        if ((can_attack_troop) &&
-            (troop_array[i].x == tile.x && troop_array[i].y == tile.y) &&
-            (troop_array[i].user_id == user_id)) {
-
-            troop_array[i].select()
-            attacker_index = i;
-            troop_selected_i = i
-            attack = 1
-            break
-
-        } else if (troop_array[i].x == tile.x && troop_array[i].y == tile.y) {
-            troop_array[i].select()
-            troop_selected_i = i
-            clicks = 1
-            break
-        } else {
-            troop_array[i].unselect()
-
         }
     }
 }
@@ -208,6 +209,8 @@ async function make_attack(troop_array, user_id, buildings, bit, game_id) {
         alert('you WOOOOOOOON')
         initialize_game()
         won = true;
+    } else if (res.msg == "cannot attack") {
+        alert('A troop can only attack once per turn')
     }
     attacker_index = -1
     defender_index = -1
@@ -223,7 +226,7 @@ function get_dist_move(troop, tile) {
     distX = Math.abs(troop.x - tile.x)
     distY = Math.abs(troop.y - tile.y)
     return {
-        can_move: (distX <= troop.movement && distY <= troop.movement),
+        can_move: (troop.movement - distX - distY >= 0),
         x: distX,
         y: distY
     };
