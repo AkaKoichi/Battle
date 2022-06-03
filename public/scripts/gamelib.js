@@ -27,6 +27,7 @@ let iron_amount_img;
 let food_amount_img;
 let win_img;
 let win_img2;
+let song;
 
 let troop_array = []
 let troops = [];
@@ -108,6 +109,7 @@ async function setup() {
     food_amount_img = loadImage('./images/food.png')
     win_img = loadImage('./images/win/per_win.png')
     win_img2 = loadImage('./images/win/mc_win.png')
+    song = loadSound('./music/musica_de_fundo.mp3')
     let troop_info = await get_troops();
     for (let troop of troop_info) {
         if (troop.trp_normal_url)
@@ -370,6 +372,7 @@ async function initialize_game() {
     troop_array = []
     buildings_array = []
     resources = []
+    song.play() 
 
     for (let i = 0; i < troops.length; i++) {
 
