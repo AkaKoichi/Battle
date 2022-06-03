@@ -3,6 +3,12 @@ var router = express.Router();
 var resources_model = require("../models/resources_model");
 
 
+router.get('/places/:id', async function(req, res, next) {
+  let game_id = req.params.id;
+  let result = await resources_model.get_resources_places(game_id);
+  res.status(result.status).send(result.result);
+});
+
 router.put('/update/:id', async function(req, res, next) {
   let id = req.params.id;
   let rsc_amount= req.body.rsc_amount;

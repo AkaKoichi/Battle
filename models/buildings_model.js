@@ -1,6 +1,6 @@
 var pool = require('./connection.js')
 let { update_resources } = require('./resources_model')
-let { check_current_playing_by_game_id } = require('./user_model')
+let { check_current_playing_by_game_id, get_opponent_id_by_game } = require('./user_model')
 
 
 
@@ -33,7 +33,7 @@ module.exports.get_buildings_id = async function (game_id) {
 }
 
 
-module.exports.build_building = async function (user_id, troop_id, bit, game_id,fac_id) {
+module.exports.build_building = async function (user_id, troop_id, bit, game_id, fac_id) {
 
   let build_iron_cost;
   let build_food_cost;
@@ -42,18 +42,18 @@ module.exports.build_building = async function (user_id, troop_id, bit, game_id,
   let your_turn;
   let turn_id;
   let bld_name;
-  if (bit == 1){
-    bld_name ='Mine'
-  }else if (bit == 2){
-    bld_name ='Field'
-  }else if (bit == 3){
-    bld_name ='Training Camp'
+  if (bit == 1) {
+    bld_name = 'Mine'
+  } else if (bit == 2) {
+    bld_name = 'Field'
+  } else if (bit == 3) {
+    bld_name = 'Training Camp'
   }
-  let sql=`select bld_id 
+  let sql = `select bld_id 
   from buildings
   where bld_name like $1 and bld_fac_id = $2`
-  let result = await pool.query(sql, [bld_name,fac_id]);
-  result=result.rows[0].bld_id
+  let result = await pool.query(sql, [bld_name, fac_id]);
+  result = result.rows[0].bld_id
   let bld_id = result;
 
   try {
@@ -61,7 +61,7 @@ module.exports.build_building = async function (user_id, troop_id, bit, game_id,
     let result = await pool.query(sql, [bld_id]);
     build_food_cost = result.rows[0].rsc_amount
     build_iron_cost = result.rows[1].rsc_amount
-    
+
     sql = `select rsc_amount from user_resources where user_id = $1`
     result = await pool.query(sql, [user_id]);
     user_iron = result.rows[0].rsc_amount
@@ -89,10 +89,12 @@ module.exports.build_building = async function (user_id, troop_id, bit, game_id,
 
       sql = `select user_bld_id
       from user_buildings
-      where bld_x = $1 and bld_y = $2`
-      result = await pool.query(sql, [x,y]);
+      where bld_x = $1 and bld_y = $2 and (user_id = $3 or user_id = $4)`
+      let oponent_id = await get_opponent_id_by_game(user_id, game_id)
+      oponent_id = oponent_id.result.user_player
+      result = await pool.query(sql, [x, y, user_id, oponent_id]);
       if (result.rows[0] != undefined) {
-        return { status: 200, result: {msg:'building exists here'} };
+        return { status: 200, result: { msg: 'building exists here' } };
       }
 
       sql = `Insert into user_buildings (user_id,bld_id,bld_x,bld_y,bld_current_health)values ($1,$2,$3,$4,$5) `;
@@ -120,11 +122,11 @@ module.exports.delete_building = async function (id) {
   }
 }
 
-module.exports.update_building = async function (user_id, user_bld_id,health) {
+module.exports.update_building = async function (user_id, user_bld_id, health) {
   try {
 
     let sql = `UPDATE user_buildings  SET bld_current_health =$3 WHERE user_id =$1 and user_bld_id =$2; `;
-    let result = await pool.query(sql, [user_id, user_bld_id,health]);
+    let result = await pool.query(sql, [user_id, user_bld_id, health]);
     let troops = result.rows;
     return { status: 200, result: troops };
   } catch (err) {

@@ -1,8 +1,9 @@
 var pool = require('./connection.js')
 let { update_resources } = require('./resources_model')
-let { check_current_playing_by_game_id } = require('./user_model')
+let { check_current_playing_by_game_id, get_opponent_id_by_game } = require('./user_model')
 let { delete_building } = require('./buildings_model')
 let { update_building } = require('./buildings_model')
+let { get_oponent_id } = require('./user_model')
 
 
 
@@ -161,10 +162,12 @@ module.exports.move_troop = async function (user_id, troop_id, tile_x, tile_y, g
   let turn_id = await check_current_playing_by_game_id(game_id)
   turn_id = turn_id.result[0].current_user_playing
   let your_turn = (turn_id == user_id)
+  let oponent_id = await get_opponent_id_by_game(user_id, game_id)
+  oponent_id = oponent_id.result.user_player
   if (can_move_troop && your_turn & can_move.can_move && troop_info.user_id == user_id) {
     try {
-      let sql = `select * from user_troops where troop_x =$1 and troop_y = $2;`;
-      let result = await pool.query(sql, [tile_coordinates.x, tile_coordinates.y]);
+      let sql = `select * from user_troops where troop_x =$1 and troop_y = $2 and (user_id = $3 or user_id = $4);`;
+      let result = await pool.query(sql, [tile_coordinates.x, tile_coordinates.y, user_id, oponent_id]);
       if (result.rows[0] == undefined) {
         let sql = `UPDATE user_troops SET troop_x = $3, troop_y = $4 , troop_current_movement =$5 WHERE user_id =$1 and user_trp_id =$2; `;
         let result = await pool.query(sql, [user_id, troop_info.user_trp_id, tile_coordinates.x, tile_coordinates.y, troop_info.troop_current_movement - can_move.x - can_move.y]);
@@ -254,21 +257,22 @@ module.exports.attack_troop = async function (user_id, attacker, defender, bit, 
     result = await pool.query(sql, [attacker]);
     let attacker_info = result.rows[0]
 
-    let can_attack_turn = attacker_info.can_attack
-    if (can_attack_turn == false) return { status: 200, result: { msg: "cannot attack" } };
+    /* let can_attack_turn = attacker_info.can_attack
+    if (can_attack_turn == false) return { status: 200, result: { msg: "cannot attack" } }; */
 
-      sql = `
+    sql = `
     select *
     from user_troops,troops
     where user_trp_id = $1 and user_troops.troop_id = troops.trp_id;`
     result = await pool.query(sql, [defender]);
     let defender_info = result.rows[0]
 
-
+    sql = `UPDATE user_troops SET can_attack = false  WHERE user_trp_id  = $1;`
+    result = await pool.query(sql, [attacker]);
 
     try {
       if (can_attack && dice_dmg_multiplier >= 1 && can_attack_troop && your_turn) {
-        console.log('passou')
+
 
         defender_info.troop_current_health -= attacker_info.trp_attack * dice_dmg_multiplier;
 
@@ -280,8 +284,7 @@ module.exports.attack_troop = async function (user_id, attacker, defender, bit, 
         let sql = `UPDATE player_game SET can_attack_troop = false  WHERE user_player  = $1;`
         let result = await pool.query(sql, [user_id]);
 
-        sql = `UPDATE user_troops SET can_attack = false  WHERE user_trp_id  = $1;`
-        result = await pool.query(sql, [attacker]);
+
 
         return { status: 200, result: { msg: "success attack" } };
       } else {
@@ -332,7 +335,8 @@ module.exports.attack_troop = async function (user_id, attacker, defender, bit, 
     result = await pool.query(sql, [attacker]);
     let attacker_info = result.rows[0]
 
-    let can_attack_turn = attacker_info.can_attack
+    /* let can_attack_turn = attacker_info.can_attack
+    if (can_attack_turn == false) return { status: 200, result: { msg: "cannot attack" } } */
 
     sql = `
     select *
@@ -341,8 +345,11 @@ module.exports.attack_troop = async function (user_id, attacker, defender, bit, 
     result = await pool.query(sql, [defender]);
     let defender_info = result.rows[0]
 
+    sql = `UPDATE user_troops SET can_attack = false  WHERE user_trp_id  = $1;`
+    result = await pool.query(sql, [attacker]);
+
     try {
-      if (can_attack && can_attack_troop && your_turn && can_attack_turn) {
+      if (can_attack && can_attack_troop && your_turn) {
         console.log('passou')
         defender_info.bld_current_health -= attacker_info.trp_attack;
         if (defender_info.bld_current_health <= 0) {

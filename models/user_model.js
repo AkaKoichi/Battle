@@ -18,9 +18,27 @@ module.exports.login_check = async function (name, password) {
 
 module.exports.get_logged_user_info = async function (userId) {
   try {
+    let sql = `Select user_id , username, user_trophies
+      from users 
+      where user_id = $1`;
+    let result = await pool.query(sql, [userId]);
+    if (result.rows.length > 0) {
+      let user = result.rows[0];
+      return { status: 200, result: user };
+    } else {
+      return { status: 404, result: { msg: "No user with that id" } };
+    }
+  } catch (err) {
+    console.log(err);
+    return { status: 500, result: err };
+  }
+}
+
+module.exports.get_logged_user_info_game = async function (userId) {
+  try {
     let sql = `Select user_id , username, user_trophies,player_fac_id
-         from users ,player_game
-         where player_game.user_player=$1 and user_id = $1`;
+    from users ,player_game
+    where player_game.user_player=$1 and user_id = $1`;
     let result = await pool.query(sql, [userId]);
     if (result.rows.length > 0) {
       let user = result.rows[0];
@@ -146,7 +164,7 @@ module.exports.get_game_id_by_user = async function (id) {
   }
 }
 
-module.exports.end_turn = async function (user_id,game_id) {
+module.exports.end_turn = async function (user_id, game_id) {
   try {
     let sql = `
     select user_trp_id,trp_movement
@@ -167,12 +185,12 @@ module.exports.end_turn = async function (user_id,game_id) {
     }
     sql = `select count(*)
     from user_buildings
-    where user_buildings.bld_id = 4 or user_buildings.bld_id = 9  and user_id = $1`
+    where (user_buildings.bld_id = 4 or user_buildings.bld_id = 9)  and user_id = $1`
     result_iron = await pool.query(sql, [user_id]);
 
     sql = `select count(*)
     from user_buildings
-    where user_buildings.bld_id = 5 or user_buildings.bld_id = 10  and user_id = $1`
+    where (user_buildings.bld_id = 5 or user_buildings.bld_id = 10)  and user_id = $1`
     result_food = await pool.query(sql, [user_id]);
 
     sql = `select rsc_amount
@@ -180,7 +198,7 @@ module.exports.end_turn = async function (user_id,game_id) {
     where user_id = $1`
     res = await pool.query(sql, [user_id]);
 
-    
+
 
     sql = `select bld_rsc_given 
     from buildings
@@ -195,7 +213,7 @@ module.exports.end_turn = async function (user_id,game_id) {
 
     await update_resources(user_id, resource_food, 1)//MUDAR O HARDCODE
     await update_resources(user_id, resource_iron, 2)
-    res = await this.get_opponent_id_by_game (user_id, game_id)
+    res = await this.get_opponent_id_by_game(user_id, game_id)
     console.log(res.result.user_player)
     await this.update_current_playing_by_game_id(res.result.user_player, game_id)
 
@@ -207,87 +225,170 @@ module.exports.end_turn = async function (user_id,game_id) {
 }
 
 //-----------------------------------------------------------------------------------------
-module.exports.create_game = async function (game_name,user_id) {
+module.exports.create_game = async function (game_name, user_id) {
+  console.log(user_id)
   try {
-      let res = await this.get_player_active_games(user_id);
-      if (res.result.length > 0){
-          return {status:400, 
-          result:{msg:"You can only have one active match."}}
-      }else{
-          let sql = `insert into game (game_name,state) 
-                  values ($1,false) returning *`;
-          res = await pool.query(sql,[game_name]);
-          let game_id = res.rows[0].game_id;
-          sql = `insert into player_game (user_player, game_id, player_actions,player_fac_id, can_move_troop, can_attack_troop) 
-             values ($1,$2,5,1,false,false) returning *`;         
-          res = await pool.query(sql,[user_id, game_id,]);
-          let player_game_id = res.rows[0].player_game_id;
-
-          return { status: 200, result: 
-              {msg: "Match successfully created.", game_id: game_id, player_game_id : player_game_id} };
+    let res = await this.get_player_active_games(user_id);
+    if (res.result.length > 0) {
+      return {
+        status: 200,
+        result: { msg: "You can only have one active match." }
       }
+    } else {
+      let sql = `insert into game (game_name,state) 
+                  values ($1,false) returning *`;
+      res = await pool.query(sql, [game_name]);
+      let game_id = res.rows[0].game_id;
+      sql = `insert into player_game (user_player, game_id,current_user_playing, player_actions,player_fac_id, can_move_troop, can_attack_troop) 
+             values ($1,$2,$1,5,1,false,false) returning *`;
+      res = await pool.query(sql, [user_id, game_id,]);
+      let player_game_id = res.rows[0].player_game_id;
+
+      return {
+        status: 200, result:
+          { msg: "Match successfully created.", game_id: game_id, player_game_id: player_game_id }
+      };
+    }
   } catch (err) {
-      console.log(err);
-      return { status: 500, result: err };
+    console.log(err);
+    return { status: 500, result: err };
   }
 }
 
 module.exports.get_player_active_games = async function (user_id) {
   try {
-      let sql =` Select * from player_game, game 
-                  where playergame.game_id = game.game_id
+    let sql = ` Select * from player_game, game 
+                  where player_game.game_id = game.game_id
                   and state = false and user_player = $1`;
-      let result = await pool.query(sql, [user_id]);
-      return { status: 200, result: result.rows };
+    let result = await pool.query(sql, [user_id]);
+    return { status: 200, result: result.rows };
   } catch (err) {
-      console.log(err);
-      return { status: 500, result: err };
+    console.log(err);
+    return { status: 500, result: err };
   }
 }
 
 
-module.exports.join_game = async function (user_id,game_id) {
+module.exports.join_game = async function (user_id, game_id) {
   try {
-      let res = await this.get_player_active_games(user_id);
-      if (res.result.length > 0)
-          return {status:400, 
-              result:{msg:"You can only have one active match."}}
-      
-      let sql = `select * from player_game where game_id = $1`;
-      res = await pool.query(sql,[game_id]);
-      // since the match always has a player, no player means no match
-      if (res.rows.length == 0) {
-          return {status:400, 
-              result:{msg:"There is no match with that id"}}
-      } else if(res.rows.length > 1) {
-          return {status:400, 
-              result:{msg:"That match is full"}}
+    let res = await this.get_player_active_games(user_id);
+    if (res.result.length > 0) {
+      console.log('one match only')
+      return {
+        status: 400,
+        result: { msg: "You can only have one active match." }
       }
-      let opponent_id = res.rows[0].user_player;
-      sql = `insert into player_game (user_player, game_id, player_actions,player_fac_id, can_move_troop, can_attack_troop) 
-          values ($1,$2,5,1,false,false) returning *`;         
-      res = await pool.query(sql,[user_id,game_id]);
-      let player_game_id = res.rows[0].player_game_id;
-      return { status: 200, result: {msg: "You successfully joined the match",
-      player_game_id: player_game_id, opponent_id: opponent_id} };
+    }
+
+    let sql = `select * from player_game where game_id = $1`;
+    console.log(game_id)
+    res = await pool.query(sql, [game_id]);
+    // since the match always has a player, no player means no match
+    console.log(res.rows)
+    if (res.rows.length == 0) {
+      console.log('no match with id')
+      return {
+        status: 400,
+        result: { msg: "There is no match with that id" }
+      }
+    } else if (res.rows.length > 1) {
+      console.log('full')
+      return {
+
+        status: 400,
+        result: { msg: "That match is full" }
+      }
+    }
+    let opponent_id = res.rows[0].user_player;
+    sql = `insert into player_game (user_player, game_id,current_user_playing, player_actions,player_fac_id, can_move_troop, can_attack_troop) 
+          values ($1,$2,$3,5,2,false,false) returning *`;
+    res = await pool.query(sql, [user_id, game_id, opponent_id]);
+    let player_game_id = res.rows[0].player_game_id;
+
+    sql = `insert into user_resources (user_id,rsc_id,rsc_amount)
+    values($1,$2,$3);`;
+    await pool.query(sql, [opponent_id, 1, 16]);
+    await pool.query(sql, [opponent_id, 2, 16]);
+    await pool.query(sql, [user_id, 1, 16]);
+    await pool.query(sql, [user_id, 2, 16]);
+    sql = `insert into user_buildings (user_id,bld_id,bld_x,bld_y,bld_current_health)
+    values($1,$2,$3,$4,$5);`
+
+    await pool.query(sql, [opponent_id, 1, 0, 7, 12]);
+    await pool.query(sql, [opponent_id, 2, 0, 8, 12]);
+    await pool.query(sql, [user_id, 6, 15, 7, 12]);
+    await pool.query(sql, [user_id, 7, 15, 8, 12]);
+
+    sql = `insert into user_troops(user_id,troop_id,troop_x,troop_y,troop_current_health,troop_current_movement,can_attack)
+    values($1,$2,$3,$4,$5,$6,$7);`;
+
+    await pool.query(sql, [opponent_id, 1, 0, 7, 4, 2, true]);
+    await pool.query(sql, [user_id, 7, 15, 7, 4, 2, true]);
+
+    sql = `insert into random_rsc (rsc,rsc_x,rsc_y,game_id)
+    values($1,$2,$3,$4)`;
+
+    await pool.query(sql, ['iron', Math.floor(Math.random() * (16 - 2) + 1), Math.floor(Math.random() * (16 - 2) + 1), game_id]);
+    await pool.query(sql, ['iron', Math.floor(Math.random() * (16 - 2) + 1), Math.floor(Math.random() * (16 - 2) + 1), game_id]);
+    await pool.query(sql, ['food', Math.floor(Math.random() * (16 - 2) + 1), Math.floor(Math.random() * (16 - 2) + 1), game_id]);
+    await pool.query(sql, ['food', Math.floor(Math.random() * (16 - 2) + 1), Math.floor(Math.random() * (16 - 2) + 1), game_id]);
+
+    return {
+      status: 200, result: {
+        msg: "You successfully joined the match",
+        player_game_id: player_game_id, opponent_id: opponent_id
+      }
+    };
   } catch (err) {
-      console.log(err);
-      return { status: 500, result: err };
+    console.log(err);
+    return { status: 500, result: err };
   }
 }
 
-module.exports.get_players_and_games_waiting =  async function (user_id) {
+module.exports.get_players_and_games_waiting = async function (user_id) {
   try {
-      let sql = `select game.game_id, player_game_id, username from player_game, game, users
+    let sql = `select game.game_id, player_game_id, username from player_game, game, users
                  where player_game.game_id = game.game_id and state = false and
                  user_id = user_player and
                  (select count(*) from player_game where player_game.game_id = game.game_id) = 1`
-      let res = await pool.query(sql);
-      return {status:200, result: res.rows};
+    let res = await pool.query(sql);
+    return { status: 200, result: res.rows };
   } catch (err) {
-      console.log(err);
-      return { status: 500, result: err };
+    console.log(err);
+    return { status: 500, result: err };
   }
 
 }
+
+
+module.exports.delete_all_from = async function (user_id, game_id) {
+  console.log(game_id)
+  try {
+    let sql = `delete from user_troops where user_id = $1`
+    await pool.query(sql,[user_id]);
+    console.log('1')
+    sql = `delete from user_buildings where user_id = $1`
+    await pool.query(sql,[user_id]);
+    console.log('2')
+    sql = `delete from user_resources where user_id = $1`
+    await pool.query(sql,[user_id]);
+    console.log('3')
+    sql = `delete from player_game where game_id = $1`
+    await pool.query(sql,[game_id]);
+    console.log('4')
+    sql = `delete from random_rsc where game_id = $1`
+    await pool.query(sql,[game_id]);
+    console.log('5')
+    sql = `delete from game where game_id = $1`
+    await pool.query(sql,[game_id]);
+    console.log('6')
+    return { status: 200 };
+  } catch (err) {
+    console.log(err);
+    return { status: 500, result: err };
+  }
+
+}
+
+
 

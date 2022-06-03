@@ -43,3 +43,15 @@ module.exports.update_resources = async function (user_id, rsc_amount,rsc_id) {
   }
 }
 
+module.exports.get_resources_places = async function(game_id) {
+  try {
+    let sql = "Select * from random_rsc where game_id = $1 ";
+    let result = await pool.query(sql,[game_id]);
+    let resources = result.rows;
+    return { status: 200, result: resources};
+  } catch (err) {
+    console.log(err);
+    return { status: 500, result: err};
+  }
+} 
+
