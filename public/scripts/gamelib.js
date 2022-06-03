@@ -103,7 +103,6 @@ window.onload = async () => {
 }
 
 async function setup() {
-
     initialize_game()
     //textFont(TRACK)
     tile_image = loadImage('./images/tile/tile.png')
@@ -176,6 +175,7 @@ async function setup() {
 
 
 async function draw() {
+    
     if (game_info != undefined && game_initialized == false) {
         initialize_game()
         game_initialized = true;
@@ -267,7 +267,7 @@ async function keyPressed() {
 }
 
 async function mousePressed() {
-    song.play()
+    song.loop()
     let tile = mouse_over_tile()
     console.log(tile)
     let y = (int)(mouseX / tilesize)
