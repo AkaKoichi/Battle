@@ -192,7 +192,6 @@ async function mouse_pressed_troops(user_id, troop_array, buildings, game_id) {
 
 
 async function make_attack(troop_array, user_id, buildings, bit, game_id) {
-
     var attacker = troop_array[attacker_index].user_trp_id;
     if (bit == 0) var defender = troop_array[defender_index].user_trp_id;
     else var defender = buildings[building_defender_index].user_bld_id;
@@ -206,9 +205,11 @@ async function make_attack(troop_array, user_id, buildings, bit, game_id) {
         initialize_game()
 
     } else if (res.msg == 'you won') {
+        console.log(game_id)
         alert('you WOOOOOOOON')
         initialize_game()
         won = true;
+        await delete_all_from_id(user_id, game_id)
     } else if (res.msg == "cannot attack") {
         alert('A troop can only attack once per turn')
     }

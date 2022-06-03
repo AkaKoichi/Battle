@@ -41,6 +41,17 @@ async function request_user_info() {
     }
 }
 
+async function request_user_info_game() {
+    try {
+        const response = await fetch(`/api/users/profile_game`);
+        var result = await response.json();
+        return {logged: response.status!=401 , result: result };
+    } catch (err) {
+        // Treat 500 errors here
+        console.log(err);
+    }
+}
+
 async function register(user) {
     try {
         // TODO: Verify user information  and give errors
@@ -194,7 +205,7 @@ async function create_game_id(game_name,user_id) {
             headers: {
                 "Content-Type": "application/json"
               },
-            body: JSON.stringify(game_name) 
+            body: JSON.stringify({game_name}) 
         });
         var result= await response.json();
         return {inserted: response.status==200 , result: result };
@@ -229,7 +240,7 @@ async function join_game_id(user_id,game_id) {
             headers: {
                 "Content-Type": "application/json"
               },
-            body: JSON.stringify(user_id) 
+            body: JSON.stringify({user_id}) 
         });
         var result= await response.json();
         return {inserted: response.status==200 , result: result };
@@ -254,6 +265,27 @@ async function get_players_and_games_waiting_id(user_id) {
         console.log(err);
     }
 }
+
+async function delete_all_from_id(user_id,game_id) {
+    try {
+        const response = await fetch(`/api/users/delete/${user_id}`, {
+            method: "DELETE",
+            body: JSON.stringify(game_id) 
+        });
+        if (response.status == 200) {
+            var user = await response.json();
+            return user;
+        } else {
+            // Treat errors like 404 here
+            console.log(response);
+        }
+    } catch (err) {
+        // Treat 500 errors here    
+        console.log(err);
+    }
+}
+
+
 
 
 
