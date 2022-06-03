@@ -59,7 +59,13 @@ let update_timer = 0;
 const radius = tilesize / 2;
 const diameter = radius * 2;
 
+
+function preload(){
+    song = loadSound('./music/musica_de_fundo.mp3')
+}
+
 window.onload = async () => {
+    
     user_info = await get_user_info_game();
     game_info = await get_game_id(user_info.user_id)
     oponent_info = await get_oponent_id(user_info.user_id, game_info.game_id);
@@ -109,7 +115,8 @@ async function setup() {
     food_amount_img = loadImage('./images/food.png')
     win_img = loadImage('./images/win/per_win.png')
     win_img2 = loadImage('./images/win/mc_win.png')
-    song = loadSound('./music/musica_de_fundo.mp3')
+   
+    
     let troop_info = await get_troops();
     for (let troop of troop_info) {
         if (troop.trp_normal_url)
@@ -260,6 +267,7 @@ async function keyPressed() {
 }
 
 async function mousePressed() {
+    song.play()
     let tile = mouse_over_tile()
     console.log(tile)
     let y = (int)(mouseX / tilesize)
@@ -368,7 +376,7 @@ async function initialize_game() {
     troop_array = []
     buildings_array = []
     resources = []
-    song.play() 
+    
 
     for (let i = 0; i < troops.length; i++) {
 
