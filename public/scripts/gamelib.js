@@ -66,7 +66,9 @@ const radius = tilesize / 2;
 const diameter = radius * 2;
 
 
-
+function preload() {
+    song = loadSound('./music/musica_de_fundo.mp3')  
+}
 
 window.onload = async () => {
     
@@ -108,17 +110,12 @@ window.onload = async () => {
 }
 
 async function setup() {
-    
-    initialize_game()
     bg_music = loadSound('./music/musica_de_fundo.mp3')
     building_sound= loadSound('./music/building.mp3')
     building_falling_sound= loadSound('./music/destruir edificios.mp3')
     attacking_sound= loadSound('./music/espada_ataque.mp3')
     walking_sound= loadSound('./music/passos.mp3')
-
-    end_turn_button = createImg('/images/buttons/end_turn_button.png');
-    attack_button = createImg('/images/buttons/attack_button.png');
-    move_button = createImg('/images/buttons/move_button.png');
+    initialize_game()
     //textFont(TRACK)
     tile_image = loadImage('./images/tile/tile.png')
     tile_image2 = loadImage('./images/tile/tile2.png')
@@ -170,14 +167,12 @@ async function setup() {
     move_button.position(windowWidth/2.2, windowWidth/2.2);
     move_button.mousePressed(async function () {
         update_troop(user_info.user_id, 0)
-        console.log('ss')
     }
     )
 
     attack_button.position(windowWidth/1.77, windowWidth/2.2);
     attack_button.mousePressed(async function () {
         update_troop(user_info.user_id, 1)
-        console.log('aaa')
     }
     )
     /*  roll_button = createButton('Check Roll');
@@ -349,10 +344,10 @@ function draw_endGame(fac_id) {
 async function update_troop(user_id, bit) {
     console.log('entrou')
     if (bit == 0) {
-        await update_troop_id(user_id, bit)
+        update_troop_id(user_id, bit)
         can_move_troop = true;
     } else if (bit == 1) {
-        await update_troop_id(user_id, bit)
+        update_troop_id(user_id, bit)
         can_attack_troop = true;
     }
 }
