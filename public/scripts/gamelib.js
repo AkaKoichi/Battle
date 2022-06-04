@@ -105,6 +105,7 @@ window.onload = async () => {
 }
 
 async function setup() {
+    initialize_game()
     bg_music = loadSound('./music/musica_de_fundo.mp3')
     building_sound= loadSound('./music/building.mp3')
     building_falling_sound= loadSound('./music/destruir edificios.mp3')
@@ -258,6 +259,7 @@ async function draw() {
         draw_pop_up_troops(troop_array, tilesize, troop_images)
         fill(color('white'))
         text('user id : ' + user_info.user_id, 800, 200)
+        text('actions : ' + user_info.player_actions, 900, 200)
         fill(color('black'))
         image(iron_amount_img, 920, 600, iron_amount_img.width * 0.5, iron_amount_img.height * 0.5)
         image(food_amount_img, 770, 600, food_amount_img.width * 0.5, food_amount_img.height * 0.5)
@@ -278,8 +280,8 @@ async function keyPressed() {
 }
 
 async function mousePressed() {
-    bg_music.loop()
-    bg_music.rate(2)
+    //bg_music.loop()
+    //bg_music.rate(2)
     let tile = mouse_over_tile()
     console.log(tile)
     let y = (int)(mouseX / tilesize)
@@ -411,6 +413,8 @@ async function initialize_game() {
     if (its_my_turn) {
         resources = []
         resources = await get_resources_by_id(game_info.game_id, user_info.user_id);
+        user_info =[]
+        user_info = await get_user_info_game();
     }
 }
 
