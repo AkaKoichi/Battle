@@ -125,8 +125,8 @@ async function setup() {
     food_amount_img = loadImage('./images/food.png')
     win_img = loadImage('./images/win/per_win.png')
     win_img2 = loadImage('./images/win/mc_win.png')
-   
-    
+
+
     let troop_info = await get_troops();
     for (let troop of troop_info) {
         if (troop.trp_normal_url)
@@ -159,19 +159,16 @@ async function setup() {
 
     /* setup_troop() */
 
-    end_turn_button = createButton('End Turn');
-    end_turn_button.position(30, 150);
+    end_turn_button.position(windowWidth/2.9, windowWidth/2.2);
     end_turn_button.mousePressed(end_turn);
 
-    move_button = createButton('Move');
-    move_button.position(30, 175);
+    move_button.position(windowWidth/2.2, windowWidth/2.2);
     move_button.mousePressed(async function () {
         update_troop(user_info.user_id, 0)
     }
     )
 
-    attack_button = createButton('Attack');
-    attack_button.position(30, 200);
+    attack_button.position(windowWidth/1.77, windowWidth/2.2);
     attack_button.mousePressed(async function () {
         update_troop(user_info.user_id, 1)
     }
@@ -186,7 +183,7 @@ async function setup() {
 
 
 async function draw() {
-    
+
     if (game_info != undefined && game_initialized == false) {
         initialize_game()
         game_initialized = true;
