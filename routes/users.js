@@ -3,10 +3,29 @@ var router = express.Router();
 var uModel = require("../models/user_model");
 var auth = require("../models/authentication")
 
+router.get('/dice_rolled/:id', async function (req, res, next) {
+    let game_id = req.params.id;
+    let result = await uModel.check_if_dice_rolled(game_id);
+    res.status(result.status).send(result.result);
+});
+
+router.put('/update_dice/:id', async function (req, res, next) {
+    let user_id = req.params.id;
+    let result = await uModel.update_dice_number(user_id);
+    res.status(result.status).send(result.result);
+});
+
+
+router.get('/game_started/:id', async function (req, res, next) {
+    let user_id = req.params.id;
+    let result = await uModel.check_if_game_started(user_id);
+    res.status(result.status).send(result.result);
+});
+
+
 router.delete('/delete/:id', async function (req, res, next) {
     let user_id = req.params.id;
     let game_id = req.body.game_id;
-    console.log('aaaaaa' + game_id)
     let result = await uModel.delete_all_from(user_id, game_id);
     res.status(result.status).send(result.result);
 });
@@ -44,7 +63,9 @@ router.post('/create_game/:id', async function (req, res, next) {
 router.put('/end_turn/:id', async function (req, res, next) {
     let user_id = req.params.id;
     let game_id = req.body.game_id;
-    let result = await uModel.end_turn(user_id, game_id);
+    let pile = req.body.pile;
+    let oponent_id = req.body.oponent_id;
+    let result = await uModel.end_turn(user_id, game_id,pile,oponent_id);
     res.status(result.status).send(result.result);
 });
 

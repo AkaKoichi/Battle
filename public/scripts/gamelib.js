@@ -34,7 +34,7 @@ var building_falling_sound;
 var attacking_sound;
 var walking_sound;
 
-
+let pile=[]
 let troop_array = []
 let troops = [];
 let buildings_array = [];
@@ -71,6 +71,7 @@ window.onload = async () => {
     user_info = await get_user_info_game();
     game_info = await get_game_id(user_info.user_id)
     oponent_info = await get_oponent_id(user_info.user_id, game_info.game_id);
+    console.log(oponent_info)
     resources = await get_resources_by_id(game_info.game_id, user_info.user_id);
     let bol = await check_current_playing_by_game(game_info.game_id)
     if (bol[0].current_user_playing == user_info.user_id) {
@@ -87,12 +88,9 @@ window.onload = async () => {
     let res = await get_resources_places_by_id(game_info.game_id)
     console.log(res[0])
     for (let i = 0; i < res.length; i++) {
-
-
         let coordinate = { x: res[i].rsc_x, y: res[i].rsc_y, resource: res[i].rsc }
 
         resources_places.push(coordinate)
-        console.log(resources_places)
     }
 
     setInterval(() => {
@@ -121,7 +119,7 @@ async function setup() {
     tile_image = loadImage('./images/tile/tile.png')
     tile_image2 = loadImage('./images/tile/tile2.png')
     tile_image_move = loadImage('./images/tile/tile5.png')
-    tile_image_attack = loadImage('./images/tile/tile4.png')
+    tile_image_attack = loadImage('./images/tile/tile_attack.png')
     farm_image = loadImage('./images/tile/farm_start.png')
     mine_image = loadImage('./images/tile/mine_start.png')
     iron_amount_img = loadImage('./images/iron.png')
@@ -145,8 +143,15 @@ async function setup() {
         if (building.bld_url)
             buildings_images[building.bld_id] = await loadImage(building.bld_url);
     }
-    let cnv = createCanvas(windowWidth, windowHeight);
+    pile.push({x:7,y:7})
+    pile.push({x:7,y:8})
+    pile.push({x:8,y:7})
+    pile.push({x:8,y:8})
+    console.log(pile)
 
+
+
+    let cnv = createCanvas(windowWidth, windowHeight);
     cnv.position(150, 50);
     //tilesize = width / board_size;
     // 380 (marwan)
@@ -218,10 +223,7 @@ async function draw() {
                 } else if (troop_array[troop_selected_i].selected) {
                     let tile = { x: x / square_size, y: y / square_size }
 
-                    if (get_dist_attack(troop_array[troop_selected_i], tile) && can_attack_troop) {
-                        image(tile_image_attack, x, y, tilesize, tilesize);
-
-                    } else if (get_dist_move(troop_array[troop_selected_i], tile).can_move) {
+                    if (get_dist_move(troop_array[troop_selected_i], tile).can_move) {
                         image(tile_image_move, x, y, tilesize, tilesize);
 
                     } else if (hovered_tile.x * square_size == x && hovered_tile.y * square_size == y) {
@@ -230,6 +232,10 @@ async function draw() {
                     } else {
                         image(tile_image, x, y, tilesize, tilesize);
                     }
+                    if (get_dist_attack(troop_array[troop_selected_i], tile) && can_attack_troop) {
+                        image(tile_image_attack, x, y, tilesize, tilesize);
+                    }
+
                 } else {
                     image(tile_image, x, y, tilesize, tilesize);
                 }
@@ -253,6 +259,18 @@ async function draw() {
 
                 }
             }
+            if(x/square_size == 7 && y / square_size == 7 ){
+                image(tile_image2, x, y, tilesize, tilesize);
+            }
+            if(x/square_size == 8 && y / square_size == 7 ){
+                image(tile_image2, x, y, tilesize, tilesize);
+            }
+            if(x/square_size == 7 && y / square_size == 8 ){
+                image(tile_image2, x, y, tilesize, tilesize);
+            }
+            if(x/square_size == 8 && y / square_size == 8 ){
+                image(tile_image2, x, y, tilesize, tilesize);
+            }
             draw_buildings(matrix, buildings_array, num_squares, user_info.user_id, square_size, tilesize, x, y, buildings_images)
         }
 
@@ -266,8 +284,8 @@ async function draw() {
         image(iron_amount_img, 920, 600, iron_amount_img.width * 0.5, iron_amount_img.height * 0.5)
         image(food_amount_img, 770, 600, food_amount_img.width * 0.5, food_amount_img.height * 0.5)
         if (resources[0] != undefined) {
-            text('iron' + resources[2].rsc_amount, 935, 660)
-            text('food' + resources[0].rsc_amount, 805, 660)
+            text(resources[2].rsc_amount, 935, 660)
+            text( resources[0].rsc_amount, 805, 660)
         }
         /* if(pop_rolls == true){
             draw_pop_up_rolls()
@@ -305,7 +323,7 @@ async function mousePressed() {
 }
 
 async function end_turn() {
-    let res = await end_turn_id(user_info.user_id, game_info.game_id)
+    let res = await end_turn_id(user_info.user_id, game_info.game_id,pile,oponent_info.user_player)
     console.log(res.msg)
     if (res.msg == 'updated') initialize_game()
 }
