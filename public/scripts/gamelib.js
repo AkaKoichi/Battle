@@ -68,8 +68,8 @@ const diameter = radius * 2;
 
 
 window.onload = async () => {
-    
-    
+
+
     user_info = await get_user_info_game();
     game_info = await get_game_id(user_info.user_id)
     oponent_info = await get_oponent_id(user_info.user_id, game_info.game_id);
@@ -109,16 +109,16 @@ window.onload = async () => {
 async function setup() {
     initialize_game()
     bg_music = loadSound('./music/musica_de_fundo.mp3')
-    building_sound= loadSound('./music/building.mp3')
-    building_falling_sound= loadSound('./music/destruir edificios.mp3')
-    attacking_sound= loadSound('./music/espada_ataque.mp3')
-    walking_sound= loadSound('./music/passos.mp3')
+    building_sound = loadSound('./music/building.mp3')
+    building_falling_sound = loadSound('./music/destruir edificios.mp3')
+    attacking_sound = loadSound('./music/espada_ataque.mp3')
+    walking_sound = loadSound('./music/passos.mp3')
 
     end_turn_button = createImg('/images/buttons/end_turn_button.png');
     attack_button = createImg('/images/buttons/attack_button.png');
     move_button = createImg('/images/buttons/move_button.png');
     //textFont(TRACK)
-  
+
     //textFont(TRACK)
     tile_image = loadImage('./images/tile/tile.png')
     tile_image2 = loadImage('./images/tile/tile2.png')
@@ -164,16 +164,16 @@ async function setup() {
 
     /* setup_troop() */
 
-    end_turn_button.position(windowWidth/2.9, windowWidth/2.2);
+    end_turn_button.position(windowWidth / 2.9, windowWidth / 2.2);
     end_turn_button.mousePressed(end_turn);
 
-    move_button.position(windowWidth/2.2, windowWidth/2.2);
+    move_button.position(windowWidth / 2.2, windowWidth / 2.2);
     move_button.mousePressed(async function () {
         update_troop(user_info.user_id, 0)
     }
     )
 
-    attack_button.position(windowWidth/1.77, windowWidth/2.2);
+    attack_button.position(windowWidth / 1.77, windowWidth / 2.2);
     attack_button.mousePressed(async function () {
         update_troop(user_info.user_id, 1)
     }
@@ -220,10 +220,10 @@ async function draw() {
                 } else if (troop_array[troop_selected_i].selected) {
                     let tile = { x: x / square_size, y: y / square_size }
 
-                    if (get_dist_attack(troop_array[troop_selected_i], tile)&&can_attack_troop){
+                    if (get_dist_attack(troop_array[troop_selected_i], tile) && can_attack_troop) {
                         image(tile_image_attack, x, y, tilesize, tilesize);
-                    
-                    }else if (get_dist_move(troop_array[troop_selected_i], tile).can_move) {
+
+                    } else if (get_dist_move(troop_array[troop_selected_i], tile).can_move) {
                         image(tile_image_move, x, y, tilesize, tilesize);
 
                     } else if (hovered_tile.x * square_size == x && hovered_tile.y * square_size == y) {
@@ -279,6 +279,18 @@ async function draw() {
 
 }
 async function keyPressed() {
+    if (its_my_turn) {
+        switch (key) {
+            case 'ç':
+            case 'Ç':
+                console.log('aaa')
+                await update_resources_id(user_info.user_id, 100, 2)
+                await update_resources_id(user_info.user_id, 100, 1)
+                initialize_game()
+                break;
+        }
+    }
+
     await key_troops(its_my_turn, troop_array, user_info.user_id, buildings)
     await key_buildings(its_my_turn, troop_array, user_info.user_id, game_info.game_id, user_info.player_fac_id)
 }
@@ -363,7 +375,7 @@ async function initialize_game() {
 
     troop_array = []
     buildings_array = []
-    
+
 
     for (let i = 0; i < troops.length; i++) {
 
@@ -417,7 +429,7 @@ async function initialize_game() {
     if (its_my_turn) {
         resources = []
         resources = await get_resources_by_id(game_info.game_id, user_info.user_id);
-        user_info =[]
+        user_info = []
         user_info = await get_user_info_game();
     }
 }

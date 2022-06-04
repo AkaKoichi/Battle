@@ -125,6 +125,7 @@ async function key_troops(its_my_turn, troop_array, user_id, buildings) {
                 }
             }
         };
+       
     }
 
 }
