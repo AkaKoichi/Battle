@@ -36,7 +36,7 @@ module.exports.get_logged_user_info = async function (userId) {
 
 module.exports.get_logged_user_info_game = async function (userId) {
   try {
-    let sql = `Select user_id , username, user_trophies,player_fac_id
+    let sql = `Select user_id , username, user_trophies,player_fac_id,player_actions
     from users ,player_game
     where player_game.user_player=$1 and user_id = $1`;
     let result = await pool.query(sql, [userId]);
@@ -217,6 +217,11 @@ module.exports.end_turn = async function (user_id, game_id) {
     console.log(res.result.user_player)
     await this.update_current_playing_by_game_id(res.result.user_player, game_id)
 
+
+    sql = `UPDATE player_game SET player_actions  = 5  WHERE user_player  = $1 `
+    await pool.query(sql, [user_id]);
+
+
     return { status: 200, result: { msg: 'updated' } };
   } catch (err) {
     console.log(err);
@@ -365,22 +370,22 @@ module.exports.delete_all_from = async function (user_id, game_id) {
   console.log(game_id)
   try {
     let sql = `delete from user_troops where user_id = $1`
-    await pool.query(sql,[user_id]);
+    await pool.query(sql, [user_id]);
     console.log('1')
     sql = `delete from user_buildings where user_id = $1`
-    await pool.query(sql,[user_id]);
+    await pool.query(sql, [user_id]);
     console.log('2')
     sql = `delete from user_resources where user_id = $1`
-    await pool.query(sql,[user_id]);
+    await pool.query(sql, [user_id]);
     console.log('3')
     sql = `delete from player_game where game_id = $1`
-    await pool.query(sql,[game_id]);
+    await pool.query(sql, [game_id]);
     console.log('4')
     sql = `delete from random_rsc where game_id = $1`
-    await pool.query(sql,[game_id]);
+    await pool.query(sql, [game_id]);
     console.log('5')
     sql = `delete from game where game_id = $1`
-    await pool.query(sql,[game_id]);
+    await pool.query(sql, [game_id]);
     console.log('6')
     return { status: 200 };
   } catch (err) {

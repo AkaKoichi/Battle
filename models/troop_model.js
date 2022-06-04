@@ -164,7 +164,15 @@ module.exports.move_troop = async function (user_id, troop_id, tile_x, tile_y, g
   let your_turn = (turn_id == user_id)
   let oponent_id = await get_opponent_id_by_game(user_id, game_id)
   oponent_id = oponent_id.result.user_player
-  if (can_move_troop && your_turn & can_move.can_move && troop_info.user_id == user_id) {
+
+  sql = `select player_actions from player_game where user_player = $1`
+  result = await pool.query(sql, [user_id]);
+
+  let actions = result.rows[0].player_actions
+  sql = `UPDATE player_game SET player_actions  = $2  WHERE user_player  = $1 returning player_actions`
+  result = await pool.query(sql, [user_id, actions - 1]);
+  actions = result.rows[0].player_actions
+  if (can_move_troop && your_turn & can_move.can_move && troop_info.user_id == user_id && actions >= 0) {
     try {
       let sql = `select * from user_troops where troop_x =$1 and troop_y = $2 and (user_id = $3 or user_id = $4);`;
       let result = await pool.query(sql, [tile_coordinates.x, tile_coordinates.y, user_id, oponent_id]);
@@ -270,8 +278,15 @@ module.exports.attack_troop = async function (user_id, attacker, defender, bit, 
     sql = `UPDATE user_troops SET can_attack = false  WHERE user_trp_id  = $1;`
     result = await pool.query(sql, [attacker]);
 
+    sql = `select player_actions from player_game where user_player = $1`
+    result = await pool.query(sql, [user_id]);
+
+    let actions = result.rows[0].player_actions
+    sql = `UPDATE player_game SET player_actions  = $2  WHERE user_player  = $1 returning player_actions`
+    result = await pool.query(sql, [user_id, actions - 1]);
+    actions = result.rows[0].player_actions
     try {
-      if (can_attack && dice_dmg_multiplier >= 1 && can_attack_troop && your_turn) {
+      if (can_attack && dice_dmg_multiplier >= 1 && can_attack_troop && your_turn && actions >= 0) {
 
 
         defender_info.troop_current_health -= attacker_info.trp_attack * dice_dmg_multiplier;
@@ -348,8 +363,16 @@ module.exports.attack_troop = async function (user_id, attacker, defender, bit, 
     sql = `UPDATE user_troops SET can_attack = false  WHERE user_trp_id  = $1;`
     result = await pool.query(sql, [attacker]);
 
+    sql = `select player_actions from player_game where user_player = $1`
+    result = await pool.query(sql, [user_id]);
+
+    let actions = result.rows[0].player_actions
+    sql = `UPDATE player_game SET player_actions  = $2  WHERE user_player  = $1 returning player_actions`
+    result = await pool.query(sql, [user_id, actions - 1]);
+    actions = result.rows[0].player_actions
+    console.log(actions)
     try {
-      if (can_attack && can_attack_troop && your_turn) {
+      if (can_attack && can_attack_troop && your_turn && actions >= 0) {
         console.log('passou')
         defender_info.bld_current_health -= attacker_info.trp_attack;
         if (defender_info.bld_current_health <= 0) {

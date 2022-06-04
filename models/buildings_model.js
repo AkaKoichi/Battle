@@ -73,10 +73,18 @@ module.exports.build_building = async function (user_id, troop_id, bit, game_id,
   } catch (err) {
     return { status: 500, result: err };
   }
+  sql = `select player_actions from player_game where user_player = $1`
+  result = await pool.query(sql, [user_id]);
+
+  let actions = result.rows[0].player_actions
+  sql = `UPDATE player_game SET player_actions  = $2  WHERE user_player  = $1 returning player_actions`
+  result = await pool.query(sql, [user_id, actions - 1]);
+  actions = result.rows[0].player_actions
   if (
     (user_iron - build_iron_cost >= 0) &&
     (user_food - build_food_cost >= 0) &&
-    (your_turn)) {
+    (your_turn) &&
+    actions >= 0) {
     try {
       let sql = `select bld_health from buildings where bld_id = $1`
       let result = await pool.query(sql, [bld_id]);
