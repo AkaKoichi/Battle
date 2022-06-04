@@ -65,8 +65,6 @@ let update_timer = 0;
 const radius = tilesize / 2;
 const diameter = radius * 2;
 
-
-
 window.onload = async () => {
 
 
@@ -109,6 +107,7 @@ window.onload = async () => {
 async function setup() {
     initialize_game()
     bg_music = loadSound('./music/musica_de_fundo.mp3')
+<<<<<<< HEAD
     building_sound = loadSound('./music/building.mp3')
     building_falling_sound = loadSound('./music/destruir edificios.mp3')
     attacking_sound = loadSound('./music/espada_ataque.mp3')
@@ -119,6 +118,16 @@ async function setup() {
     move_button = createImg('/images/buttons/move_button.png');
     //textFont(TRACK)
 
+=======
+    building_sound= loadSound('./music/building.mp3')
+    building_falling_sound= loadSound('./music/destruir edificios.mp3')
+    attacking_sound= loadSound('./music/espada_ataque.mp3')
+    walking_sound= loadSound('./music/passos.mp3')
+    end_turn_button = createImg('/images/buttons/end_turn_button.png');
+    attack_button = createImg('/images/buttons/attack_button.png');
+    move_button = createImg('/images/buttons/move_button.png');
+    initialize_game()
+>>>>>>> 7e3ce2bf5a0d63f6054463a54a72d928d9351b08
     //textFont(TRACK)
     tile_image = loadImage('./images/tile/tile.png')
     tile_image2 = loadImage('./images/tile/tile2.png')
