@@ -76,6 +76,10 @@ module.exports.build_building = async function (user_id, troop_id, bit, game_id,
   sql = `select player_actions from player_game where user_player = $1`
   result = await pool.query(sql, [user_id]);
 
+  if( result.rows[0].player_actions - 1 < 0){
+    return { status: 200, result: { msg: 'no actions left' } };
+  }
+
   let actions = result.rows[0].player_actions
   sql = `UPDATE player_game SET player_actions  = $2  WHERE user_player  = $1 returning player_actions`
   result = await pool.query(sql, [user_id, actions - 1]);

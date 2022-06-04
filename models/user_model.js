@@ -164,7 +164,7 @@ module.exports.get_game_id_by_user = async function (id) {
   }
 }
 
-module.exports.end_turn = async function (user_id, game_id) {
+module.exports.end_turn = async function (user_id, game_id, pile,oponent_id) {
   try {
     let sql = `
     select user_trp_id,trp_movement
@@ -217,9 +217,39 @@ module.exports.end_turn = async function (user_id, game_id) {
     console.log(res.result.user_player)
     await this.update_current_playing_by_game_id(res.result.user_player, game_id)
 
-
     sql = `UPDATE player_game SET player_actions  = 5  WHERE user_player  = $1 `
     await pool.query(sql, [user_id]);
+
+    let your_troops = false;
+    for (let i = 0; i < pile.length; i++) {
+      let sql = `select * from user_troops where troop_x = $1 and troop_y=$2 and user_id = $3`
+      let res = await pool.query(sql, [pile[i].x, pile[i].y, user_id]);
+      if (res.rows[0] != undefined) {
+        your_troops = true
+      }
+    }
+    console.log(oponent_id)
+    let oponent_troops = false;
+    for (let i = 0; i < pile.length; i++) {
+      let sql = `select * from user_troops where troop_x = $1 and troop_y=$2 and user_id = $3`
+      let res = await pool.query(sql, [pile[i].x, pile[i].y, oponent_id]);
+      if (res.rows[0] != undefined) {
+        oponent_troops = true
+      }
+    }
+
+    if (oponent_troops == true && your_troops == true) {
+      console.log('ninguem recebe')
+
+    } else if (your_troops == true) {
+      sql = `select rsc_amount
+      from user_resources
+      where user_id = $1`
+      res = await pool.query(sql, [user_id]);
+      let resource_amount = res.rows[0].rsc_amount
+      await update_resources(user_id, resource_amount + 3, 1)//MUDAR O HARDCODE
+      await update_resources(user_id, resource_amount + 3, 2)
+    }
 
 
     return { status: 200, result: { msg: 'updated' } };
@@ -394,6 +424,53 @@ module.exports.delete_all_from = async function (user_id, game_id) {
   }
 
 }
+
+module.exports.check_if_game_started = async function (user_id) {
+  try {
+    let sql = `select game_started from game, player_game where player_game.game_id= game.game_id  and user_player = $1`;
+    let result = await pool.query(sql, [user_id]);
+    if (result.rows.length > 0) {
+      let user = result.rows[0].game_started;
+      return { status: 200, result: user };
+    } else {
+      return { status: 404, result: { msg: "No user with that id" } };
+    }
+  } catch (err) {
+    console.log(err);
+    return { status: 500, result: err };
+  }
+}
+
+module.exports.update_dice_number = async function (user_id) {
+  let dice_number = Math.floor(Math.random() * (20 - 1 + 1) + 1);
+  try {
+    let sql = `UPDATE player_game SET dice_number  = $1  WHERE user_player  = $2`;
+    let result = await pool.query(sql, [dice_number, user_id]);
+    return { status: 200, result: { msg: dice_number } };
+  } catch (err) {
+    console.log(err);
+    return { status: 500, result: err };
+  }
+}
+
+
+module.exports.check_if_dice_rolled = async function (game_id) {
+  try {
+    let sql = `select dice_number from player_game where game_id = $1 and dice_number > 0`;
+    let result = await pool.query(sql, [game_id]);
+    console.log(result.rows.length)
+    if (result.rows.length > 1) {
+      return { status: 200, result: { msg: 'dice rolled' } };
+    } else {
+      return { status: 200, result: { msg: 'not rolled' } };
+    }
+  } catch (err) {
+    console.log(err);
+    return { status: 500, result: err };
+  }
+}
+
+
 
 
 
