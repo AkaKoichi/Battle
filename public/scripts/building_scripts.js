@@ -4,9 +4,15 @@ let buttons = [];
 let troops_resources = [];
 let y;
 let x;
-let y_pop_buttons = 0
+let y_pop_buttons = 0;
+let mc_tc;
+let per_tc;
 
 
+function preload() {
+    mc_tc = loadImage('/images/mc_tc.png');
+    per_tc = loadImage('/images/per_tc.png');
+}
 
 class building {
     constructor(user_id, user_bld_id, bld_id, name, health, current_health, bld_x, bld_y) {
@@ -138,6 +144,7 @@ async function build_building(troop_array, user_id, game_id, fac_id) {
                         return
                     }
                     building_sound.play()
+                    building_sound.rate(2)
                     alert("Building Successfully Built");
                     initialize_game()
                     built = true;
@@ -153,6 +160,7 @@ async function build_building(troop_array, user_id, game_id, fac_id) {
                         return
                     }
                     building_sound.play()
+                    building_sound.rate(2)
                     alert("Building Successfully Built");
                     initialize_game()
                     built = true;
@@ -167,6 +175,7 @@ async function build_building(troop_array, user_id, game_id, fac_id) {
                 return
             }
             building_sound.play()
+            building_sound.rate(2)
             alert("Building Successfully Built");
             initialize_game();
             location.reload()
@@ -243,10 +252,13 @@ function draw_pop_up_buildings(buildings_array, tilesize, images, troops) {
             fill(170, 160, 85);
             rect(windowWidth / 1.5, 0, 501, windowHeight);
             noStroke()
-            image(bulding_image, windowWidth / 1.4, windowHeight / 20, bulding_image.width, bulding_image.height);
+            if (buildings_array[i].bld_name == 'tc1' || buildings_array[i].bld_name == 'tc2') {
+                image(per_tc, windowWidth / 1.35, windowHeight / 20, per_tc.width/1.5, per_tc.height/1.5);
+            } else image(mc_tc, windowWidth / 1.35, windowHeight / 20, mc_tc.width/1.5, mc_tc.height/1.5);
+
             fill(w);
             fill(b);
-            text(buildings[i].bld_name, windowWidth / 1.4, windowHeight / 2)
+            text('Town Center', windowWidth / 1.3, windowHeight / 1.8)
             text(buildings[i].current_health, windowWidth / 1.4, windowHeight / 1.8)
             fill(w);
             prepare_to_train = true;
