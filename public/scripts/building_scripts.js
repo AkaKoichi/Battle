@@ -123,7 +123,6 @@ async function key_buildings(its_my_turn, troop_array, user_id, game_id, fac_id)
 
 
 async function build_building(troop_array, user_id, game_id, fac_id) {
-    console.log(fac_id)
     let built = false;
 
 
@@ -138,6 +137,7 @@ async function build_building(troop_array, user_id, game_id, fac_id) {
                         alert('cannot build here , building already exists in this tile')
                         return
                     }
+                    building_sound.play()
                     alert("Building Successfully Built");
                     initialize_game()
                     built = true;
@@ -152,6 +152,7 @@ async function build_building(troop_array, user_id, game_id, fac_id) {
                         alert('cannot build here , building already exists in this tile')
                         return
                     }
+                    building_sound.play()
                     alert("Building Successfully Built");
                     initialize_game()
                     built = true;
@@ -165,6 +166,7 @@ async function build_building(troop_array, user_id, game_id, fac_id) {
                 alert('cannot build here , building already exists in this tile')
                 return
             }
+            building_sound.play()
             alert("Building Successfully Built");
             initialize_game();
             location.reload()

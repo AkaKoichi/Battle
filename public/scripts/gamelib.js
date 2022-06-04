@@ -27,7 +27,13 @@ let iron_amount_img;
 let food_amount_img;
 let win_img;
 let win_img2;
-let song;
+
+let bg_music;
+var building_sound;
+var building_falling_sound;
+var attacking_sound;
+var walking_sound;
+
 
 let troop_array = []
 let troops = [];
@@ -60,11 +66,10 @@ const radius = tilesize / 2;
 const diameter = radius * 2;
 
 
-function preload(){
-    song = loadSound('./music/musica_de_fundo.mp3')
-}
+
 
 window.onload = async () => {
+    
     
     user_info = await get_user_info_game();
     game_info = await get_game_id(user_info.user_id)
@@ -85,7 +90,7 @@ window.onload = async () => {
     let res = await get_resources_places_by_id(game_info.game_id)
     console.log(res[0])
     for (let i = 0; i < res.length; i++) {
-        console.log('aa')
+
 
         let coordinate = { x: res[i].rsc_x, y: res[i].rsc_y, resource: res[i].rsc }
 
@@ -103,6 +108,11 @@ window.onload = async () => {
 }
 
 async function setup() {
+    bg_music = loadSound('./music/musica_de_fundo.mp3')
+    building_sound= loadSound('./music/building.mp3')
+    building_falling_sound= loadSound('./music/destruir edificios.mp3')
+    attacking_sound= loadSound('./music/espada_ataque.mp3')
+    walking_sound= loadSound('./music/passos.mp3')
     initialize_game()
     //textFont(TRACK)
     tile_image = loadImage('./images/tile/tile.png')
@@ -267,7 +277,7 @@ async function keyPressed() {
 }
 
 async function mousePressed() {
-    song.loop()
+    //bg_music.loop()
     let tile = mouse_over_tile()
     console.log(tile)
     let y = (int)(mouseX / tilesize)
@@ -278,6 +288,7 @@ async function mousePressed() {
 
 async function end_turn() {
     let res = await end_turn_id(user_info.user_id, game_info.game_id)
+    console.log(res.msg)
     if (res.msg == 'updated') initialize_game()
 
     /* let resources_per_turn = 2
@@ -375,7 +386,6 @@ async function initialize_game() {
 
     troop_array = []
     buildings_array = []
-    resources = []
     
 
     for (let i = 0; i < troops.length; i++) {
