@@ -202,13 +202,16 @@ async function make_attack(troop_array, user_id, buildings, bit, game_id) {
 
     let res = await attack_troop_id(user_id, attacker, defender, bit, game_id)
     if (res.msg == 'success attack' && bit == 0) {
+        attacking_sound.play()
         troop_array[defender_index].hurt = true
         troop_array[defender_index].timer = 1000
     } else if (res.msg == 'success attack' && bit == 1) {
+        attacking_sound.play()
         alert('attacked building')
         initialize_game()
 
     } else if (res.msg == 'you won') {
+        attacking_sound.play
         console.log(game_id)
         alert('you WOOOOOOOON')
         initialize_game()
