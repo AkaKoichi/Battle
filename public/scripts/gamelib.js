@@ -65,11 +65,6 @@ let update_timer = 0;
 const radius = tilesize / 2;
 const diameter = radius * 2;
 
-
-function preload() {
-    song = loadSound('./music/musica_de_fundo.mp3')  
-}
-
 window.onload = async () => {
     
     
@@ -115,6 +110,9 @@ async function setup() {
     building_falling_sound= loadSound('./music/destruir edificios.mp3')
     attacking_sound= loadSound('./music/espada_ataque.mp3')
     walking_sound= loadSound('./music/passos.mp3')
+    end_turn_button = createImg('/images/buttons/end_turn_button.png');
+    attack_button = createImg('/images/buttons/attack_button.png');
+    move_button = createImg('/images/buttons/move_button.png');
     initialize_game()
     //textFont(TRACK)
     tile_image = loadImage('./images/tile/tile.png')
