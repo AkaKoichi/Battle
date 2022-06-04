@@ -60,12 +60,15 @@ const radius = tilesize / 2;
 const diameter = radius * 2;
 
 
-function preload(){
+function preload() {
     song = loadSound('./music/musica_de_fundo.mp3')
+    end_turn_button = createImg('/images/buttons/end_turn_button.png');
+    attack_button = createImg('/images/buttons/attack_button.png');
+    move_button = createImg('/images/buttons/move_button.png');
 }
 
 window.onload = async () => {
-    
+
     user_info = await get_user_info_game();
     game_info = await get_game_id(user_info.user_id)
     oponent_info = await get_oponent_id(user_info.user_id, game_info.game_id);
@@ -114,8 +117,8 @@ async function setup() {
     food_amount_img = loadImage('./images/food.png')
     win_img = loadImage('./images/win/per_win.png')
     win_img2 = loadImage('./images/win/mc_win.png')
-   
-    
+
+
     let troop_info = await get_troops();
     for (let troop of troop_info) {
         if (troop.trp_normal_url)
@@ -148,19 +151,16 @@ async function setup() {
 
     /* setup_troop() */
 
-    end_turn_button = createButton('End Turn');
-    end_turn_button.position(30, 150);
+    end_turn_button.position(windowWidth/2.9, windowWidth/2.2);
     end_turn_button.mousePressed(end_turn);
 
-    move_button = createButton('Move');
-    move_button.position(30, 175);
+    move_button.position(windowWidth/2.2, windowWidth/2.2);
     move_button.mousePressed(async function () {
         update_troop(user_info.user_id, 0)
     }
     )
 
-    attack_button = createButton('Attack');
-    attack_button.position(30, 200);
+    attack_button.position(windowWidth/1.77, windowWidth/2.2);
     attack_button.mousePressed(async function () {
         update_troop(user_info.user_id, 1)
     }
@@ -175,7 +175,7 @@ async function setup() {
 
 
 async function draw() {
-    
+
     if (game_info != undefined && game_initialized == false) {
         initialize_game()
         game_initialized = true;
@@ -376,7 +376,7 @@ async function initialize_game() {
     troop_array = []
     buildings_array = []
     resources = []
-    
+
 
     for (let i = 0; i < troops.length; i++) {
 
