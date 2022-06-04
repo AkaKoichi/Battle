@@ -118,6 +118,7 @@ async function setup() {
     tile_image = loadImage('./images/tile/tile.png')
     tile_image2 = loadImage('./images/tile/tile2.png')
     tile_image_move = loadImage('./images/tile/tile5.png')
+    tile_image_attack = loadImage('./images/tile/tile4.png')
     farm_image = loadImage('./images/tile/farm_start.png')
     mine_image = loadImage('./images/tile/mine_start.png')
     iron_amount_img = loadImage('./images/iron.png')
@@ -217,7 +218,10 @@ async function draw() {
                 } else if (troop_array[troop_selected_i].selected) {
                     let tile = { x: x / square_size, y: y / square_size }
 
-                    if (get_dist_move(troop_array[troop_selected_i], tile).can_move) {
+                    if (get_dist_attack(troop_array[troop_selected_i], tile)&&can_attack_troop){
+                        image(tile_image_attack, x, y, tilesize, tilesize);
+                    
+                    }else if (get_dist_move(troop_array[troop_selected_i], tile).can_move) {
                         image(tile_image_move, x, y, tilesize, tilesize);
 
                     } else if (hovered_tile.x * square_size == x && hovered_tile.y * square_size == y) {
@@ -290,37 +294,6 @@ async function end_turn() {
     let res = await end_turn_id(user_info.user_id, game_info.game_id)
     console.log(res.msg)
     if (res.msg == 'updated') initialize_game()
-
-    /* let resources_per_turn = 2
-
-    for (let i = 0; i < buildings.length; i++) {
-        if (buildings[i].user_id == user_info.user_id) {
-            if (buildings[i].bld_name == 'Mine') {
-                await update_resources_id(user_info.user_id, resources[0].rsc_amount + resources_per_turn, 1)
-            }
-            if (buildings[i].bld_name == 'Field') {
-                await update_resources_id(user_info.user_id, resources[1].rsc_amount + resources_per_turn, 2)
-            }
-        }
-    }
-    console.log('a')
-    for (let i = 0; i < troop_array.length; i++) {
-        await update_troops_id(troop_array[i].user_id, troop_array[i].user_trp_id, troop_array[i].x, troop_array[i].y, troop_array[i].health, troop_array[i].init_movement)
-
-    }
-    let bol = await check_current_playing_by_game(game_info.game_id)
-    if (bol[0].current_user_playing == user_info.user_id) {
-        if (user_info.user_id == oponent_info.user_player) {//opponent id
-            await update_current_playing(game_info.game_id, user_info.user_id)
-
-        } else {
-            await update_current_playing(game_info.game_id, oponent_info.user_player);
-        }
-        opponent_turn()
-    } else {
-        await update_current_playing(game_info.game_id, user_info.user_id);
-        your_turn()
-    } */
 }
 
 async function your_turn() {

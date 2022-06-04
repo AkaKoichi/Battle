@@ -141,7 +141,7 @@ async function mouse_pressed_troops(user_id, troop_array, buildings, game_id) {
                 (its_my_turn)) {
                 let res = await move_troop_id(user_id, troop_array[i].user_trp_id, tile.x, tile.y, game_id)
                 console.log(res.troops)
-                if (res.troops.msg=='troop moved succesfuly')walking_sound.play()
+                if (res.troops.msg == 'troop moved succesfuly') walking_sound.play()
                 if (res.troops.msg != undefined) {
                     initialize_game()
                     can_move_troop = false
