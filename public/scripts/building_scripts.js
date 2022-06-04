@@ -144,6 +144,7 @@ async function build_building(troop_array, user_id, game_id, fac_id) {
                         return
                     }
                     building_sound.play()
+                    building_sound.rate(2)
                     alert("Building Successfully Built");
                     initialize_game()
                     built = true;
@@ -159,6 +160,7 @@ async function build_building(troop_array, user_id, game_id, fac_id) {
                         return
                     }
                     building_sound.play()
+                    building_sound.rate(2)
                     alert("Building Successfully Built");
                     initialize_game()
                     built = true;
@@ -173,6 +175,7 @@ async function build_building(troop_array, user_id, game_id, fac_id) {
                 return
             }
             building_sound.play()
+            building_sound.rate(2)
             alert("Building Successfully Built");
             initialize_game();
             location.reload()

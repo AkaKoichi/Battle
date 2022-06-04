@@ -284,7 +284,7 @@ async function keyPressed() {
 
 async function mousePressed() {
     bg_music.loop()
-    bg_music.rate(3)
+    bg_music.rate(2)
     let tile = mouse_over_tile()
     console.log(tile)
     let y = (int)(mouseX / tilesize)
