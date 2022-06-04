@@ -66,7 +66,12 @@ const radius = tilesize / 2;
 const diameter = radius * 2;
 
 
-
+function preload() {
+    song = loadSound('./music/musica_de_fundo.mp3')
+    end_turn_button = createImg('/images/buttons/end_turn_button.png');
+    attack_button = createImg('/images/buttons/attack_button.png');
+    move_button = createImg('/images/buttons/move_button.png');
+}
 
 window.onload = async () => {
     
