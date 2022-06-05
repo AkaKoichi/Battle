@@ -133,10 +133,8 @@ async function build_building(troop_array, user_id, game_id, fac_id) {
 
 
     if (troop_array[troop_selected_i].selected) {
-
         for (let j = 0; j < resources_places.length; j++) {
             if (troop_array[troop_selected_i].x == resources_places[j].x && troop_array[troop_selected_i].y == resources_places[j].y) {
-                console.log(resources_places[j].resource)
                 if (resources_places[j].resource == 'iron') {
                     let res = await build(user_id, troop_array[troop_selected_i].user_trp_id, 1, game_id, fac_id)//tirar hard code
                     if (res.result.msg == 'building exists here') {
@@ -226,8 +224,8 @@ function draw_pop_up_buildings(buildings_array, tilesize, images, troops) {
                 image(bulding_image, windowWidth / 1.4, windowHeight / 20, bulding_image.width, bulding_image.height);
                 fill(w);
                 fill(b);
-                text("Name :" + buildings[i].bld_name, windowWidth / 1.4, windowHeight / 2.3)
-                text("Health : " + buildings[i].bld_health, windowWidth / 1.4, windowHeight / 2.1)
+                text("Name :" + buildings_array[i].bld_name, windowWidth / 1.4, windowHeight / 2.3)
+                text("Health : " + buildings_array[i].current_health, windowWidth / 1.4, windowHeight / 2.1)
                 text("FOOD", windowWidth / 1.31, windowHeight / 1.8)
                 text("IRON", windowWidth / 1.21, windowHeight / 1.8)
                 fill(w);
@@ -259,7 +257,7 @@ function draw_pop_up_buildings(buildings_array, tilesize, images, troops) {
             fill(w);
             fill(b);
             text('Town Center', windowWidth / 1.3, windowHeight / 1.8)
-            text(buildings[i].current_health, windowWidth / 1.4, windowHeight / 1.8)
+            text(buildings_array[i].current_health, windowWidth / 1.4, windowHeight / 1.8)
             fill(w);
             prepare_to_train = true;
         }
@@ -270,8 +268,8 @@ function draw_pop_up_buildings(buildings_array, tilesize, images, troops) {
             image(bulding_image, windowWidth / 1.4, windowHeight / 20, bulding_image.width, bulding_image.height);
             fill(w);
             fill(b);
-            text(buildings[i].bld_name, windowWidth / 1.3, windowHeight / 2.3)
-            text(buildings[i].bld_health, windowWidth / 1.4, windowHeight / 2)
+            text(buildings_array[i].bld_name, windowWidth / 1.3, windowHeight / 2.3)
+            text(buildings_array[i].current_health, windowWidth / 1.4, windowHeight / 2)
             fill(w);
             prepare_to_train = true;
         }
@@ -283,8 +281,8 @@ function draw_pop_up_buildings(buildings_array, tilesize, images, troops) {
             image(bulding_image, windowWidth / 1.4, windowHeight / 20, bulding_image.width, bulding_image.height);
             fill(w);
             fill(b);
-            text(buildings[i].bld_name, windowWidth / 1.3, windowHeight / 2.8)
-            text(buildings[i].bld_health, windowWidth / 1.4, windowHeight / 2.5)
+            text(buildings_array[i].bld_name, windowWidth / 1.3, windowHeight / 2.8)
+            text(buildings_array[i].current_health, windowWidth / 1.4, windowHeight / 2.5)
             fill(w);
             prepare_to_train = true;
         }

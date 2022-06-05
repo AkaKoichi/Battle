@@ -125,7 +125,7 @@ async function key_troops(its_my_turn, troop_array, user_id, buildings) {
                 }
             }
         };
-       
+
     }
 
 }
@@ -159,6 +159,7 @@ async function mouse_pressed_troops(user_id, troop_array, buildings, game_id) {
             } else {
                 troop_array[i].unselect()
                 /* troop_selected_i=undefined */
+                pop_up_open = false;
             }
             if ((can_attack_troop) &&
                 (troop_array[i].x == tile.x && troop_array[i].y == tile.y) &&
@@ -189,6 +190,7 @@ async function mouse_pressed_troops(user_id, troop_array, buildings, game_id) {
                 break
             } else {
                 troop_array[i].unselect()
+                pop_up_open = false;
                 /* troop_selected_i = undefined */
 
             }
@@ -291,6 +293,7 @@ function draw_pop_up_troops(troop_array, tilesize, images) {
     for (let i = 0; i < troop_array.length; i++) {
         troop_image = images[troop_array[i].trp_id]
         if (troop_shown == false && troop_array[i].selected == true) {
+            pop_up_open = true;
             fill(170, 160, 85);
             rect(windowWidth / 1.5, 0, 501, windowHeight);
             noStroke()

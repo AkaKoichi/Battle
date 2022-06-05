@@ -111,7 +111,9 @@ async function setup() {
     walking_sound = loadSound('./music/passos.mp3')
 
     end_turn_button = createImg('/images/buttons/end_turn_button.png');
+    //end_turn_button_over = createImg('/images/buttons/end_turn_button_over.png');
     attack_button = createImg('/images/buttons/attack_button.png');
+    //attack_button_over = createImg('/images/buttons/attack_button_over.png');
     move_button = createImg('/images/buttons/move_button.png');
     //textFont(TRACK)
 
@@ -173,18 +175,37 @@ async function setup() {
 
     end_turn_button.position(windowWidth / 2.9, windowWidth / 2.2);
     end_turn_button.mousePressed(end_turn);
+    end_turn_button.mouseOver( function(){
+        end_turn_button.attribute('src','/images/buttons/end_turn_button_over.png')
+    })
+    end_turn_button.mouseOut( function(){
+        end_turn_button.attribute('src','/images/buttons/end_turn_button.png')
+    })
 
     move_button.position(windowWidth / 2.2, windowWidth / 2.2);
     move_button.mousePressed(async function () {
         update_troop(user_info.user_id, 0)
     }
     )
+    move_button.mouseOver( function(){
+        move_button.attribute('src','/images/buttons/move_button_over.png')
+    })
+    move_button.mouseOut( function(){
+        move_button.attribute('src','/images/buttons/move_button.png')
+    })
+
 
     attack_button.position(windowWidth / 1.77, windowWidth / 2.2);
     attack_button.mousePressed(async function () {
         update_troop(user_info.user_id, 1)
     }
     )
+    attack_button.mouseOver( function(){
+        attack_button.attribute('src','/images/buttons/attack_button_over.png')
+    })
+    attack_button.mouseOut( function(){
+        attack_button.attribute('src','/images/buttons/attack_button.png')
+    })
     /*  roll_button = createButton('Check Roll');
      roll_button.position(30, 230);
      roll_button.mousePressed(  async function () {
@@ -335,16 +356,22 @@ async function end_turn() {
 async function your_turn() {
     its_my_turn = true;
     end_turn_button.removeAttribute('disabled');
+    end_turn_button.show()
     move_button.removeAttribute('disabled');
+    move_button.show()
     attack_button.removeAttribute('disabled');
+    attack_button.show()
 
 }
 
 function opponent_turn() {
     its_my_turn = false;
     end_turn_button.attribute('disabled', '');
+    end_turn_button.hide()
     move_button.attribute('disabled', '');
+    move_button.hide()
     attack_button.attribute('disabled', '');
+    attack_button.hide()
 
 }
 
@@ -356,10 +383,12 @@ function toggle_button(button) {
 
 function enable_button(button) {
     button.removeAttribute('disabled')
+    button.show()
 }
 
 function disable_button(button) {
     button.attribute('disabled', '');
+    button.hide()
 }
 
 function mouse_over_tile() {

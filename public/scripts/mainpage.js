@@ -69,10 +69,19 @@ function setup() {
     sound_button.position(675, 650);
     music_button.position(735, 650);
     join_lobby_button.mousePressed(enter_room);
-    join_lobby_button.mouseOver(async function (){
-        console.log('hello');
+    join_lobby_button.mouseOver( function(){
+        join_lobby_button.attribute('src','/images/buttons/join_lobby_over.png')
+    })
+    join_lobby_button.mouseOut( function(){
+        join_lobby_button.attribute('src','/images/buttons/join_lobby.png')
     })
     how_to_play_button.mousePressed(how_to_play_link);
+    how_to_play_button.mouseOver( function(){
+        how_to_play_button.attribute('src','/images/buttons/how_to_play_over.png')
+    })
+    how_to_play_button.mouseOut( function(){
+        how_to_play_button.attribute('src','/images/buttons/how_to_play.png')
+    })
 
     input_game_name = createInput();
     input_game_name.position(410, 570);
@@ -94,6 +103,7 @@ function setup() {
         join_game_id(userid,res[0].game_id)
     }
     )
+    
 }
 
 async function draw() {

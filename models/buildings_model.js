@@ -19,7 +19,7 @@ module.exports.get_all_buildings = async function () {
 module.exports.get_buildings_id = async function (game_id) {
 
   try {
-    let sql = `Select game.game_id,user_id,user_bld_id,user_buildings.bld_id,buildings.bld_id,bld_x,bld_y,bld_name,bld_health
+    let sql = `Select game.game_id,user_id,user_bld_id,user_buildings.bld_id,buildings.bld_id,bld_x,bld_y,bld_name,bld_health,bld_current_health
     from user_buildings,buildings,player_game,game  
     where buildings.bld_id = user_buildings.bld_id and(user_buildings.user_id = user_player) and player_game.game_id = game.game_id and game.game_id = $1 `;
 
