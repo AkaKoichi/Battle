@@ -126,6 +126,10 @@ async function setup() {
     food_amount_img = loadImage('./images/food.png')
     win_img = loadImage('./images/win/per_win.png')
     win_img2 = loadImage('./images/win/mc_win.png')
+    pile_bottom_right =loadImage('./images/tile/pile_bottom_right.png')
+    pile_bottom_left =loadImage('./images/tile/pile_bottom_left.png')
+    pile_top_right =loadImage('./images/tile/pile_top_right.png')
+    pile_top_left =loadImage('./images/tile/pile_top_left.png')
 
 
     let troop_info = await get_troops();
@@ -260,16 +264,16 @@ async function draw() {
                 }
             }
             if(x/square_size == 7 && y / square_size == 7 ){
-                image(tile_image2, x, y, tilesize, tilesize);
+                image(pile_top_left, x, y, tilesize, tilesize);
             }
             if(x/square_size == 8 && y / square_size == 7 ){
-                image(tile_image2, x, y, tilesize, tilesize);
+                image(pile_top_right, x, y, tilesize, tilesize);
             }
             if(x/square_size == 7 && y / square_size == 8 ){
-                image(tile_image2, x, y, tilesize, tilesize);
+                image(pile_bottom_left, x, y, tilesize, tilesize);
             }
             if(x/square_size == 8 && y / square_size == 8 ){
-                image(tile_image2, x, y, tilesize, tilesize);
+                image(pile_bottom_right, x, y, tilesize, tilesize);
             }
             draw_buildings(matrix, buildings_array, num_squares, user_info.user_id, square_size, tilesize, x, y, buildings_images)
         }
