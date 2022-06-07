@@ -134,8 +134,8 @@ async function mouse_pressed_troops(user_id, troop_array, buildings, game_id) {
                 let res = await move_troop_id(user_id, troop_array[i].user_trp_id, tile.x, tile.y, game_id)
                 console.log(res.troops)
                 if (res.troops.msg == 'troop moved succesfuly') {
-                    walking_sound.play()
-                    walking_sound.rate(3)
+                    /* walking_sound.play()
+                    walking_sound.rate(3) */
                 }
                 if (res.troops.msg != undefined) {
                     initialize_game()
@@ -214,23 +214,23 @@ async function make_attack_roll(troop_array, user_id, buildings, bit, game_id) {
 async function make_attack(troop_array, user_id, bit, game_id, attacker, defender) {
     let res = await attack_troop_id(user_id, attacker, defender, bit, game_id)
     if (res.msg == 'success attack' && bit == 0) {
-        attacking_sound.play()
-        attacking_sound.rate(3)
+        /* attacking_sound.play()
+        attacking_sound.rate(3) */
         roll_attack_number = res.number
         troop_array[defender_index].hurt = true
         troop_array[defender_index].timer = 2500
 
     } else initialize_game()
     if (res.msg == 'success attack' && bit == 1) {
-        attacking_sound.play()
-        attacking_sound.rate(3)
+      /*   attacking_sound.play()
+        attacking_sound.rate(3) */
 
         alert('attacked building')
         initialize_game()
 
     } else if (res.msg == 'you won') {
-        attacking_sound.play()
-        attacking_sound.rate(3)
+       /*  attacking_sound.play()
+        attacking_sound.rate(3) */
         alert('you WOOOOOOOON')
         initialize_game()
         await delete_all_from_id(user_id, game_id,oponent_info.user_player)

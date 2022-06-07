@@ -109,11 +109,11 @@ window.onload = async () => {
 async function setup() {
     //textFont(font_regular)
     initialize_game()
-    bg_music = loadSound('./music/musica_de_fundo.mp3')
+    /* bg_music = loadSound('./music/musica_de_fundo.mp3')
     building_sound = loadSound('./music/building.mp3')
     building_falling_sound = loadSound('./music/destruir edificios.mp3')
     attacking_sound = loadSound('./music/espada_ataque.mp3')
-    walking_sound = loadSound('./music/passos.mp3')
+    walking_sound = loadSound('./music/passos.mp3') */
 
     end_turn_button = createImg('/images/buttons/end_turn_button.png');
 
