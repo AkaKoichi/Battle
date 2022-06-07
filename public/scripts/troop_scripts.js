@@ -231,12 +231,10 @@ async function make_attack(troop_array, user_id, bit, game_id, attacker, defende
     } else if (res.msg == 'you won') {
         attacking_sound.play()
         attacking_sound.rate(3)
-
-        console.log(game_id)
         alert('you WOOOOOOOON')
         initialize_game()
-        won = true;
-        await delete_all_from_id(user_id, game_id)
+        await delete_all_from_id(user_id, game_id,oponent_info.user_player)
+        window.location = "finish.html"
     } else if (res.msg == "cannot attack") {
         alert('A troop can only attack once per turn')
     } else if (res.msg == 'success missed') {

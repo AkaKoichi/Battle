@@ -32,10 +32,11 @@ router.get('/game_started/:id', async function (req, res, next) {
 });
 
 
-router.delete('/delete/:id', async function (req, res, next) {
+router.delete('/delete/:id/:game_id/:oponent_id', async function (req, res, next) {
     let user_id = req.params.id;
-    let game_id = req.body.game_id;
-    let result = await uModel.delete_all_from(user_id, game_id);
+    let game_id = req.params.game_id;
+    let oponent_id = req.params.oponent_id;
+    let result = await uModel.delete_all_from(user_id, game_id,oponent_id);
     res.status(result.status).send(result.result);
 });
 
