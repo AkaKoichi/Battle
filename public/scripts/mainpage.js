@@ -102,14 +102,6 @@ function setup() {
     input_game_name = createInput();
     input_game_name.position(windowWidth /2.2, windowHeight / 6);
 
-    create_game_button = createButton('create game');
-    create_game_button.position(400, 650);
-    create_game_button.mousePressed(async function () {
-        let result = await create_game_id(input_game_name.value(), userid)
-        if (result.inserted) alert(result.result.msg)
-
-    }
-    )
 
     join_game_button = createButton('join game');
     join_game_button.position(500, 650);
