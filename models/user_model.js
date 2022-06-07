@@ -129,8 +129,8 @@ module.exports.update_current_playing_by_game_id = async function (user_id, game
 module.exports.get_opponent_id_by_game = async function (id, game_id) {
   try {
     let sql = `
-      select user_player
-      from player_game
+      select user_player,username
+      from player_game,users
       where user_player != $1 and game_id = $2`;
     let result = await pool.query(sql, [id, game_id]);
     if (result.rows.length > 0) {

@@ -72,7 +72,12 @@ function setup() {
     how_to_play_button.position(windowWidth /  2.39, windowHeight / 1.4);
     sound_button.position(windowWidth / 2, windowHeight / 1.1);
     music_button.position(windowWidth /2.2, windowHeight / 1.1);
-    create_lobby_button.mousePressed();
+    create_lobby_button.mousePressed(async function () {
+        let result = await create_game_id(input_game_name.value(), userid)
+        if (result.inserted) alert(result.result.msg)
+        enter_room()
+
+    });
     create_lobby_button.mouseOver(function () {
         create_lobby_button.attribute('src', '/images/buttons/create_lobby_over.png')
     })

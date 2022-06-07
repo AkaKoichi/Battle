@@ -1,7 +1,4 @@
 
-
-
-
 var user_info;
 var oponent_info;
 var game_info;
@@ -45,6 +42,8 @@ var resources_places = [];
 var can_move_troop = false;
 var can_attack_troop = false;
 var pop_up_open = false;
+var pop_up_building_cost = false
+let clicked = false ;
 
 
 let end_turn_button;
@@ -214,8 +213,8 @@ async function setup() {
     })
 
     buldings_cost_button.position(windowWidth / 2.2, windowWidth / 2.1);
-    buldings_cost_button.mousePressed(async function () {
-        draw_pop_up_buildings_cost(buildings_array, square_size, buildings_images, troop_array)
+    buldings_cost_button.mousePressed(function () {
+        pop_up_building_cost = true;
     }
     )
     buldings_cost_button.mouseOver(function () {
@@ -315,6 +314,12 @@ async function draw() {
             if (x / square_size == 8 && y / square_size == 8) {
                 image(pile_bottom_right, x, y, tilesize, tilesize);
             }
+            if (pop_up_building_cost){
+                fill(170, 160, 85);
+                rect(windowWidth / 1.5, 0, 501, windowHeight);
+                fill(color('white'));
+                clicked = true
+            }
             draw_buildings(matrix, buildings_array, num_squares, user_info.user_id, square_size, tilesize, x, y, buildings_images)
             draw_troops(matrix, troop_array, num_squares, user_info.user_id, square_size, diameter, x, y, troop_images, hurt_troop_images)
             draw_pop_up_buildings(buildings_array, square_size, buildings_images, troop_array)
@@ -332,9 +337,7 @@ async function draw() {
             text(roll_attack_number, 850, 550)
             text(rolls_to_hit, 850, 535)
 
-            /* if(pop_rolls == true){
-                draw_pop_up_rolls()
-            } */
+            
         }
     }
 
@@ -359,6 +362,11 @@ async function keyPressed() {
 async function mousePressed() {
     //bg_music.loop()
     //bg_music.rate(2)
+    if (clicked == true){
+        pop_up_building_cost= false
+        clicked = false;
+    }
+    
     let tile = mouse_over_tile()
     console.log(tile)
     let y = (int)(mouseX / tilesize)

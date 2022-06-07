@@ -2,9 +2,11 @@
 let prepare_to_train = false;
 let buttons = [];
 let troops_resources = [];
+let buildings_resources = [];
 let y;
 let x;
 let y_pop_buttons = 0;
+let y_pop_cost = 0;
 let mc_tc;
 let per_tc;
 
@@ -69,9 +71,9 @@ function mouse_pressed_buildings(building_array, x, y, troop_array, user_id, gam
 
 async function buildings_setup(user_id, buildings, fac_id, game_id) {
     let last_name;
-    console.log(fac_id)
     troops_resources = await get_troops_resources(fac_id, user_id);
-    console.log(troops_resources)
+    buildings_resources = await get_all_buildings_cost_id(user_id, fac_id)
+    console.log(buildings_resources)
     for (let i = 0; i < troops_resources.length; i++) {
         if (last_name == troops_resources[i].trp_name) {
 
@@ -289,11 +291,30 @@ function draw_pop_up_buildings(buildings_array, tilesize, images, troops) {
         else if (buildings_array[i].selected == false) {
             prepare_to_train = false
         }
+
     }
+    if (pop_up_building_cost) {
+        let last_name_cost;
+        let y_pop_cost = 50;
+        text("FOOD", windowWidth / 1.31,  windowHeight / 3)
+        text("IRON", windowWidth / 1.21,  windowHeight / 3)
+        for (let i = 0; i < buildings_resources.length; i++) {
+            if (last_name_cost == buildings_resources[i].bld_name) {
+                fill(color('white'))
+                text(buildings_resources[i].rsc_amount, windowWidth / 1.2, windowHeight / 3 + y_pop_cost - 15)
+                fill(color('black'))
+            } else {
+                fill(color('white'))
+                text(buildings_resources[i].bld_name, windowWidth / 1.45, windowHeight / 3 + y_pop_cost)
+                text(buildings_resources[i].rsc_amount, windowWidth / 1.3, windowHeight / 3 + y_pop_cost)
+                fill(color('black'))
+                last_name_cost = buildings_resources[i].bld_name;
+            }
+            y_pop_cost += 15
+
+        }
+    }
+
+
 }
 
-function draw_pop_up_buildings_cost(buildings_array, tilesize, images, troops) {
-    fill(170, 160, 85);
-    rect(windowWidth / 1.5, 0, 501, windowHeight);
-    noStroke()
-} 

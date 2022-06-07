@@ -2,6 +2,13 @@ var express = require('express');
 var router = express.Router();
 var building_model = require("../models/buildings_model");
 
+router.get('/buildings_cost/:user_id/:fac_id', async function (req, res, next) {
+  let user_id = req.params.user_id;
+  let fac_id = req.params.fac_id;
+  let result = await building_model.get_all_buildings_cost(user_id,fac_id);
+  res.status(result.status).send(result.result);
+});
+
 router.put('/update/:id', async function (req, res, next) {
 
   let id = req.body.id;

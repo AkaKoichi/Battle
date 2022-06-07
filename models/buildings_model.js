@@ -3,6 +3,23 @@ let { update_resources } = require('./resources_model')
 let { check_current_playing_by_game_id, get_opponent_id_by_game } = require('./user_model')
 
 
+module.exports.get_all_buildings_cost = async function (user_id,fac_id) {
+  try {
+    let sql = `select buildings.bld_id,bld_name,rsc_type,rsc_amount 
+    from resources_buildings,player_game,buildings,resources
+    where resources_buildings.rsc_id = resources.rsc_id 
+    and resources_buildings.bld_id = buildings.bld_id 
+    and player_game.player_fac_id = buildings.bld_fac_id
+    and player_game.player_fac_id = $2
+    and player_game.user_player = $1 `;
+    let result = await pool.query(sql,[user_id,fac_id]);
+    let buildings = result.rows;
+    return { status: 200, result: buildings };
+  } catch (err) {
+    console.log(err);
+    return { status: 500, result: err };
+  }
+}
 
 module.exports.get_all_buildings = async function () {
   try {

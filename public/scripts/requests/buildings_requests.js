@@ -93,3 +93,19 @@ async function update_building_id(id, user_bld_id, health) {
         console.log(err);
     }
 }
+
+async function get_all_buildings_cost_id(user_id,fac_id) {
+    try {
+        const response = await fetch(`/api/buildings/buildings_cost/${user_id}/${fac_id}`);
+        if (response.status == 200) {
+           var buildings = await response.json();
+           return buildings;
+        } else {
+            // Treat errors like 404 here
+            console.log(response);
+        }
+    } catch (err) {
+        // Treat 500 errors here    
+        console.log(err);
+    }
+} 
