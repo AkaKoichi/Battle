@@ -223,12 +223,7 @@ async function setup() {
     buldings_cost_button.mouseOut(function () {
         buldings_cost_button.attribute('src', '/images/buttons/button_building_cost.png')
     })
-    /*  roll_button = createButton('Check Roll');
-     roll_button.position(30, 230);
-     roll_button.mousePressed(  async function () {
-         pop_rolls = true
-     }
-     ) */
+   
 };
 
 
