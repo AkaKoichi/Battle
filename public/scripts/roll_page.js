@@ -13,7 +13,7 @@ let macedonia_button;
 let font_regular;
 
 function preload(){
-    font_regular = loadFont('Founts/Track-Regular.otf')
+   // font_regular = loadFont('Founts/Track-Regular.otf')
 
     roll_button = createImg('/images/buttons/roll_dice_button.png');
     persia_button = createImg('/images/buttons/persian_button.png');
@@ -49,7 +49,7 @@ window.onload = async () => {
 
 function setup() {
     createCanvas(windowWidth, windowHeight);
-    textFont(font_regular);
+    //textFont(font_regular);
 
     roll_button.position(windowWidth / 2.5, windowHeight /1.5);
     roll_button.mousePressed(async function () {

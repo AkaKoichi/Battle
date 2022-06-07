@@ -71,7 +71,7 @@ var rolls_to_hit = 0
 
 window.onload = async () => {
 
-    font_regular = loadFont('Founts/Track-Regular.otf')
+   // font_regular = loadFont('Founts/Track-Regular.otf')
     user_info = await get_user_info_game();
     game_info = await get_game_id(user_info.user_id)
     oponent_info = await get_oponent_id(user_info.user_id, game_info.game_id);
@@ -107,7 +107,7 @@ window.onload = async () => {
 }
 
 async function setup() {
-    textFont(font_regular)
+    //textFont(font_regular)
     initialize_game()
     bg_music = loadSound('./music/musica_de_fundo.mp3')
     building_sound = loadSound('./music/building.mp3')

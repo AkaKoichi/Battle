@@ -40,7 +40,7 @@ async function how_to_play_link() {
 }
 
 function preload() {
-    font_regular = loadFont('Founts/Track-Regular.otf')
+    //font_regular = loadFont('Founts/Track-Regular.otf')
 
     leader_board_img = loadImage('images/leader_board.png')
     avatar_img = loadImage('/images/avatar.png');
@@ -62,7 +62,7 @@ function preload() {
 
 function setup() {
     createCanvas(windowWidth, windowHeight);
-    textFont(font_regular)
+    //textFont(font_regular)
     /* button1 = new Button(400, 100, image1,image2)
     button1.mousePressed() */
 
