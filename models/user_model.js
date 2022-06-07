@@ -365,17 +365,17 @@ module.exports.get_players_and_games_waiting = async function (user_id) {
 }
 
 
-module.exports.delete_all_from = async function (user_id, game_id) {
+module.exports.delete_all_from = async function (user_id, game_id,oponent_id) {
   console.log(game_id)
   try {
-    let sql = `delete from user_troops where user_id = $1`
-    await pool.query(sql, [user_id]);
+    let sql = `delete from user_troops where user_id = $1 or user_id = $2`
+    await pool.query(sql, [user_id,oponent_id]);
     console.log('1')
-    sql = `delete from user_buildings where user_id = $1`
-    await pool.query(sql, [user_id]);
+    sql = `delete from user_buildings where user_id = $1 or user_id = $2`
+    await pool.query(sql, [user_id,oponent_id]);
     console.log('2')
-    sql = `delete from user_resources where user_id = $1`
-    await pool.query(sql, [user_id]);
+    sql = `delete from user_resources where user_id = $1 or user_id = $2`
+    await pool.query(sql, [user_id,oponent_id]);
     console.log('3')
     sql = `delete from player_game where game_id = $1`
     await pool.query(sql, [game_id]);

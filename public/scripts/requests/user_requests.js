@@ -266,11 +266,13 @@ async function get_players_and_games_waiting_id(user_id) {
     }
 }
 
-async function delete_all_from_id(user_id, game_id) {
+async function delete_all_from_id(user_id, game_id,oponent_id) {
     try {
-        const response = await fetch(`/api/users/delete/${user_id}`, {
+        const response = await fetch(`/api/users/delete/${user_id}/${game_id}/${oponent_id}`, {
             method: "DELETE",
-            body: JSON.stringify(game_id)
+            headers: {
+                "Content-Type": "application/json"
+            }
         });
         if (response.status == 200) {
             var user = await response.json();

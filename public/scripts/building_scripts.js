@@ -151,7 +151,6 @@ async function build_building(troop_array, user_id, game_id, fac_id) {
                 }
 
                 if (resources_places[j].resource == 'food') {
-                    console.log('fff')
                     let res = await build(user_id, troop_array[troop_selected_i].user_trp_id, 2, game_id, fac_id)// tirar hard code
                     console.log(res)
                     if (res.result.msg == 'building exists here') {

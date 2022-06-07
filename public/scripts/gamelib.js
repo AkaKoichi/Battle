@@ -1,6 +1,7 @@
 
 
 
+
 var user_info;
 var oponent_info;
 var game_info;
@@ -330,15 +331,12 @@ async function draw() {
                 text(resources[0].rsc_amount, 805, 660)
             }
             text(roll_attack_number, 850, 550)
-            text(rolls_to_hit,850,535)
+            text(rolls_to_hit, 850, 535)
+
             /* if(pop_rolls == true){
                 draw_pop_up_rolls()
             } */
-
-
         }
-
-
     }
 
 }

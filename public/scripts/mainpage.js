@@ -27,7 +27,6 @@ window.onload = async () => {
 
 async function enter_room() {
     res = await check_if_game_started_id(userid)
-    console.log(res)
     if (res == false) {
         window.location = "roll_page.html";
 
@@ -112,7 +111,6 @@ function setup() {
     join_game_button.mousePressed(async function () {
         res = await get_players_and_games_waiting_id(userid)
         join_game_id(userid, res[0].game_id)
-        console.log(res)
         if (res.inserted) alert(res.msg)
     }
     )
