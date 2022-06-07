@@ -319,6 +319,7 @@ async function draw() {
             draw_pop_up_buildings(buildings_array, square_size, buildings_images, troop_array)
             draw_pop_up_troops(troop_array, tilesize, troop_images)
             fill(color('white'))
+            textSize(20);
             text('user id : ' + user_info.user_id, 800, 200)
             text('actions : ' + user_info.player_actions, 900, 200)
             fill(color('black'))
