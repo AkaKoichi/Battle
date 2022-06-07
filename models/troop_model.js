@@ -271,9 +271,9 @@ module.exports.attack_troop = async function (user_id, attacker, defender, bit, 
     result = await pool.query(sql, [attacker]);
     let attacker_info = result.rows[0]
 
-    /* let can_attack_turn = attacker_info.can_attack
+    let can_attack_turn = attacker_info.can_attack
     if (can_attack_turn == false) return { status: 200, result: { msg: "cannot attack" } };
- */
+
     sql = `
     select *
     from user_troops,troops
