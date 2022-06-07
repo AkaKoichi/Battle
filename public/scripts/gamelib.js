@@ -178,7 +178,7 @@ async function setup() {
 
     setup_troop()
 
-    end_turn_button.position(windowWidth / 2.9, windowWidth / 2.2);
+    end_turn_button.position(windowWidth / 12, windowWidth / 2.4);
     end_turn_button.mousePressed(end_turn);
     end_turn_button.mouseOver(function () {
         end_turn_button.attribute('src', '/images/buttons/end_turn_button_over.png')
@@ -187,7 +187,7 @@ async function setup() {
         end_turn_button.attribute('src', '/images/buttons/end_turn_button.png')
     })
 
-    move_button.position(windowWidth / 2.2, windowWidth / 2.2);
+    move_button.position(windowWidth / 5.5, windowWidth / 2.4);
     move_button.mousePressed(async function () {
         update_troop(user_info.user_id, 0)
     }
@@ -200,7 +200,7 @@ async function setup() {
     })
 
 
-    attack_button.position(windowWidth / 1.77, windowWidth / 2.2);
+    attack_button.position(windowWidth / 3.55, windowWidth / 2.4);
     attack_button.mousePressed(async function () {
         update_troop(user_info.user_id, 1)
     }
@@ -325,17 +325,18 @@ async function draw() {
             draw_pop_up_buildings(buildings_array, square_size, buildings_images, troop_array)
             draw_pop_up_troops(troop_array, tilesize, troop_images)
             fill(color('white'))
-            text('user id : ' + user_info.user_id, 800, 200)
-            text('actions : ' + user_info.player_actions, 900, 200)
+            textSize(20);
+            text(user_info.username, windowWidth/2.6, windowHeight/15)
+            text('Player Actions : ' + user_info.player_actions, windowWidth/2.6, windowHeight/10)
             fill(color('black'))
-            image(iron_amount_img, 920, 600, iron_amount_img.width * 0.5, iron_amount_img.height * 0.5)
-            image(food_amount_img, 770, 600, food_amount_img.width * 0.5, food_amount_img.height * 0.5)
+            image(iron_amount_img, windowWidth/2.2, windowHeight/6, iron_amount_img.width * 0.5, iron_amount_img.height * 0.5)
+            image(food_amount_img, windowWidth/2.6, windowHeight/6.5 ,food_amount_img.width * 0.5, food_amount_img.height * 0.5)
             if (resources[0] != undefined) {
-                text(resources[2].rsc_amount, 935, 660)
-                text(resources[0].rsc_amount, 805, 660)
+                text(resources[2].rsc_amount, windowWidth/2.1, windowHeight/4.5)
+                text(resources[0].rsc_amount, windowWidth/2.45, windowHeight/4.5)
             }
-            text(roll_attack_number, 850, 550)
-            text(rolls_to_hit, 850, 535)
+            text('Die Roll needed to deal damage : ' + roll_attack_number, windowWidth/2.6, windowHeight/2.2)
+            text('Last Die Roll : ' + rolls_to_hit, windowWidth/2.6, windowHeight/2.5)
 
             
         }
