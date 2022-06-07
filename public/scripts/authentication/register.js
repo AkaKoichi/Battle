@@ -2,6 +2,7 @@ let input_name;
 let input_password;
 
 function preload() {
+    logo = createImg('/images/logo/logo.png');
     register_button = createImg('/images/buttons/registo.png');
     sound_button = createImg('/images/buttons/som.png');
     music_button = createImg('/images/buttons/musica.png');
@@ -10,22 +11,28 @@ function preload() {
 function setup() {
     
     input_name = createInput();
-    input_name.position(600, 300);
-    
+    input_name.position(windowWidth/2.3, windowHeight/2.1);
     input_password = createInput();
-    input_password.position(600, 370);
-    createCanvas(1420, 700);
+    input_password.position(windowWidth/2.3, windowHeight/1.75);
+    createCanvas(windowWidth,windowHeight);
     //buttons
-    register_button.position(520, 480);
-    sound_button.position(1250, 650);
-    music_button.position(1350, 650);
+    logo.position(windowWidth/5.2, windowHeight/20)
+    register_button.position(windowWidth/2.58, windowHeight/1.5);
+    sound_button.position(windowWidth/1.06, windowHeight/1.1);
+    music_button.position(windowWidth/1.1, windowHeight/1.1);
     register_button.mousePressed(register_user);
+    register_button.mouseOver( function(){
+        register_button.attribute('src','/images/buttons/registo_over.png')
+    })
+    register_button.mouseOut( function(){
+        register_button.attribute('src','/images/buttons/registo.png')
+    })
 }
 
 function draw() {
     textSize(20);
-    text("User name:",600,270);
-    text("Password:",600,350);
+    text("User name:",windowWidth/2.3, windowHeight/2.2);
+    text("Password:",windowWidth/2.3, windowHeight/1.8);
 }
 
 async function register_user() {

@@ -28,11 +28,11 @@ window.onload = async () => {
 async function enter_room() {
     res = await check_if_game_started_id(userid)
     console.log(res)
-    if (res == false){
+    if (res == false) {
         window.location = "roll_page.html";
 
-    }else window.location = "gamelib.html";
-    
+    } else window.location = "gamelib.html";
+
 }
 
 async function how_to_play_link() {
@@ -40,6 +40,8 @@ async function how_to_play_link() {
 }
 
 function preload() {
+    font_regular = loadFont('Founts/Track-Regular.otf')
+
     leader_board_img = loadImage('images/leader_board.png')
     avatar_img = loadImage('/images/avatar.png');
     how_to_play_button = createImg('/images/buttons/how_to_play.png');
@@ -58,29 +60,29 @@ function preload() {
 
 
 function setup() {
-    createCanvas(1470, 730);
-
+    createCanvas(windowWidth, windowHeight);
+    textFont(font_regular)
     /* button1 = new Button(400, 100, image1,image2)
     button1.mousePressed() */
 
     //buttons
     join_lobby_button.position(550, 250);
     how_to_play_button.position(595, 550);
-    sound_button.position(675, 650);
-    music_button.position(735, 650);
+    sound_button.position(windowWidth/1.8, windowHeight/1.1);
+    music_button.position(windowWidth/1.1, windowHeight/1.1);
     join_lobby_button.mousePressed(enter_room);
-    join_lobby_button.mouseOver( function(){
-        join_lobby_button.attribute('src','/images/buttons/join_lobby_over.png')
+    join_lobby_button.mouseOver(function () {
+        join_lobby_button.attribute('src', '/images/buttons/join_lobby_over.png')
     })
-    join_lobby_button.mouseOut( function(){
-        join_lobby_button.attribute('src','/images/buttons/join_lobby.png')
+    join_lobby_button.mouseOut(function () {
+        join_lobby_button.attribute('src', '/images/buttons/join_lobby.png')
     })
     how_to_play_button.mousePressed(how_to_play_link);
-    how_to_play_button.mouseOver( function(){
-        how_to_play_button.attribute('src','/images/buttons/how_to_play_over.png')
+    how_to_play_button.mouseOver(function () {
+        how_to_play_button.attribute('src', '/images/buttons/how_to_play_over.png')
     })
-    how_to_play_button.mouseOut( function(){
-        how_to_play_button.attribute('src','/images/buttons/how_to_play.png')
+    how_to_play_button.mouseOut(function () {
+        how_to_play_button.attribute('src', '/images/buttons/how_to_play.png')
     })
 
     input_game_name = createInput();
@@ -100,10 +102,10 @@ function setup() {
     join_game_button.position(500, 650);
     join_game_button.mousePressed(async function () {
         res = await get_players_and_games_waiting_id(userid)
-        join_game_id(userid,res[0].game_id)
+        join_game_id(userid, res[0].game_id)
     }
     )
-    
+
 }
 
 async function draw() {
@@ -118,8 +120,8 @@ async function draw() {
 
     image(avatar_img, 75, 20);
     image(trophies_img, 215, 535);
-    image(leader_board_img, 1050, 10);
-    textSize(20);
+    image(leader_board_img, windowWidth/1.4, windowHeight/8);
+    textSize(25);
     text(username, 275, 500);
     text(trophies, 270, 590);
 

@@ -11,24 +11,36 @@ function preload() {
 
 function setup() {
     input_name = createInput();
-    input_name.position(600, 300);
+    input_name.position(windowWidth/2.3, windowHeight/2.1);
     input_password = createInput();
-    input_password.position(600, 370);
-    createCanvas(1420, 700);
+    input_password.position(windowWidth/2.3, windowHeight/1.75);
+    createCanvas(windowWidth,windowHeight);
     //buttons
-    logo.position(200,-50)
-    login_button.position(520,400)
-    register_button.position(520, 550);
-    sound_button.position(1250, 650);
-    music_button.position(1350, 650);
+    logo.position(windowWidth/5.2, windowHeight/20)
+    login_button.position(windowWidth/2.4, windowHeight/1.5)
+    register_button.position(windowWidth/2.58, windowHeight/1.3);
+    sound_button.position(windowWidth/1.06, windowHeight/1.1);
+    music_button.position(windowWidth/1.1, windowHeight/1.1);
     login_button.mousePressed(login_user);
+    login_button.mouseOver( function(){
+        login_button.attribute('src','/images/buttons/login_over.png')
+    })
+    login_button.mouseOut( function(){
+        login_button.attribute('src','/images/buttons/login.png')
+    })
     register_button.mousePressed(go_to_register);
+    register_button.mouseOver( function(){
+        register_button.attribute('src','/images/buttons/registo_over.png')
+    })
+    register_button.mouseOut( function(){
+        register_button.attribute('src','/images/buttons/registo.png')
+    })
 }
 
 function draw() {
     textSize(20);
-    text("User name:",600,270);
-    text("Password:",600,350);
+    text("User name:",windowWidth/2.3, windowHeight/2.2);
+    text("Password:",windowWidth/2.3, windowHeight/1.8);
 }
 
 function go_to_register(){
