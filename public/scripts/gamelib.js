@@ -75,7 +75,7 @@ window.onload = async () => {
     user_info = await get_user_info_game();
     game_info = await get_game_id(user_info.user_id)
     oponent_info = await get_oponent_id(user_info.user_id, game_info.game_id);
-    console.log(oponent_info)
+
     resources = await get_resources_by_id(game_info.game_id, user_info.user_id);
     let bol = await check_current_playing_by_game(game_info.game_id)
     if (bol[0].current_user_playing == user_info.user_id) {
@@ -90,7 +90,7 @@ window.onload = async () => {
         disable_button(attack_button)
     }
     let res = await get_resources_places_by_id(game_info.game_id)
-    console.log(res[0])
+  
     for (let i = 0; i < res.length; i++) {
         let coordinate = { x: res[i].rsc_x, y: res[i].rsc_y, resource: res[i].rsc }
 
@@ -158,7 +158,7 @@ async function setup() {
     pile.push({ x: 7, y: 8 })
     pile.push({ x: 8, y: 7 })
     pile.push({ x: 8, y: 8 })
-    console.log(pile)
+  
 
 
 
@@ -343,7 +343,7 @@ async function keyPressed() {
         switch (key) {
             case 'ç':
             case 'Ç':
-                console.log('aaa')
+        
                 await update_resources_id(user_info.user_id, 100, 2)
                 await update_resources_id(user_info.user_id, 100, 1)
                 initialize_game()
@@ -364,7 +364,7 @@ async function mousePressed() {
     }
     
     let tile = mouse_over_tile()
-    console.log(tile)
+
     let y = (int)(mouseX / tilesize)
     let x = (int)(mouseY / tilesize)
     mouse_pressed_troops(user_info.user_id, troop_array, buildings, game_info.game_id)
@@ -373,7 +373,7 @@ async function mousePressed() {
 
 async function end_turn() {
     let res = await end_turn_id(user_info.user_id, game_info.game_id, pile, oponent_info.user_player)
-    console.log(res.msg)
+  
     if (res.msg == 'updated') initialize_game()
 }
 
@@ -431,7 +431,7 @@ function draw_endGame(fac_id) {
 }
 
 async function update_troop(user_id, bit) {
-    console.log('entrou')
+  
     if (bit == 0) {
         update_troop_id(user_id, bit)
         can_move_troop = true;
