@@ -47,9 +47,10 @@ function preload() {
     avatar_img = loadImage('/images/avatar.png');
     how_to_play_button = createImg('/images/buttons/how_to_play.png');
     join_lobby_button = createImg('/images/buttons/join_lobby.png');
+    create_lobby_button = createImg('/images/buttons/create_lobby.png')
 
-    image1 = loadImage('/images/buttons/how_to_play.png');
-    image2 = loadImage('/images/buttons/join_lobby.png');
+    //image1 = loadImage('/images/buttons/how_to_play.png');
+    //image2 = loadImage('/images/buttons/join_lobby.png');
 
     sound_button = createImg('/images/buttons/som.png');
     music_button = createImg('/images/buttons/musica.png');
@@ -67,10 +68,18 @@ function setup() {
     button1.mousePressed() */
 
     //buttons
-    join_lobby_button.position(550, 250);
-    how_to_play_button.position(595, 550);
-    sound_button.position(windowWidth / 1.8, windowHeight / 1.1);
-    music_button.position(windowWidth / 1.1, windowHeight / 1.1);
+    create_lobby_button.position(windowWidth /2.5, windowHeight / 5)
+    join_lobby_button.position(windowWidth / 2.5, windowHeight / 2.2);
+    how_to_play_button.position(windowWidth /  2.39, windowHeight / 1.4);
+    sound_button.position(windowWidth / 2, windowHeight / 1.1);
+    music_button.position(windowWidth /2.2, windowHeight / 1.1);
+    create_lobby_button.mousePressed();
+    create_lobby_button.mouseOver(function () {
+        create_lobby_button.attribute('src', '/images/buttons/create_lobby_over.png')
+    })
+    create_lobby_button.mouseOut(function () {
+        create_lobby_button.attribute('src', '/images/buttons/create_lobby.png')
+    })
     join_lobby_button.mousePressed(enter_room);
     join_lobby_button.mouseOver(function () {
         join_lobby_button.attribute('src', '/images/buttons/join_lobby_over.png')
@@ -87,7 +96,7 @@ function setup() {
     })
 
     input_game_name = createInput();
-    input_game_name.position(410, 570);
+    input_game_name.position(windowWidth /2.2, windowHeight / 6);
 
     create_game_button = createButton('create game');
     create_game_button.position(400, 650);
@@ -120,12 +129,12 @@ async function draw() {
     } */
     /* button1.display(); */
 
-    image(avatar_img, 75, 20);
-    image(trophies_img, 215, 535);
+    image(avatar_img, windowWidth / 20, windowHeight / 15);
+    image(trophies_img, windowWidth / 8.5, windowHeight / 1.4);
     image(leader_board_img, windowWidth / 1.4, windowHeight / 8);
-    textSize(25);
-    text(username, 275, 500);
-    text(trophies, 270, 590);
+    textSize(22);
+    text(username, windowWidth / 6.8, windowHeight / 1.6);
+    text(trophies, windowWidth / 7.15, windowHeight / 1.3);
 
 
 
