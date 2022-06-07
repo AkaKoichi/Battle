@@ -330,9 +330,9 @@ async function draw() {
                 text(resources[2].rsc_amount, windowWidth/2.1, windowHeight/4.5)
                 text(resources[0].rsc_amount, windowWidth/2.45, windowHeight/4.5)
             }
-            text('Die Roll needed to deal damage : ' + roll_attack_number, windowWidth/2.6, windowHeight/2.2)
-            text('Last Die Roll : ' + rolls_to_hit, windowWidth/2.6, windowHeight/2.5)
-
+            text(' Last Die Roll :' + roll_attack_number, windowWidth/2.6, windowHeight/2.2)
+            text(' Die Roll needed to deal damage : ' + rolls_to_hit, windowWidth/2.6, windowHeight/2.5)
+            
             
         }
     }
