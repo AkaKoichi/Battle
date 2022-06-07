@@ -31,14 +31,9 @@ async function enter_room() {
     if (res == false) {
         window.location = "roll_page.html";
 
-<<<<<<< HEAD
-    }else if ( res == true) window.location = "gamelib.html";
-    
-    
-=======
-    } else window.location = "gamelib.html";
+    } else if (res == true) window.location = "gamelib.html";
 
->>>>>>> 4e9e083e46fdb2d7201d8d0760e485a4dc3bbb6f
+
 }
 
 async function how_to_play_link() {
@@ -74,8 +69,8 @@ function setup() {
     //buttons
     join_lobby_button.position(550, 250);
     how_to_play_button.position(595, 550);
-    sound_button.position(windowWidth/1.8, windowHeight/1.1);
-    music_button.position(windowWidth/1.1, windowHeight/1.1);
+    sound_button.position(windowWidth / 1.8, windowHeight / 1.1);
+    music_button.position(windowWidth / 1.1, windowHeight / 1.1);
     join_lobby_button.mousePressed(enter_room);
     join_lobby_button.mouseOver(function () {
         join_lobby_button.attribute('src', '/images/buttons/join_lobby_over.png')
@@ -98,8 +93,8 @@ function setup() {
     create_game_button.position(400, 650);
     create_game_button.mousePressed(async function () {
         let result = await create_game_id(input_game_name.value(), userid)
-        if(result.inserted) alert(result.result.msg)
-       
+        if (result.inserted) alert(result.result.msg)
+
     }
     )
 
@@ -107,13 +102,9 @@ function setup() {
     join_game_button.position(500, 650);
     join_game_button.mousePressed(async function () {
         res = await get_players_and_games_waiting_id(userid)
-<<<<<<< HEAD
-        join_game_id(userid,res[0].game_id)
-        console.log(res)
-        if(res.inserted) alert(res.msg)
-=======
         join_game_id(userid, res[0].game_id)
->>>>>>> 4e9e083e46fdb2d7201d8d0760e485a4dc3bbb6f
+        console.log(res)
+        if (res.inserted) alert(res.msg)
     }
     )
 
@@ -131,7 +122,7 @@ async function draw() {
 
     image(avatar_img, 75, 20);
     image(trophies_img, 215, 535);
-    image(leader_board_img, windowWidth/1.4, windowHeight/8);
+    image(leader_board_img, windowWidth / 1.4, windowHeight / 8);
     textSize(25);
     text(username, 275, 500);
     text(trophies, 270, 590);
