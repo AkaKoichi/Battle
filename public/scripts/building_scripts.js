@@ -70,7 +70,7 @@ function mouse_pressed_buildings(building_array, x, y, troop_array, user_id, gam
 async function buildings_setup(user_id, buildings, fac_id, game_id) {
     let last_name;
     console.log(fac_id)
-    troops_resources = await get_troops_resources(fac_id,user_id);
+    troops_resources = await get_troops_resources(fac_id, user_id);
     console.log(troops_resources)
     for (let i = 0; i < troops_resources.length; i++) {
         if (last_name == troops_resources[i].trp_name) {
@@ -251,8 +251,8 @@ function draw_pop_up_buildings(buildings_array, tilesize, images, troops) {
             rect(windowWidth / 1.5, 0, 501, windowHeight);
             noStroke()
             if (buildings_array[i].bld_name == 'tc1' || buildings_array[i].bld_name == 'tc2') {
-                image(per_tc, windowWidth / 1.35, windowHeight / 20, per_tc.width/1.5, per_tc.height/1.5);
-            } else image(mc_tc, windowWidth / 1.35, windowHeight / 20, mc_tc.width/1.5, mc_tc.height/1.5);
+                image(per_tc, windowWidth / 1.35, windowHeight / 20, per_tc.width / 1.5, per_tc.height / 1.5);
+            } else image(mc_tc, windowWidth / 1.35, windowHeight / 20, mc_tc.width / 1.5, mc_tc.height / 1.5);
 
             fill(w);
             fill(b);
@@ -290,4 +290,10 @@ function draw_pop_up_buildings(buildings_array, tilesize, images, troops) {
             prepare_to_train = false
         }
     }
+}
+
+function draw_pop_up_buildings_cost(buildings_array, tilesize, images, troops) {
+    fill(170, 160, 85);
+    rect(windowWidth / 1.5, 0, 501, windowHeight);
+    noStroke()
 } 

@@ -51,6 +51,7 @@ let end_turn_button;
 let move_button;
 let attack_button;
 let roll_button;
+let buldings_cost_button;
 
 var board_size = 16;
 let tilesize = 44;  //700 / board_size;
@@ -71,7 +72,7 @@ var rolls_to_hit = 0
 
 window.onload = async () => {
 
-
+    font_regular = loadFont('Founts/Track-Regular.otf')
     user_info = await get_user_info_game();
     game_info = await get_game_id(user_info.user_id)
     oponent_info = await get_oponent_id(user_info.user_id, game_info.game_id);
@@ -107,6 +108,7 @@ window.onload = async () => {
 }
 
 async function setup() {
+    textFont(font_regular)
     initialize_game()
     bg_music = loadSound('./music/musica_de_fundo.mp3')
     building_sound = loadSound('./music/building.mp3')
@@ -119,9 +121,9 @@ async function setup() {
     attack_button = createImg('/images/buttons/attack_button.png');
 
     move_button = createImg('/images/buttons/move_button.png');
-    //textFont(TRACK)
 
-    //textFont(TRACK)
+    buldings_cost_button = createImg('/images/buttons/button_building_cost.png')
+
     tile_image = loadImage('./images/tile/tile.png')
     tile_image2 = loadImage('./images/tile/tile2.png')
     tile_image_move = loadImage('./images/tile/tile5.png')
@@ -209,6 +211,18 @@ async function setup() {
     })
     attack_button.mouseOut(function () {
         attack_button.attribute('src', '/images/buttons/attack_button.png')
+    })
+
+    buldings_cost_button.position(windowWidth / 2.2, windowWidth / 2.1);
+    buldings_cost_button.mousePressed(async function () {
+        draw_pop_up_buildings_cost(buildings_array, square_size, buildings_images, troop_array)
+    }
+    )
+    buldings_cost_button.mouseOver(function () {
+        buldings_cost_button.attribute('src', '/images/buttons/button_building_cost_over.png')
+    })
+    buldings_cost_button.mouseOut(function () {
+        buldings_cost_button.attribute('src', '/images/buttons/button_building_cost.png')
     })
     /*  roll_button = createButton('Check Roll');
      roll_button.position(30, 230);
