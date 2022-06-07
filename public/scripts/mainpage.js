@@ -31,7 +31,8 @@ async function enter_room() {
     if (res == false){
         window.location = "roll_page.html";
 
-    }else window.location = "gamelib.html";
+    }else if ( res == true) window.location = "gamelib.html";
+    
     
 }
 
@@ -89,18 +90,19 @@ function setup() {
     create_game_button = createButton('create game');
     create_game_button.position(400, 650);
     create_game_button.mousePressed(async function () {
-        let result = create_game_id(input_game_name.value(), userid)
-        /*console.log(result)
-        alert(result.msg) */
+        let result = await create_game_id(input_game_name.value(), userid)
+        if(result.inserted) alert(result.result.msg)
+       
     }
     )
-
 
     join_game_button = createButton('join game');
     join_game_button.position(500, 650);
     join_game_button.mousePressed(async function () {
         res = await get_players_and_games_waiting_id(userid)
         join_game_id(userid,res[0].game_id)
+        console.log(res)
+        if(res.inserted) alert(res.msg)
     }
     )
     

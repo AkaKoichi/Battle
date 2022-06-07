@@ -119,7 +119,7 @@ module.exports.delete_troop = async function (id) {
   }
 }
 
-module.exports.get_all_troops_resources = async function (id) {
+module.exports.get_all_troops_resources = async function (id, user_id) {
   try {
     let sql = `
     select troops.trp_id,trp_name,rsc_type,rsc_amount 
@@ -127,11 +127,13 @@ module.exports.get_all_troops_resources = async function (id) {
     where resources_troops.rsc_id = resources.rsc_id 
     and resources_troops.trp_id = troops.trp_id 
     and player_game.player_fac_id = troops.trp_fac_id
-    and player_game.player_fac_id = $1 
-    and player_game.user_player = $1
+    and player_game.player_fac_id = $1
+    and player_game.user_player = $2
     ;`;
-    let result = await pool.query(sql, [id]);
+    let result = await pool.query(sql, [id, user_id]);
     let troops = result.rows;
+    console.log('dasssssssssssssssssssssssssssssssssssssssssssssssssssssssssss')
+    console.log(troops)
     return { status: 200, result: troops };
   } catch (err) {
     console.log(err);
@@ -168,7 +170,7 @@ module.exports.move_troop = async function (user_id, troop_id, tile_x, tile_y, g
   sql = `select player_actions from player_game where user_player = $1`
   result = await pool.query(sql, [user_id]);
 
-  if( result.rows[0].player_actions - 1 < 0){
+  if (result.rows[0].player_actions - 1 < 0) {
     return { status: 200, result: { msg: 'no actions left' } };
   }
 
@@ -260,7 +262,7 @@ module.exports.attack_troop = async function (user_id, attacker, defender, bit, 
     where trp_id1 = $1 and trp_id2 = $2;`
     result = await pool.query(sql, [attacker_troop_id, defender_troop_id]);
     result = result.rows[0].dics_roll
-    dice_dmg_multiplier = roll_dice(result, 6)
+    let dice_dmg_multiplier = roll_dice(result, 6)
 
     sql = `
     select *
@@ -270,8 +272,8 @@ module.exports.attack_troop = async function (user_id, attacker, defender, bit, 
     let attacker_info = result.rows[0]
 
     /* let can_attack_turn = attacker_info.can_attack
-    if (can_attack_turn == false) return { status: 200, result: { msg: "cannot attack" } }; */
-
+    if (can_attack_turn == false) return { status: 200, result: { msg: "cannot attack" } };
+ */
     sql = `
     select *
     from user_troops,troops
@@ -285,7 +287,7 @@ module.exports.attack_troop = async function (user_id, attacker, defender, bit, 
     sql = `select player_actions from player_game where user_player = $1`
     result = await pool.query(sql, [user_id]);
 
-    if( result.rows[0].player_actions - 1 < 0){
+    if (result.rows[0].player_actions - 1 < 0) {
       return { status: 200, result: { msg: 'no actions left' } };
     }
 
@@ -294,10 +296,10 @@ module.exports.attack_troop = async function (user_id, attacker, defender, bit, 
     result = await pool.query(sql, [user_id, actions - 1]);
     actions = result.rows[0].player_actions
     try {
-      if (can_attack && dice_dmg_multiplier >= 1 && can_attack_troop && your_turn && actions >= 0) {
+      if (can_attack && dice_dmg_multiplier.mult >= 1 && can_attack_troop && your_turn && actions >= 0) {
 
 
-        defender_info.troop_current_health -= attacker_info.trp_attack * dice_dmg_multiplier;
+        defender_info.troop_current_health -= attacker_info.trp_attack * dice_dmg_multiplier.mult;
 
         if (defender_info.troop_current_health <= 0) {
           await this.delete_troop(defender)
@@ -309,11 +311,11 @@ module.exports.attack_troop = async function (user_id, attacker, defender, bit, 
 
 
 
-        return { status: 200, result: { msg: "success attack" } };
+        return { status: 200, result: { msg: "success attack", number: dice_dmg_multiplier.number } };
       } else {
         let sql = `UPDATE player_game SET can_attack_troop = false  WHERE user_player  = $1;`
         let result = await pool.query(sql, [user_id]);
-        return { status: 200, result: { msg: "success missed" } };
+        return { status: 200, result: { msg: "success missed", number: dice_dmg_multiplier.number } };
       }
     } catch (err) {
       console.log(err);
@@ -358,8 +360,8 @@ module.exports.attack_troop = async function (user_id, attacker, defender, bit, 
     result = await pool.query(sql, [attacker]);
     let attacker_info = result.rows[0]
 
-    /* let can_attack_turn = attacker_info.can_attack
-    if (can_attack_turn == false) return { status: 200, result: { msg: "cannot attack" } } */
+    let can_attack_turn = attacker_info.can_attack
+    if (can_attack_turn == false) return { status: 200, result: { msg: "cannot attack" } }
 
     sql = `
     select *
@@ -374,7 +376,7 @@ module.exports.attack_troop = async function (user_id, attacker, defender, bit, 
     sql = `select player_actions from player_game where user_player = $1`
     result = await pool.query(sql, [user_id]);
 
-    if( result.rows[0].player_actions - 1 < 0){
+    if (result.rows[0].player_actions - 1 < 0) {
       return { status: 200, result: { msg: 'no actions left' } };
     }
 
@@ -413,11 +415,11 @@ module.exports.attack_troop = async function (user_id, attacker, defender, bit, 
 function roll_dice(min, sides) {
   dice_number = dice(1, sides);
   if (dice_number == sides) {
-    return 2
+    return { mult: 2, number: dice_number }
   } else if (dice_number >= min) {
-    return 1
+    return { mult: 1, number: dice_number }
   }
-  return 0
+  return { mult: 0, number: dice_number }
 }
 function dice(min, max) {
   return Math.floor(Math.random() * (max - min + 1) + min);
@@ -496,16 +498,17 @@ module.exports.get_troops_rolls_id = async function (fac_id) {
     return { status: 500, result: err };
   }
 }
+module.exports.get_dice_rolls = async function (attacker, defender) {
+  try {
+    sql = `select dics_roll
+    from rolls_to_deal_damage
+    where trp_id1 = $1 and trp_id2 = $2;`
+    result = await pool.query(sql, [attacker, defender]);
+    result = result.rows[0].dics_roll
+    return { status: 200, result: { msg: result } };
 
-
-
-
-
-
-
-
-
-
-
-
-
+  } catch (err) {
+    console.log(err);
+    return { status: 500, result: err };
+  }
+}

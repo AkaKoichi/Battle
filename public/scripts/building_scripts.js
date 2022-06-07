@@ -49,7 +49,7 @@ function mouse_pressed_buildings(building_array, x, y, troop_array, user_id, gam
                 (attack > 0)) {
                 building_defender_index = i;
 
-                make_attack(troop_array, user_id, building_array, 1, game_id)
+                make_attack_roll(troop_array, user_id, building_array, 1, game_id)
                 can_attack_troop = false;
                 attack = 0;
                 break
@@ -69,8 +69,9 @@ function mouse_pressed_buildings(building_array, x, y, troop_array, user_id, gam
 
 async function buildings_setup(user_id, buildings, fac_id, game_id) {
     let last_name;
-
-    troops_resources = await get_troops_resources(fac_id);
+    console.log(fac_id)
+    troops_resources = await get_troops_resources(fac_id,user_id);
+    console.log(troops_resources)
     for (let i = 0; i < troops_resources.length; i++) {
         if (last_name == troops_resources[i].trp_name) {
 

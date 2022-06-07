@@ -3,6 +3,13 @@ var router = express.Router();
 var troop_model = require("../models/troop_model");
 
 
+router.get('/dice_rolls/:attacker/:defender', async function (req, res, next) {
+  let attacker = req.params.attacker;
+  let defender = req.params.defender;
+  let result = await troop_model.get_dice_rolls(attacker,defender);
+  res.status(result.status).send(result.result);
+});
+
 router.get('/rolls/:id', async function (req, res, next) {
   let fac_id = req.params.id
   console.log(fac_id)
@@ -38,9 +45,10 @@ router.put('/move/:id', async function (req, res, next) {
   res.status(result.status).send(result.result);
 });
 
-router.get('/resources/:id', async function (req, res, next) {
+router.get('/resources/:id/:user_id', async function (req, res, next) {
   let id = req.params.id;
-  let result = await troop_model.get_all_troops_resources(id);
+  let user_id = req.params.user_id;
+  let result = await troop_model.get_all_troops_resources(id,user_id);
   res.status(result.status).send(result.result);
 });
 

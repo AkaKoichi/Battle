@@ -3,6 +3,15 @@ var router = express.Router();
 var uModel = require("../models/user_model");
 var auth = require("../models/authentication")
 
+router.post('/insert_initial_state/:id', async function (req, res, next) {
+    let user_id = req.params.id;
+    let game_id = req.body.game_id;
+    let fac_id = req.body.fac_id;
+    let oponent_id = req.body.oponent_id;
+    let result = await uModel.insert_initial_state(user_id, game_id,fac_id,oponent_id);
+    res.status(result.status).send(result.result);
+});
+
 router.get('/dice_rolled/:id', async function (req, res, next) {
     let game_id = req.params.id;
     let result = await uModel.check_if_dice_rolled(game_id);

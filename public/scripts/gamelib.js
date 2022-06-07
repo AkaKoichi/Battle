@@ -34,7 +34,7 @@ var building_falling_sound;
 var attacking_sound;
 var walking_sound;
 
-let pile=[]
+let pile = []
 let troop_array = []
 let troops = [];
 let buildings_array = [];
@@ -64,6 +64,9 @@ let update_timer = 0;
 
 const radius = tilesize / 2;
 const diameter = radius * 2;
+
+var roll_attack_number = 0
+var rolls_to_hit = 0
 
 window.onload = async () => {
 
@@ -111,9 +114,9 @@ async function setup() {
     walking_sound = loadSound('./music/passos.mp3')
 
     end_turn_button = createImg('/images/buttons/end_turn_button.png');
-    //end_turn_button_over = createImg('/images/buttons/end_turn_button_over.png');
+
     attack_button = createImg('/images/buttons/attack_button.png');
-    //attack_button_over = createImg('/images/buttons/attack_button_over.png');
+
     move_button = createImg('/images/buttons/move_button.png');
     //textFont(TRACK)
 
@@ -128,10 +131,10 @@ async function setup() {
     food_amount_img = loadImage('./images/food.png')
     win_img = loadImage('./images/win/per_win.png')
     win_img2 = loadImage('./images/win/mc_win.png')
-    pile_bottom_right =loadImage('./images/tile/pile_bottom_right.png')
-    pile_bottom_left =loadImage('./images/tile/pile_bottom_left.png')
-    pile_top_right =loadImage('./images/tile/pile_top_right.png')
-    pile_top_left =loadImage('./images/tile/pile_top_left.png')
+    pile_bottom_right = loadImage('./images/tile/pile_bottom_right.png')
+    pile_bottom_left = loadImage('./images/tile/pile_bottom_left.png')
+    pile_top_right = loadImage('./images/tile/pile_top_right.png')
+    pile_top_left = loadImage('./images/tile/pile_top_left.png')
 
 
     let troop_info = await get_troops();
@@ -149,10 +152,10 @@ async function setup() {
         if (building.bld_url)
             buildings_images[building.bld_id] = await loadImage(building.bld_url);
     }
-    pile.push({x:7,y:7})
-    pile.push({x:7,y:8})
-    pile.push({x:8,y:7})
-    pile.push({x:8,y:8})
+    pile.push({ x: 7, y: 7 })
+    pile.push({ x: 7, y: 8 })
+    pile.push({ x: 8, y: 7 })
+    pile.push({ x: 8, y: 8 })
     console.log(pile)
 
 
@@ -171,15 +174,15 @@ async function setup() {
         }
     }
 
-    /* setup_troop() */
+    setup_troop()
 
     end_turn_button.position(windowWidth / 2.9, windowWidth / 2.2);
     end_turn_button.mousePressed(end_turn);
-    end_turn_button.mouseOver( function(){
-        end_turn_button.attribute('src','/images/buttons/end_turn_button_over.png')
+    end_turn_button.mouseOver(function () {
+        end_turn_button.attribute('src', '/images/buttons/end_turn_button_over.png')
     })
-    end_turn_button.mouseOut( function(){
-        end_turn_button.attribute('src','/images/buttons/end_turn_button.png')
+    end_turn_button.mouseOut(function () {
+        end_turn_button.attribute('src', '/images/buttons/end_turn_button.png')
     })
 
     move_button.position(windowWidth / 2.2, windowWidth / 2.2);
@@ -187,11 +190,11 @@ async function setup() {
         update_troop(user_info.user_id, 0)
     }
     )
-    move_button.mouseOver( function(){
-        move_button.attribute('src','/images/buttons/move_button_over.png')
+    move_button.mouseOver(function () {
+        move_button.attribute('src', '/images/buttons/move_button_over.png')
     })
-    move_button.mouseOut( function(){
-        move_button.attribute('src','/images/buttons/move_button.png')
+    move_button.mouseOut(function () {
+        move_button.attribute('src', '/images/buttons/move_button.png')
     })
 
 
@@ -200,11 +203,11 @@ async function setup() {
         update_troop(user_info.user_id, 1)
     }
     )
-    attack_button.mouseOver( function(){
-        attack_button.attribute('src','/images/buttons/attack_button_over.png')
+    attack_button.mouseOver(function () {
+        attack_button.attribute('src', '/images/buttons/attack_button_over.png')
     })
-    attack_button.mouseOut( function(){
-        attack_button.attribute('src','/images/buttons/attack_button.png')
+    attack_button.mouseOut(function () {
+        attack_button.attribute('src', '/images/buttons/attack_button.png')
     })
     /*  roll_button = createButton('Check Roll');
      roll_button.position(30, 230);
@@ -272,6 +275,7 @@ async function draw() {
             }
             num_squares++
 
+
             for (let i = 0; i < resources_places.length; i++) {
                 if (resources_places[i].x * square_size == x && resources_places[i].y * square_size == y) {
                     if (resources_places[i].resource == 'iron') {
@@ -284,37 +288,41 @@ async function draw() {
 
                 }
             }
-            if(x/square_size == 7 && y / square_size == 7 ){
+            if (x / square_size == 7 && y / square_size == 7) {
                 image(pile_top_left, x, y, tilesize, tilesize);
             }
-            if(x/square_size == 8 && y / square_size == 7 ){
+            if (x / square_size == 8 && y / square_size == 7) {
                 image(pile_top_right, x, y, tilesize, tilesize);
             }
-            if(x/square_size == 7 && y / square_size == 8 ){
+            if (x / square_size == 7 && y / square_size == 8) {
                 image(pile_bottom_left, x, y, tilesize, tilesize);
             }
-            if(x/square_size == 8 && y / square_size == 8 ){
+            if (x / square_size == 8 && y / square_size == 8) {
                 image(pile_bottom_right, x, y, tilesize, tilesize);
             }
             draw_buildings(matrix, buildings_array, num_squares, user_info.user_id, square_size, tilesize, x, y, buildings_images)
+            draw_troops(matrix, troop_array, num_squares, user_info.user_id, square_size, diameter, x, y, troop_images, hurt_troop_images)
+            draw_pop_up_buildings(buildings_array, square_size, buildings_images, troop_array)
+            draw_pop_up_troops(troop_array, tilesize, troop_images)
+            fill(color('white'))
+            text('user id : ' + user_info.user_id, 800, 200)
+            text('actions : ' + user_info.player_actions, 900, 200)
+            fill(color('black'))
+            image(iron_amount_img, 920, 600, iron_amount_img.width * 0.5, iron_amount_img.height * 0.5)
+            image(food_amount_img, 770, 600, food_amount_img.width * 0.5, food_amount_img.height * 0.5)
+            if (resources[0] != undefined) {
+                text(resources[2].rsc_amount, 935, 660)
+                text(resources[0].rsc_amount, 805, 660)
+            }
+            text(roll_attack_number, 850, 550)
+            text(rolls_to_hit,850,535)
+            /* if(pop_rolls == true){
+                draw_pop_up_rolls()
+            } */
+
+
         }
 
-        draw_troops(matrix, troop_array, num_squares, user_info.user_id, square_size, diameter, x, y, troop_images, hurt_troop_images)
-        draw_pop_up_buildings(buildings_array, square_size, buildings_images, troop_array)
-        draw_pop_up_troops(troop_array, tilesize, troop_images)
-        fill(color('white'))
-        text('user id : ' + user_info.user_id, 800, 200)
-        text('actions : ' + user_info.player_actions, 900, 200)
-        fill(color('black'))
-        image(iron_amount_img, 920, 600, iron_amount_img.width * 0.5, iron_amount_img.height * 0.5)
-        image(food_amount_img, 770, 600, food_amount_img.width * 0.5, food_amount_img.height * 0.5)
-        if (resources[0] != undefined) {
-            text(resources[2].rsc_amount, 935, 660)
-            text( resources[0].rsc_amount, 805, 660)
-        }
-        /* if(pop_rolls == true){
-            draw_pop_up_rolls()
-        } */
 
     }
 
@@ -348,7 +356,7 @@ async function mousePressed() {
 }
 
 async function end_turn() {
-    let res = await end_turn_id(user_info.user_id, game_info.game_id,pile,oponent_info.user_player)
+    let res = await end_turn_id(user_info.user_id, game_info.game_id, pile, oponent_info.user_player)
     console.log(res.msg)
     if (res.msg == 'updated') initialize_game()
 }

@@ -90,9 +90,9 @@ async function delete_troops_id(id) {
     }
 }
 
-async function get_troops_resources(id) {
+async function get_troops_resources(id,user_id) {
     try {
-        const response = await fetch(`/api/troops/resources/${id}`);
+        const response = await fetch(`/api/troops/resources/${id}/${user_id}`);
         if (response.status == 200) {
             var troops = await response.json();
             return troops;
@@ -188,4 +188,21 @@ async function get_troops_rolls(fac_id) {
         console.log(err);
     }
 }
+
+async function get_dice_rolls_id(attacker,defender) {
+    try {
+        const response = await fetch(`/api/troops/dice_rolls/${attacker}/${defender}`);
+        if (response.status == 200) {
+            var troops = await response.json();
+            return troops;
+        } else {
+            // Treat errors like 404 here
+            console.log(response);
+        }
+    } catch (err) {
+        // Treat 500 errors here    
+        console.log(err);
+    }
+}
+
 

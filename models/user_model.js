@@ -164,7 +164,7 @@ module.exports.get_game_id_by_user = async function (id) {
   }
 }
 
-module.exports.end_turn = async function (user_id, game_id, pile,oponent_id) {
+module.exports.end_turn = async function (user_id, game_id, pile, oponent_id) {
   try {
     let sql = `
     select user_trp_id,trp_movement
@@ -270,8 +270,8 @@ module.exports.create_game = async function (game_name, user_id) {
         result: { msg: "You can only have one active match." }
       }
     } else {
-      let sql = `insert into game (game_name,state) 
-                  values ($1,false) returning *`;
+      let sql = `insert into game (game_name,state,game_started) 
+                  values ($1,false,false) returning *`;
       res = await pool.query(sql, [game_name]);
       let game_id = res.rows[0].game_id;
       sql = `insert into player_game (user_player, game_id,current_user_playing, player_actions,player_fac_id, can_move_troop, can_attack_troop) 
@@ -310,7 +310,7 @@ module.exports.join_game = async function (user_id, game_id) {
     if (res.result.length > 0) {
       console.log('one match only')
       return {
-        status: 400,
+        status: 200,
         result: { msg: "You can only have one active match." }
       }
     }
@@ -330,48 +330,17 @@ module.exports.join_game = async function (user_id, game_id) {
       console.log('full')
       return {
 
-        status: 400,
+        status: 200,
         result: { msg: "That match is full" }
       }
     }
-    let opponent_id = res.rows[0].user_player;
+    let opponent_id = res.rows[0].user_player
     sql = `insert into player_game (user_player, game_id,current_user_playing, player_actions,player_fac_id, can_move_troop, can_attack_troop) 
-          values ($1,$2,$3,5,2,false,false) returning *`;
+      values ($1,$2,$3,5,2,false,false) returning *`;
     res = await pool.query(sql, [user_id, game_id, opponent_id]);
-    let player_game_id = res.rows[0].player_game_id;
-
-    sql = `insert into user_resources (user_id,rsc_id,rsc_amount)
-    values($1,$2,$3);`;
-    await pool.query(sql, [opponent_id, 1, 16]);
-    await pool.query(sql, [opponent_id, 2, 16]);
-    await pool.query(sql, [user_id, 1, 16]);
-    await pool.query(sql, [user_id, 2, 16]);
-    sql = `insert into user_buildings (user_id,bld_id,bld_x,bld_y,bld_current_health)
-    values($1,$2,$3,$4,$5);`
-
-    await pool.query(sql, [opponent_id, 1, 0, 7, 12]);
-    await pool.query(sql, [opponent_id, 2, 0, 8, 12]);
-    await pool.query(sql, [user_id, 6, 15, 7, 12]);
-    await pool.query(sql, [user_id, 7, 15, 8, 12]);
-
-    sql = `insert into user_troops(user_id,troop_id,troop_x,troop_y,troop_current_health,troop_current_movement,can_attack)
-    values($1,$2,$3,$4,$5,$6,$7);`;
-
-    await pool.query(sql, [opponent_id, 1, 0, 7, 4, 2, true]);
-    await pool.query(sql, [user_id, 7, 15, 7, 4, 2, true]);
-
-    sql = `insert into random_rsc (rsc,rsc_x,rsc_y,game_id)
-    values($1,$2,$3,$4)`;
-
-    await pool.query(sql, ['iron', Math.floor(Math.random() * (16 - 2) + 1), Math.floor(Math.random() * (16 - 2) + 1), game_id]);
-    await pool.query(sql, ['iron', Math.floor(Math.random() * (16 - 2) + 1), Math.floor(Math.random() * (16 - 2) + 1), game_id]);
-    await pool.query(sql, ['food', Math.floor(Math.random() * (16 - 2) + 1), Math.floor(Math.random() * (16 - 2) + 1), game_id]);
-    await pool.query(sql, ['food', Math.floor(Math.random() * (16 - 2) + 1), Math.floor(Math.random() * (16 - 2) + 1), game_id]);
-
     return {
       status: 200, result: {
-        msg: "You successfully joined the match",
-        player_game_id: player_game_id, opponent_id: opponent_id
+        msg: "You successfully joined the match"
       }
     };
   } catch (err) {
@@ -458,9 +427,12 @@ module.exports.check_if_dice_rolled = async function (game_id) {
   try {
     let sql = `select dice_number from player_game where game_id = $1 and dice_number > 0`;
     let result = await pool.query(sql, [game_id]);
-    console.log(result.rows.length)
     if (result.rows.length > 1) {
-      return { status: 200, result: { msg: 'dice rolled' } };
+      let sql = `select user_player from player_game where game_id =$1  order by dice_number desc;`
+      let result = await pool.query(sql, [game_id]);
+      result = result.rows[0].user_player
+
+      return { status: 200, result: { msg: result } };
     } else {
       return { status: 200, result: { msg: 'not rolled' } };
     }
@@ -470,6 +442,114 @@ module.exports.check_if_dice_rolled = async function (game_id) {
   }
 }
 
+
+
+module.exports.insert_initial_state = async function (user_id, game_id, fac_id, opponent_id) {
+  console.log('Aquiiiiiiiiiiiiiiiiiiiiiiiiiiiii')
+  if (fac_id == 1) {
+    try {
+
+      let sql = `UPDATE game SET game_started  = true  WHERE game_id  = $1`;
+      await pool.query(sql, [game_id]);
+
+      sql = `UPDATE player_game SET current_user_playing  = $1  WHERE game_id  = $2`;
+      await pool.query(sql, [user_id,game_id]);
+
+      sql = `UPDATE player_game SET player_fac_id  = $1  WHERE user_player  = $2`;
+      await pool.query(sql, [1,user_id]);
+
+      sql = `UPDATE player_game SET player_fac_id  = $1  WHERE user_player  = $2`;
+      await pool.query(sql, [2,opponent_id]);
+
+      sql = `insert into user_resources (user_id,rsc_id,rsc_amount)
+      values($1,$2,$3);`;
+      await pool.query(sql, [user_id, 1, 16]);
+      await pool.query(sql, [user_id, 2, 16]);
+      await pool.query(sql, [opponent_id, 1, 16]);
+      await pool.query(sql, [opponent_id, 2, 16]);
+      sql = `insert into user_buildings (user_id,bld_id,bld_x,bld_y,bld_current_health)
+      values($1,$2,$3,$4,$5);`
+
+      await pool.query(sql, [user_id, 1, 0, 7, 12]);
+      await pool.query(sql, [user_id, 2, 0, 8, 12]);
+      await pool.query(sql, [opponent_id, 6, 15, 7, 12]);
+      await pool.query(sql, [opponent_id, 7, 15, 8, 12]);
+
+      sql = `insert into user_troops(user_id,troop_id,troop_x,troop_y,troop_current_health,troop_current_movement,can_attack)
+      values($1,$2,$3,$4,$5,$6,$7);`;
+
+      await pool.query(sql, [user_id, 1, 0, 7, 4, 2, true]);
+      await pool.query(sql, [opponent_id, 7, 15, 7, 4, 2, true]);
+
+      sql = `insert into random_rsc (rsc,rsc_x,rsc_y,game_id)
+      values($1,$2,$3,$4)`;
+
+      await pool.query(sql, ['iron', Math.floor(Math.random() * (6 - 1 + 1) + 1), Math.floor(Math.random() * (15 - 1 + 1) + 1), game_id]);
+      await pool.query(sql, ['food', Math.floor(Math.random() * (6 - 1 + 1) + 1), Math.floor(Math.random() * (15 - 1 + 1) + 1), game_id]);
+      await pool.query(sql, ['iron', Math.floor(Math.random() * (14 - 9 + 1) + 9), Math.floor(Math.random() * (15 - 1 + 1) + 1), game_id]);
+      await pool.query(sql, ['food', Math.floor(Math.random() * (14 - 9 + 1) + 9), Math.floor(Math.random() * (15 - 1 + 1) + 1), game_id]);
+
+      return { status: 200, result: { msg: 'initial state inserted' } };
+
+    } catch (err) {
+      console.log(err);
+      return { status: 500, result: err };
+    }
+  } else if (fac_id == 2) {
+    try {
+      let sql = `UPDATE game SET game_started  = true  WHERE game_id  = $1`;
+      await pool.query(sql, [game_id]);
+
+      sql = `UPDATE player_game SET current_user_playing  = $1  WHERE game_id  = $2`;
+      await pool.query(sql, [user_id,game_id]);
+
+      sql = `UPDATE player_game SET player_fac_id  = $1  WHERE user_player  = $2`;
+      await pool.query(sql, [2,user_id]);
+
+      sql = `UPDATE player_game SET player_fac_id  = $1  WHERE user_player  = $2`;
+      await pool.query(sql, [1,opponent_id]);
+
+  
+      sql = `insert into user_resources (user_id,rsc_id,rsc_amount)
+      values($1,$2,$3);`;
+      await pool.query(sql, [opponent_id, 1, 16]);
+      await pool.query(sql, [opponent_id, 2, 16]);
+      await pool.query(sql, [user_id, 1, 16]);
+      await pool.query(sql, [user_id, 2, 16]);
+      sql = `insert into user_buildings (user_id,bld_id,bld_x,bld_y,bld_current_health)
+      values($1,$2,$3,$4,$5);`
+
+      await pool.query(sql, [opponent_id, 1, 0, 7, 12]);
+      await pool.query(sql, [opponent_id, 2, 0, 8, 12]);
+      await pool.query(sql, [user_id, 6, 15, 7, 12]);
+      await pool.query(sql, [user_id, 7, 15, 8, 12]);
+
+      sql = `insert into user_troops(user_id,troop_id,troop_x,troop_y,troop_current_health,troop_current_movement,can_attack)
+      values($1,$2,$3,$4,$5,$6,$7);`;
+
+      await pool.query(sql, [opponent_id, 1, 0, 7, 4, 2, true]);
+      await pool.query(sql, [user_id, 7, 15, 7, 4, 2, true]);
+
+      sql = `insert into random_rsc (rsc,rsc_x,rsc_y,game_id)
+      values($1,$2,$3,$4) `;
+
+      await pool.query(sql, ['iron', Math.floor(Math.random() * (6 - 1 + 1) + 1), Math.floor(Math.random() * (15 - 1 + 1) + 1), game_id]);
+      await pool.query(sql, ['food', Math.floor(Math.random() * (6 - 1 + 1) + 1), Math.floor(Math.random() * (15 - 1 + 1) + 1), game_id]);
+      await pool.query(sql, ['iron', Math.floor(Math.random() * (14 - 9 + 1) + 9), Math.floor(Math.random() * (15 - 1 + 1) + 1), game_id]);
+      await pool.query(sql, ['food', Math.floor(Math.random() * (14 - 9 + 1) + 9), Math.floor(Math.random() * (15 - 1 + 1) + 1), game_id]);
+
+
+
+      return { status: 200, result: { msg: 'initial state inserted' } };
+
+    } catch (err) {
+      console.log(err);
+      return { status: 500, result: err };
+    }
+  }
+
+
+}
 
 
 

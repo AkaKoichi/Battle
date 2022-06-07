@@ -338,6 +338,27 @@ async function check_if_dice_rolled_id(game_id) {
     }
 }
 
+async function insert_initial_state_id(user_id, game_id,fac_id,oponent_id) {
+    try {
+        // TODO: Verify user information  and give errors
+        const response = await fetch(`/api/users/insert_initial_state/${user_id}`,
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ game_id,fac_id,oponent_id })
+            });
+        var result = await response.json();
+        return { inserted: response.status == 200, result: result };
+    } catch (err) {
+        // Treat 500 errors here
+        console.log(err);
+    }
+}
+
+
+
 
 
 
