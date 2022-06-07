@@ -327,7 +327,7 @@ function draw_pop_up_troops(troop_array, tilesize, images) {
 
 function setup_troop() {
     roll_attack_button = createButton('ROLL');
-    roll_attack_button.position(900, 800);
+    roll_attack_button.position(windowWidth /2.3, windowHeight / 1.8);
 
     roll_attack_button.hide()
 } 
