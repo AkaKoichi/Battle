@@ -2,7 +2,7 @@ let input_name;
 let input_password;
 
 function preload() {
-    //font_regular = loadFont('Founts/Track-Regular.otf')
+    font_regular = loadFont('Founts/Track-Regular.otf')
     logo = createImg('/images/logo/logo.png');
     register_button = createImg('/images/buttons/registo.png');
     sound_button = createImg('/images/buttons/som.png');
@@ -10,13 +10,13 @@ function preload() {
 }
 
 function setup() {
-    //textFont(font_regular)
+    textFont(font_regular)
     input_name = createInput();
     input_name.position(windowWidth/2.3, windowHeight/2.1);
     input_password = createInput();
     input_password.position(windowWidth/2.3, windowHeight/1.75);
     createCanvas(windowWidth,windowHeight);
-    //buttons
+    buttons
     logo.position(windowWidth/5.2, windowHeight/20)
     register_button.position(windowWidth/2.58, windowHeight/1.5);
     sound_button.position(windowWidth/1.06, windowHeight/1.1);

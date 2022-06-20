@@ -71,7 +71,7 @@ var rolls_to_hit = 0
 
 window.onload = async () => {
 
-   // font_regular = loadFont('Founts/Track-Regular.otf')
+    font_regular = loadFont('Founts/Track-Regular.otf')
     user_info = await get_user_info_game();
     game_info = await get_game_id(user_info.user_id)
     oponent_info = await get_oponent_id(user_info.user_id, game_info.game_id);
@@ -107,7 +107,7 @@ window.onload = async () => {
 }
 
 async function setup() {
-    //textFont(font_regular)
+    textFont(font_regular)
     initialize_game()
     /* bg_music = loadSound('./music/musica_de_fundo.mp3')
     building_sound = loadSound('./music/building.mp3')
@@ -321,17 +321,15 @@ async function draw() {
             draw_pop_up_troops(troop_array, tilesize, troop_images)
             fill(color('white'))
             textSize(20);
-            text(user_info.username, windowWidth/2.6, windowHeight/15)
-            text('Player Actions : ' + user_info.player_actions, windowWidth/2.6, windowHeight/10)
-            fill(color('black'))
+            text('Username: '+user_info.username, windowWidth/2.6, windowHeight/15)
+            text('Player Actions: ' + user_info.player_actions, windowWidth/2.6, windowHeight/10)
             image(iron_amount_img, windowWidth/2.2, windowHeight/6, iron_amount_img.width * 0.5, iron_amount_img.height * 0.5)
             image(food_amount_img, windowWidth/2.6, windowHeight/6.5 ,food_amount_img.width * 0.5, food_amount_img.height * 0.5)
             if (resources[0] != undefined) {
-                text(resources[2].rsc_amount, windowWidth/2.1, windowHeight/4.5)
-                text(resources[0].rsc_amount, windowWidth/2.45, windowHeight/4.5)
+                text(resources[2].rsc_amount, (windowWidth/2.1)+5,(windowHeight/4.5)-10)
+                text(resources[0].rsc_amount, (windowWidth/2.45)-10, (windowHeight/4.5)-5)
             }
-            text(' Last Die Roll :' + roll_attack_number, windowWidth/2.6, windowHeight/2.2)
-            text(' Die Roll needed to deal damage : ' + rolls_to_hit, windowWidth/2.6, windowHeight/2.5)
+            text(' Last Die Roll: ' + roll_attack_number, windowWidth/2.6, windowHeight/2.2)
             
             
         }
@@ -341,8 +339,8 @@ async function draw() {
 async function keyPressed() {
     if (its_my_turn) {
         switch (key) {
-            case 'ç':
-            case 'Ç':
+            case 'r':
+            case 'R':
         
                 await update_resources_id(user_info.user_id, 100, 2)
                 await update_resources_id(user_info.user_id, 100, 1)
